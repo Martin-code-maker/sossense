@@ -1,6 +1,9 @@
 package sossense.datubasea;
 
 import javax.swing.*;
+
+import sossense.mqtt.Mqtt;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +17,12 @@ public class SOSsenseApp {
     public SOSsenseApp() {
         gestion = new KudeatuInstalazioak();
         crearInterfaz();
+        // MQTT erabili gabe funtzionatzeko, zati hau komentatu
+        try {
+            Mqtt mqtt = new Mqtt();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void bistaratuApp(){
@@ -611,6 +620,7 @@ public class SOSsenseApp {
             JOptionPane.INFORMATION_MESSAGE);
     }
     
+    /*
     public static void main(String[] args) {
         // Ejecutar en el Event Dispatch Thread
         SwingUtilities.invokeLater(new Runnable() {
@@ -620,5 +630,6 @@ public class SOSsenseApp {
             }
         });
     }
+    */
 
 }
