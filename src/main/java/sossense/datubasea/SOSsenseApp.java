@@ -8,11 +8,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ArrayList;
 
 public class SOSsenseApp {
 
     private KudeatuInstalazioak gestion;
     JFrame frame = new JFrame("S.O.S.sense");
+    private JPanel menuPanel;
+    private boolean menuExpanded = true;
+    private final int menuExpandedWidth = 180;
+    private final int menuCollapsedWidth = 18;
+    private List<JButton> menuButtons = new ArrayList<>();
     
     public SOSsenseApp() {
         gestion = new KudeatuInstalazioak();
@@ -32,17 +38,33 @@ public class SOSsenseApp {
     private void crearInterfaz() {
         //
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(900, 700);
         frame.setLayout(new BorderLayout());
 
         // ==================== PANEL SUPERIOR ====================
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(255, 15, 235));
+        topPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
+        topPanel.setPreferredSize(new Dimension(0, 80));
+
+        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/sossense/img/image-removebg-preview.png"));
+        Image scaled = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        JButton menuToggle = new JButton(new ImageIcon(scaled));
+        menuToggle.setBorderPainted(false);
+        menuToggle.setFocusPainted(false);
+        menuToggle.setContentAreaFilled(false);
+        menuToggle.setPreferredSize(new Dimension(48, 48));
+        menuToggle.addActionListener(e -> toggleMenu());
+
+        JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        leftTopPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
+        leftTopPanel.add(menuToggle);
+        topPanel.add(leftTopPanel, BorderLayout.WEST);
 
         // Título centrado
         JLabel title = new JLabel("S.O.S.sense - Monitorización de Instalaciones", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 30));
-        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Arial", Font.BOLD, 36));
+        title.setForeground(Color.BLACK);
         topPanel.add(title, BorderLayout.CENTER);
         
         // Botón de cerrar a la derecha
@@ -52,7 +74,7 @@ public class SOSsenseApp {
         closeButton.setBackground(Color.RED);
         closeButton.setBorderPainted(false);
         closeButton.setFocusPainted(false);
-        closeButton.setPreferredSize(new Dimension(60, 40));
+        closeButton.setPreferredSize(new Dimension(70, 50));
         
         // Efecto hover para el botón de cerrar
         closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -82,7 +104,7 @@ public class SOSsenseApp {
         
         // Panel para el botón
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setBackground(new Color(255, 15, 235));
+        buttonPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
         buttonPanel.add(closeButton);
         topPanel.add(buttonPanel, BorderLayout.EAST);
 
@@ -109,56 +131,146 @@ public class SOSsenseApp {
 
     
     private JPanel crearMenuPanel(JFrame frame) {
-        JPanel menuPanel = new JPanel();
-        menuPanel.setBackground(Color.LIGHT_GRAY);
+        JPanel menuPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color base = new Color(0xD3, 0x85, 0x7E);
+                int arc = 26;
+                g2.setColor(base);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
+                g2.fillRect(0, 0, arc / 2, getHeight()); // flatten left edge
+                g2.dispose();
+            }
+        };
+        this.menuPanel = menuPanel;
+        menuPanel.setOpaque(false);
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-        menuPanel.setPreferredSize(new Dimension(180, 0));
+        menuPanel.setPreferredSize(new Dimension(menuExpandedWidth, 0));
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 12, 20, 12));
         
         JLabel menuTitle = new JLabel("MENUA");
         menuTitle.setFont(new Font("Arial", Font.BOLD, 20));
         menuTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        menuPanel.add(Box.createVerticalStrut(20));
+        menuPanel.add(Box.createVerticalStrut(10));
         menuPanel.add(menuTitle);
-        menuPanel.add(Box.createVerticalStrut(30));
+        menuPanel.add(Box.createVerticalStrut(24));
         
         // Botones del menú - AÑADIDO "PLANOAK"
         String[] itemsMenu = {"INSTALACION GUZTIAK", "PLANOAK", "GEHITU BERRIA", "ESTATISTIKAK", "BILATU", "KONTAKTUA"};
         for (String item : itemsMenu) {
-            JButton menuButton = new JButton(item);
+            JButton menuButton = new JButton(item) {
+                private boolean isSelected = false;
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    Color bgColor = new Color(0xF6, 0xB2, 0xB2);
+                    if (isSelected) {
+                        bgColor = new Color(0xD6, 0x92, 0x92);
+                        g2.setColor(new Color(0, 0, 0, 80));
+                        g2.fillRoundRect(2, 2, getWidth()-4, getHeight()-4, 10, 10);
+                    }
+                    
+                    g2.setColor(bgColor);
+                    g2.fillRoundRect(1, 1, getWidth()-2, getHeight()-2, 10, 10);
+                    g2.setColor(Color.BLACK);
+                    g2.setStroke(new BasicStroke(1.5f));
+                    g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 10, 10);
+                    g2.dispose();
+                    
+                    super.paintComponent(g);
+                }
+                public void setSelected(boolean selected) {
+                    isSelected = selected;
+                    repaint();
+                }
+            };
             menuButton.setFont(new Font("Arial", Font.PLAIN, 14));
             menuButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             menuButton.setMaximumSize(new Dimension(160, 50));
-            menuButton.setBackground(new Color(70, 130, 180));
-            menuButton.setForeground(Color.WHITE);
+            menuButton.setContentAreaFilled(false);
+            menuButton.setForeground(Color.BLACK);
             menuButton.setFocusPainted(false);
             
             // Asignar acciones a los botones
             switch (item) {
                 case "INSTALACION GUZTIAK":
-                    menuButton.addActionListener(e -> mostrarTodasInstalaciones(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        mostrarTodasInstalaciones(frame);
+                    });
                     break;
                 case "PLANOAK":  // NUEVO BOTÓN
-                    menuButton.addActionListener(e -> mostrarPlanos(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        mostrarPlanos(frame);
+                    });
                     break;
                 case "GEHITU BERRIA":
-                    menuButton.addActionListener(e -> agregarNuevaInstalacion(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        agregarNuevaInstalacion(frame);
+                    });
                     break;
                 case "ESTATISTIKAK":
-                    menuButton.addActionListener(e -> mostrarEstadisticas(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        mostrarEstadisticas(frame);
+                    });
                     break;
                 case "BILATU":
-                    menuButton.addActionListener(e -> buscarInstalacion(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        buscarInstalacion(frame);
+                    });
                     break;
                 case "KONTAKTUA":
-                    menuButton.addActionListener(e -> mostrarContacto(frame));
+                    menuButton.addActionListener(e -> {
+                        selectButton(menuButton);
+                        mostrarContacto(frame);
+                    });
                     break;
             }
             
+            menuButtons.add(menuButton);
             menuPanel.add(menuButton);
             menuPanel.add(Box.createVerticalStrut(10));
         }
         
         return menuPanel;
+    }
+
+    private void toggleMenu() {
+        menuExpanded = !menuExpanded;
+        int width = menuExpanded ? menuExpandedWidth : menuCollapsedWidth;
+        menuPanel.setPreferredSize(new Dimension(width, 0));
+
+        for (Component component : menuPanel.getComponents()) {
+            component.setVisible(menuExpanded);
+        }
+
+        menuPanel.revalidate();
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    private void selectButton(JButton button) {
+        for (JButton btn : menuButtons) {
+            try {
+                btn.getClass().getMethod("setSelected", boolean.class).invoke(btn, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            button.getClass().getMethod("setSelected", boolean.class).invoke(button, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private JPanel crearPanelInstalaciones() {
@@ -620,16 +732,5 @@ public class SOSsenseApp {
             JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /*
-    public static void main(String[] args) {
-        // Ejecutar en el Event Dispatch Thread
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new SOSsenseApp();
-            }
-        });
-    }
-    */
 
 }

@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL; // Import necesario para cargar la imagen
 
 public class PanelPlano extends JPanel {
     private PlanoInstalacion plano;

@@ -173,6 +173,7 @@ public class LoginPanela implements PropertyChangeListener {
 
         panel.add(entrar);
         panel.add(salir);
+        leihoa.getRootPane().setDefaultButton(entrar);
         return panel;
     }
 
