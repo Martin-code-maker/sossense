@@ -326,61 +326,143 @@ public class SOSsenseApp {
         
         JScrollPane scrollPane = new JScrollPane(instalacionesPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        scrollPane.getVerticalScrollBar().setUnitIncrement(25); //Velocidad de scroll más rápida
         
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         
         return mainPanel;
     }
     
-    private JPanel crearPanelInstalacion(Instalazioa inst) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(inst.getKolorFondo());
-        panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(inst.getKolorea(), 2),
-            BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        ));
+    // Método auxiliar para obtener la ruta de la imagen según el tipo (mota)
+    private String lortuIrudiaMotarenArabera(String mota) {
+        if (mota == null) return "/sossense/img/icon_default.png";
         
-        // Panel superior con izena y mota
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
+        switch (mota.toUpperCase()) {
+            case "OSPITALEA":    return "/sossense/img/icon_hospital.png";
+            case "UNIBERTSITATEA": return "/sossense/img/icon_universidad.png";
+            case "FABRIKA":      return "/sossense/img/icon_fabrika.png";
+            case "IKASTOLA":     return "/sossense/img/icon_ikastola.png";
+            case "LABORATORIO":  return "/sossense/img/icon_laboratorio.png";
+            default:             return "/sossense/img/icon_default.png";
+        }
+    }
+
+    private JPanel crearPanelInstalacion(Instalazioa inst) {
+        // 1. Panel personalizado (Igual que antes pero quizás con radio un poco mayor si quieres)
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(inst.getKolorFondo());
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
+
+                g2.setColor(Color.BLACK);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
+            }
+        };
+        
+        panel.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        // Aumentamos el padding interno del panel (antes 15, ahora 20)
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        // ---------------------------------------------------------
+        // A. IMAGEN A LA IZQUIERDA (MÁS GRANDE)
+        // ---------------------------------------------------------
+        gbc.gridx = 0; 
+        gbc.gridy = 0;
+        gbc.gridheight = 4;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 30); // Más separación entre imagen y texto
+        
+        ImageIcon iconOriginal = null;
+        try {
+            java.net.URL imgUrl = getClass().getResource(lortuIrudiaMotarenArabera(inst.getMota()));
+            if (imgUrl != null) {
+                iconOriginal = new ImageIcon(imgUrl);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+
+        JLabel imageLabel;
+        // TAMAÑO AUMENTADO: de 140x140 a 200x200
+        int tamanoImagen = 200; 
+        
+        if (iconOriginal != null) {
+            Image imgEscalada = iconOriginal.getImage().getScaledInstance(tamanoImagen, tamanoImagen, Image.SCALE_SMOOTH);
+            imageLabel = new JLabel(new ImageIcon(imgEscalada));
+        } else {
+            imageLabel = new JLabel("No Image");
+            imageLabel.setPreferredSize(new Dimension(tamanoImagen, tamanoImagen));
+        }
+        panel.add(imageLabel, gbc);
+
+        // ---------------------------------------------------------
+        // B. INFORMACIÓN A LA DERECHA (FUENTES MÁS GRANDES)
+        // ---------------------------------------------------------
+        
+        // 1. Título
+        gbc.gridx = 1; 
+        gbc.gridy = 0;
+        gbc.gridheight = 1;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.insets = new Insets(5, 0, 15, 0); // Más espacio debajo del título
         
         JLabel izenaLabel = new JLabel(inst.getIzena());
-        izenaLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        // FUENTE AUMENTADA: de 22 a 28
+        izenaLabel.setFont(new Font("Arial", Font.BOLD, 28)); 
+        panel.add(izenaLabel, gbc);
+
+        // 2. Sensores
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, 10, 0); // Más espacio debajo
         
-        JLabel motaLabel = new JLabel("[" + inst.getMota() + "]");
-        motaLabel.setFont(new Font("Arial", Font.ITALIC, 14));
-        motaLabel.setForeground(Color.DARK_GRAY);
+        JLabel sensoresLabel = new JLabel("Sentsore kopurua: " + inst.getSentsoreak());
+        // FUENTE AUMENTADA: de 18 a 22
+        sensoresLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        panel.add(sensoresLabel, gbc);
         
-        topPanel.add(izenaLabel, BorderLayout.WEST);
-        topPanel.add(motaLabel, BorderLayout.EAST);
+        // 3. Egoera
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 0, 0, 0);
         
-        // Panel central con información
-        JPanel centerPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-        centerPanel.setOpaque(false);
+        JPanel panelEstado = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelEstado.setOpaque(false);
         
-        JLabel sensoresLabel = new JLabel("Sentsore kopurua: " + inst.getSentsoreak(), SwingConstants.CENTER);
-        sensoresLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel lblEgoeraTitulo = new JLabel("Egoera: ");
+        // FUENTE AUMENTADA: de 20 a 24
+        lblEgoeraTitulo.setFont(new Font("Arial", Font.BOLD, 24));
         
-        JLabel egoeraLabel = new JLabel("Egoera: " + inst.getEgoera(), SwingConstants.CENTER);
-        egoeraLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        egoeraLabel.setForeground(inst.getKolorEgoera());
+        JLabel lblEgoeraValor = new JLabel(inst.getEgoera());
+        // FUENTE AUMENTADA: de 24 a 30
+        lblEgoeraValor.setFont(new Font("Arial", Font.BOLD, 30)); 
+        lblEgoeraValor.setForeground(inst.getKolorEgoera());
         
-        centerPanel.add(sensoresLabel);
-        centerPanel.add(egoeraLabel);
+        panelEstado.add(lblEgoeraTitulo);
+        panelEstado.add(lblEgoeraValor);
         
-        // Panel inferior con dirección
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setOpaque(false);
+        panel.add(panelEstado, gbc);
+
+        // 4. Dirección
+        gbc.gridy = 3;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.SOUTHEAST;
+        gbc.insets = new Insets(15, 0, 0, 0);
+        
         JLabel helbideaLabel = new JLabel(inst.getHelbidea());
-        helbideaLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        // FUENTE AUMENTADA: de 11 a 14
+        helbideaLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         helbideaLabel.setForeground(Color.DARK_GRAY);
-        bottomPanel.add(helbideaLabel);
-        
-        // Añadir todo al panel principal
-        panel.add(topPanel, BorderLayout.NORTH);
-        panel.add(centerPanel, BorderLayout.CENTER);
-        panel.add(bottomPanel, BorderLayout.SOUTH);
-        
+        panel.add(helbideaLabel, gbc);
+
         return panel;
     }
     
