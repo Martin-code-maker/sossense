@@ -152,14 +152,11 @@ public class SOSsenseApp {
         // ==================== PANEL PRINCIPAL ====================
         centerPanel = crearPanelInstalaciones();
 
-        // ==================== PANEL INFERIOR ====================
-        JPanel bottomPanel = crearPanelInferior(frame);
 
         // ==================== AÑADIR TODO AL FRAME ====================
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(menuPanel, BorderLayout.WEST);
         frame.add(centerPanel, BorderLayout.CENTER);
-        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         // Centrar la ventana
         frame.setLocationRelativeTo(null);
@@ -525,30 +522,6 @@ public class SOSsenseApp {
         return panel;
     }
     
-    private JPanel crearPanelInferior(JFrame frame) {
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBackground(Color.LIGHT_GRAY);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        // Información de resumen
-        JLabel resumenLabel = new JLabel(
-            "Instalazioak: " + gestion.getTotalInstalaciones() + 
-            " | Sentsore guztira: " + gestion.getTotalSensores()
-        );
-        resumenLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        // Botón de actualizar
-        JButton actualizarButton = new JButton("EGUNERATU");
-        actualizarButton.addActionListener(e -> {
-            frame.dispose();
-            new SOSsenseApp(); // Reiniciar la aplicación para actualizar
-        });
-        
-        bottomPanel.add(resumenLabel, BorderLayout.WEST);
-        bottomPanel.add(actualizarButton, BorderLayout.EAST);
-        
-        return bottomPanel;
-    }
     
     // Método para cambiar el contenido del panel central
     private void cambiarPanelCentral(JPanel nuevoPanel) {
