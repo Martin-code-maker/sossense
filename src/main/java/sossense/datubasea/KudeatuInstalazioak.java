@@ -3,8 +3,13 @@ package sossense.datubasea;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
-import java.util.Map;        // ← AÑADIR
-import java.util.HashMap;    // ← AÑADIR
+import java.util.Map;
+import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class KudeatuInstalazioak {
 
@@ -15,8 +20,54 @@ public class KudeatuInstalazioak {
         hasieratuInstalazioak();
     }
     
-    // Cargar algunas instalazioZerrenda de ejemplo
+    // Cargar instalaciones desde archivo txt
     private void hasieratuInstalazioak() {
+        String archivo = "datos/instalaciones.txt";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // Ignorar líneas vacías y comentarios
+                if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
+                    continue;
+                }
+                
+                String[] partes = linea.split("\\|");
+                if (partes.length >= 5) {
+                    String nombre = partes[0].trim();
+                    int sensores = Integer.parseInt(partes[1].trim());
+                    String estado = partes[2].trim();
+                    String direccion = partes[3].trim();
+                    String tipo = partes[4].trim();
+                    
+                    // Si hay color personalizado
+                    if (partes.length >= 6) {
+                        String[] rgb = partes[5].trim().split(",");
+                        if (rgb.length == 3) {
+                            int r = Integer.parseInt(rgb[0].trim());
+                            int g = Integer.parseInt(rgb[1].trim());
+                            int b = Integer.parseInt(rgb[2].trim());
+                            agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo, new Color(r, g, b)));
+                        } else {
+                            agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo));
+                        }
+                    } else {
+                        agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de instalaciones: " + e.getMessage());
+            // Cargar instalaciones por defecto si falla la lectura
+            cargarInstalacionesPorDefecto();
+        } catch (NumberFormatException e) {
+            System.err.println("Error al parsear números del archivo: " + e.getMessage());
+            cargarInstalacionesPorDefecto();
+        }
+    }
+    
+    // Método de respaldo con instalaciones por defecto
+    private void cargarInstalacionesPorDefecto() {
         agregarInstalacion(new Instalazioa(
             "MU-ko OSPITALA",
             60,
@@ -31,31 +82,6 @@ public class KudeatuInstalazioak {
             "NORMALA",
             "Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain",
             "UNIBERTSITATEA"
-        ));
-        
-        agregarInstalacion(new Instalazioa(
-            "Mondragon Fabrika",
-            35,
-            "ARINGARRI",
-            "Goiru Kalea 1, 20500 Arrasate, Gipuzkoa",
-            "FABRIKA"
-        ));
-        
-        agregarInstalacion(new Instalazioa(
-            "Eskola Nagusia",
-            15,
-            "NORMALA",
-            "San Andres Kalea 12, 20500 Arrasate",
-            "IKASTOLA"
-        ));
-        
-        agregarInstalacion(new Instalazioa(
-            "Ikerketa Laborategia",
-            25,
-            "MANTENIMIENTO",
-            "Teknologia Parkea, 20100 Errenteria",
-            "LABORATORIO",
-            new Color(255, 230, 230) // Rosa muy claro personalizado
         ));
     }
     

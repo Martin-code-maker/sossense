@@ -1,0 +1,55 @@
+# Formato: nombre|sensores|estado|direccion|tipo|color_r,g,b (opcional)
+# El color es opcional, si no se especifica se usará el color por defecto según el tipo
+MU-ko OSPITALA|60|LARRIA|Nafarros Himbidea 16.20500 Arrasate, Gipuzkoa, Spain|OSPITALEA
+MU-ko UNIBERTSITATEA|20|NORMALA|Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain|UNIBERTSITATEA
+Mondragon Fabrika|35|ARINGARRI|Goiru Kalea 1, 20500 Arrasate, Gipuzkoa|FABRIKA
+Eskola Nagusia|15|NORMALA|San Andres Kalea 12, 20500 Arrasate|IKASTOLA
+Ikerketa Laborategia|25|MANTENIMIENTO|Teknologia Parkea, 20100 Errenteria|LABORATORIO|255,230,230
+Osakidetza Azkoitia|45|LARRIA|Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALEA
+Eibar Kirol Zentroa|18|NORMALA|Urkizu Kalea 9, 20600 Eibar, Gipuzkoa|KIROL_ZENTROA
+CAF Fabrika|52|ARINGARRI|Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA|220,180,140
+Donostia Unibertsitatea|28|NORMALA|Ategorrieta Hiribidea 67, 20014 Donostia, Gipuzkoa|UNIBERTSITATEA
+Arrasate Ikastola|22|NORMALA|Iturriotz 31, 20500 Arrasate, Gipuzkoa|IKASTOLA
+Orona Fabrika|48|ARINGARRI|Orona Ideo, 20120 Hernani, Gipuzkoa|FABRIKA
+Durango Ospitalea|55|LARRIA|Montevideo Etorbidea 16, 48200 Durango, Bizkaia|OSPITALEA|255,100,100
+Bergara Ikerketa|30|MANTENIMIENTO|Iturriotz 2, 20570 Bergara, Gipuzkoa|LABORATORIO
+Tolosa Ikastola|19|NORMALA|Goikolarra Kalea 8, 20400 Tolosa, Gipuzkoa|IKASTOLA
+Fagor Fabrika|41|ARINGARRI|Barrerria 35, 20500 Arrasate, Gipuzkoa|FABRIKA
+Gasteiz Unibertsitatea|32|NORMALA|Nieves Cano 33, 01006 Vitoria-Gasteiz, Araba|UNIBERTSITATEA
+Irun Kirol Zentroa|16|NORMALA|Ficoba Plaza 1, 20304 Irun, Gipuzkoa|KIROL_ZENTROA
+Zarautz Laborategia|27|MANTENIMIENTO|Nafarroa Kalea 12, 20800 Zarautz, Gipuzkoa|LABORATORIO|250,240,230
+Gernika Ikastola|21|NORMALA|Barrenkalea 3, 48300 Gernika-Lumo, Bizkaia|IKASTOLA
+Irizar Fabrika|38|ARINGARRI|Ormaiztegi Kalea 5, 20212 Ormaiztegi, Gipuzkoa|FABRIKA
+Ondarroa Ospitalea|50|LARRIA|Erribera Kalea 1, 48700 Ondarroa, Bizkaia|OSPITALEA
+Eibar Unibertsitatea|24|NORMALA|Etxe-Auzoa 34, 20600 Eibar, Gipuzkoa|UNIBERTSITATEA
+Pasaia Kirol Zentroa|17|NORMALA|Herrera Kalea 11, 20110 Pasaia, Gipuzkoa|KIROL_ZENTROA
+Laudio Ikastola|20|NORMALA|San Roque Kalea 2, 01400 Laudio, Araba|IKASTOLA
+Elgoibar Fabrika|44|ARINGARRI|San Anton Plaza 2, 20870 Elgoibar, Gipuzkoa|FABRIKA|200,170,150
+Errenteria Laborategia|29|MANTENIMIENTO|Kapanaga 9, 20100 Errenteria, Gipuzkoa|LABORATORIO
+Barakaldo Ospitalea|58|LARRIA|Zaramaga Kalea 22, 48901 Barakaldo, Bizkaia|OSPITALEA
+Lasarte Ikastola|18|NORMALA|Loiola Kalea 7, 20160 Lasarte-Oria, Gipuzkoa|IKASTOLA
+Amorebieta Fabrika|36|ARINGARRI|Zeharkalea 4, 48340 Amorebieta-Etxano, Bizkaia|FABRIKA
+Leioa Unibertsitatea|31|NORMALA|Barrio Sarriena, 48940 Leioa, Bizkaia|UNIBERTSITATEA
+Andoain Kirol Zentroa|19|NORMALA|Buruntza 1, 20140 Andoain, Gipuzkoa|KIROL_ZENTROA
+Bilbao Laborategia|33|MANTENIMIENTO|Abandoibarra Etorbidea 2, 48009 Bilbo, Bizkaia|LABORATORIO|245,235,225
+Zumaia Ikastola|16|NORMALA|Kultur Plaza 1, 20750 Zumaia, Gipuzkoa|IKASTOLA
+Tubacex Fabrika|47|ARINGARRI|Polígono Industrial 1, 01080 Alava|FABRIKA
+Zumarraga Ospitalea|42|LARRIA|Urola Kalea 10, 20700 Zumarraga, Gipuzkoa|OSPITALEA
+Oñati Unibertsitatea|26|NORMALA|Universitate Plaza 1, 20560 Oñati, Gipuzkoa|UNIBERTSITATEA
+Deba Kirol Zentroa|14|NORMALA|Lapurdi Kalea 3, 20820 Deba, Gipuzkoa|KIROL_ZENTROA
+Azpeitia Ikastola|23|NORMALA|Nagusia Kalea 5, 20730 Azpeitia, Gipuzkoa|IKASTOLA
+Ormazabal Fabrika|39|ARINGARRI|Velategi 2, 20270 Ormaiztegi, Gipuzkoa|FABRIKA|210,175,145
+Bizkaia Laborategia|28|MANTENIMIENTO|Uribitarte Kalea 8, 48001 Bilbo, Bizkaia|LABORATORIO
+Lekeitio Ospitalea|40|LARRIA|Arranegi Kalea 6, 48280 Lekeitio, Bizkaia|OSPITALEA
+Hernani Ikastola|17|NORMALA|Txaltxa Zelai 2, 20120 Hernani, Gipuzkoa|IKASTOLA
+Beasain Fabrika|43|ARINGARRI|Nafarroa Etorbidea 32, 20200 Beasain, Gipuzkoa|FABRIKA
+Getxo Unibertsitatea|25|NORMALA|Laida Bidea 1, 48992 Getxo, Bizkaia|UNIBERTSITATEA
+Hondarribia Kirol Zentroa|15|NORMALA|Jaizubia Kalea 5, 20280 Hondarribia, Gipuzkoa|KIROL_ZENTROA
+Eskoriatza Laborategia|26|MANTENIMIENTO|Autonomia Plaza 8, 20540 Eskoriatza, Gipuzkoa|LABORATORIO|240,230,220
+Legazpi Ikastola|19|NORMALA|Zubiaurre 14, 20230 Legazpi, Gipuzkoa|IKASTOLA
+Danobat Fabrika|46|ARINGARRI|Arriaga 21, 20870 Elgoibar, Gipuzkoa|FABRIKA
+Mungia Ospitalea|37|LARRIA|Erdialdea Kalea 4, 48100 Mungia, Bizkaia|OSPITALEA
+Deusto Unibertsitatea|34|NORMALA|Mundaiz 50, 20012 Donostia, Gipuzkoa|UNIBERTSITATEA
+Usurbil Kirol Zentroa|13|NORMALA|Errotazar Bidea 2, 20170 Usurbil, Gipuzkoa|KIROL_ZENTROA
+Araba Laborategia|31|MANTENIMIENTO|Portal de Arriaga 9, 01013 Vitoria-Gasteiz, Araba|LABORATORIO
+Errenteria Ikastola|21|NORMALA|Galtzaraborda 67, 20100 Errenteria, Gipuzkoa|IKASTOLA

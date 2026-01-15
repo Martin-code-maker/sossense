@@ -1,0 +1,5 @@
+# Plantas disponibles para los sensores
+PLANTAS=Planta Baja,Planta 1,Planta 2,Planta 3,Sótano
+
+# Áreas disponibles para los sensores
+AREAS=Pasillo Principal,Oficina,Sala de Máquinas,Cocina,Baños,Almacén,Laboratorio,Aula,Habitación,Vestíbulo

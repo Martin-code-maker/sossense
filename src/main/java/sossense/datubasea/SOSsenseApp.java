@@ -303,6 +303,7 @@ public class SOSsenseApp {
     private JPanel crearPanelInstalaciones() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         
+        // Panel de búsqueda
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
@@ -322,11 +323,37 @@ public class SOSsenseApp {
         
         mainPanel.add(searchPanel, BorderLayout.NORTH);
         
+        // Panel para instalaciones
         JPanel instalacionesPanel = new JPanel();
         instalacionesPanel.setLayout(new BoxLayout(instalacionesPanel, BoxLayout.Y_AXIS));
         instalacionesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         
-        bistaratuInstalazioak(instalacionesPanel, controller.lortuInstalazioak());
+        // Variables para la paginación
+        int[] paginaActual = {0}; // usar array para poder modificarlo en el listener
+        int itemsPorPagina = 5;
+        List<Instalazioa> todasInstalaciones = controller.lortuInstalazioak();
+        
+        // Panel de navegación (abajo)
+        JPanel navegacionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        navegacionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        JButton anteriorBtn = new JButton("◀ AURREKO");
+        anteriorBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        anteriorBtn.setPreferredSize(new Dimension(120, 35));
+        
+        JLabel paginaLabel = new JLabel();
+        paginaLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        JButton siguienteBtn = new JButton("HURRENGOA ▶");
+        siguienteBtn.setFont(new Font("Arial", Font.BOLD, 12));
+        siguienteBtn.setPreferredSize(new Dimension(120, 35));
+        
+        navegacionPanel.add(anteriorBtn);
+        navegacionPanel.add(paginaLabel);
+        navegacionPanel.add(siguienteBtn);
+        
+        // Crear un contenedor para poder reemplazar el scroll
+        JPanel contenedorPrincipal = new JPanel(new BorderLayout());
         
         JPanel contenedorPanel = new JPanel();
         contenedorPanel.setLayout(new BoxLayout(contenedorPanel, BoxLayout.Y_AXIS));
@@ -337,16 +364,64 @@ public class SOSsenseApp {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         scrollPane.getVerticalScrollBar().setUnitIncrement(25);
         
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        contenedorPrincipal.add(scrollPane, BorderLayout.CENTER);
+        contenedorPrincipal.add(navegacionPanel, BorderLayout.SOUTH);
         
+        mainPanel.add(contenedorPrincipal, BorderLayout.CENTER);
+        
+        // Función para actualizar la página
+        Runnable actualizarPagina = () -> {
+            int totalPages = (int) Math.ceil((double) todasInstalaciones.size() / itemsPorPagina);
+            
+            // Validar página actual
+            if (paginaActual[0] < 0) paginaActual[0] = 0;
+            if (paginaActual[0] >= totalPages && totalPages > 0) paginaActual[0] = totalPages - 1;
+            
+            // Obtener instalaciones de la página actual
+            int inicio = paginaActual[0] * itemsPorPagina;
+            int fin = Math.min(inicio + itemsPorPagina, todasInstalaciones.size());
+            List<Instalazioa> instalaziakPagina = todasInstalaciones.subList(inicio, fin);
+            
+            // Mostrar instalaciones
+            bistaratuInstalazioak(instalacionesPanel, instalaziakPagina);
+            
+            // Actualizar etiqueta de página
+            paginaLabel.setText("Orria " + (paginaActual[0] + 1) + " / " + Math.max(1, totalPages));
+            
+            // Habilitar/deshabilitar botones
+            anteriorBtn.setEnabled(paginaActual[0] > 0);
+            siguienteBtn.setEnabled(paginaActual[0] < totalPages - 1);
+            
+            // Scroll hacia arriba
+            scrollPane.getVerticalScrollBar().setValue(0);
+        };
+        
+        // Acciones de los botones de navegación
+        anteriorBtn.addActionListener(e -> {
+            paginaActual[0]--;
+            actualizarPagina.run();
+        });
+        
+        siguienteBtn.addActionListener(e -> {
+            paginaActual[0]++;
+            actualizarPagina.run();
+        });
+        
+        // Acción de búsqueda
         java.awt.event.ActionListener buscarAction = e -> {
             String filtro = searchField.getText();
             List<Instalazioa> filtradas = controller.bilatuInstalazioak(filtro);
-            bistaratuInstalazioak(instalacionesPanel, filtradas);
+            todasInstalaciones.clear();
+            todasInstalaciones.addAll(filtradas);
+            paginaActual[0] = 0; // Volver a la primera página
+            actualizarPagina.run();
         };
         
         buscarBtn.addActionListener(buscarAction);
         searchField.addActionListener(buscarAction);
+        
+        // Mostrar la primera página
+        actualizarPagina.run();
         
         return mainPanel;
     }
