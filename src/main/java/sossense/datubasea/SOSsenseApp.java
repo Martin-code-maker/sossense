@@ -194,7 +194,7 @@ public class SOSsenseApp {
         menuPanel.add(Box.createVerticalStrut(24));
         
         // Botones del menú - AÑADIDO "PLANOAK"
-        String[] itemsMenu = {"INSTALACION GUZTIAK", "PLANOAK", "GEHITU BERRIA", "ESTATISTIKAK", "KONTAKTUA"};
+        String[] itemsMenu = {"INSTALACION GUZTIAK", "GEHITU BERRIA", "ESTATISTIKAK", "KONTAKTUA"};
         for (String item : itemsMenu) {
             JButton menuButton = new JButton(item) {
                 private boolean isSelected = false;
@@ -237,12 +237,6 @@ public class SOSsenseApp {
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
                         cambiarPanelCentral(crearPanelInstalaciones());
-                    });
-                    break;
-                case "PLANOAK":
-                    menuButton.addActionListener(e -> {
-                        selectButton(menuButton);
-                        cambiarPanelCentral(crearPanelSeleccionPlanos());
                     });
                     break;
                 case "GEHITU BERRIA":
@@ -519,6 +513,31 @@ public class SOSsenseApp {
         helbideaLabel.setForeground(Color.DARK_GRAY);
         panel.add(helbideaLabel, gbc);
 
+        // Hacer el panel completo clickeable para abrir la vista de planos
+        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cambiarPanelCentral(crearPanelSeleccionPlanos(inst.getIzena()));
+            }
+            
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                panel.setBackground(new Color(
+                    Math.max(0, inst.getKolorFondo().getRed() - 20),
+                    Math.max(0, inst.getKolorFondo().getGreen() - 20),
+                    Math.max(0, inst.getKolorFondo().getBlue() - 20)
+                ));
+                panel.repaint();
+            }
+            
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel.setBackground(inst.getKolorFondo());
+                panel.repaint();
+            }
+        });
+
         return panel;
     }
     
@@ -534,67 +553,137 @@ public class SOSsenseApp {
     
     // Métodos para las acciones del menú
     
-    // Panel para seleccionar planos
-    private JPanel crearPanelSeleccionPlanos() {
+    // Panel para seleccionar planos de una instalación específica
+    private JPanel crearPanelSeleccionPlanos(String nombreInstalacion) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        JLabel titulo = new JLabel("PLANOAK - Aukeratu instalazio bat");
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        // Buscar la instalación
+        Instalazioa instalacion = gestion.buscarInstalacion(nombreInstalacion);
+        if (instalacion == null) {
+            JLabel errorLabel = new JLabel("Ez da instalaziorik aurkitu: " + nombreInstalacion);
+            errorLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            mainPanel.add(errorLabel, BorderLayout.CENTER);
+            return mainPanel;
+        }
+        
+        // Panel superior con título e info de la instalación
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+        
+        JLabel titulo = new JLabel("PLANOAK - " + nombreInstalacion);
+        titulo.setFont(new Font("Arial", Font.BOLD, 28));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
-        mainPanel.add(titulo, BorderLayout.NORTH);
+        headerPanel.add(titulo, BorderLayout.NORTH);
         
-        JPanel instalacionesPanel = new JPanel(new GridLayout(0, 2, 15, 15));
-        instalacionesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JLabel subtitulo = new JLabel("Aukeratu ikusi nahi duzun planoa");
+        subtitulo.setFont(new Font("Arial", Font.PLAIN, 16));
+        subtitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        subtitulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        headerPanel.add(subtitulo, BorderLayout.CENTER);
         
-        List<Instalazioa> instalaciones = gestion.getInstalaciones();
-        for (Instalazioa inst : instalaciones) {
-            JPanel instPanel = new JPanel(new BorderLayout());
-            instPanel.setBackground(inst.getKolorFondo());
-            instPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(inst.getKolorea(), 3),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-            ));
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        
+        // Panel con las tarjetas de planos
+        JPanel planosPanel = new JPanel(new GridLayout(0, 2, 20, 20));
+        planosPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        
+        // De momento, crear una lista de planos posibles para esta instalación
+        // En el futuro, esto podría venir de una lista en la clase Instalazioa
+        String[] nombrePlanos = {"Planta Baja", "Planta 1", "Planta 2", "Sótano"};
+        
+        for (String nombrePlano : nombrePlanos) {
+            JPanel planoPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    g2.setColor(instalacion.getKolorFondo());
+                    g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+                    
+                    g2.setColor(instalacion.getKolorea());
+                    g2.setStroke(new BasicStroke(3));
+                    g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+                }
+            };
             
-            JLabel nombreLabel = new JLabel(inst.getIzena());
-            nombreLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            planoPanel.setOpaque(false);
+            planoPanel.setLayout(new BorderLayout());
+            planoPanel.setPreferredSize(new Dimension(300, 200));
+            planoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            
+            // Icono de plano
+            JLabel iconoLabel = new JLabel("🗺️");
+            iconoLabel.setFont(new Font("Arial", Font.PLAIN, 60));
+            iconoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            
+            // Nombre del plano
+            JLabel nombreLabel = new JLabel(nombrePlano);
+            nombreLabel.setFont(new Font("Arial", Font.BOLD, 20));
             nombreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            nombreLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
             
-            JLabel motaLabel = new JLabel(inst.getMota());
-            motaLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            motaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            // Info adicional
+            JLabel infoLabel = new JLabel("Click para ver el plano");
+            infoLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+            infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            infoLabel.setForeground(Color.GRAY);
             
-            JLabel sensoresLabel = new JLabel("Sentsoreak: " + inst.getSentsoreak());
-            sensoresLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            sensoresLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+            contentPanel.setOpaque(false);
+            contentPanel.add(iconoLabel);
+            contentPanel.add(nombreLabel);
+            contentPanel.add(infoLabel);
             
-            JPanel infoPanel = new JPanel(new GridLayout(3, 1, 5, 5));
-            infoPanel.setOpaque(false);
-            infoPanel.add(nombreLabel);
-            infoPanel.add(motaLabel);
-            infoPanel.add(sensoresLabel);
+            planoPanel.add(contentPanel, BorderLayout.CENTER);
             
-            instPanel.add(infoPanel, BorderLayout.CENTER);
-            
-            instPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            instPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            // Hacer clickeable
+            planoPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            planoPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    cambiarPanelCentral(crearPanelPlanoEspecifico(inst.getIzena()));
+                    cambiarPanelCentral(crearPanelPlanoEspecifico(nombreInstalacion, nombrePlano));
+                }
+                
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    planoPanel.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createEmptyBorder(20, 20, 20, 20),
+                        BorderFactory.createLineBorder(instalacion.getKolorea(), 2)
+                    ));
+                }
+                
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    planoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
                 }
             });
             
-            instalacionesPanel.add(instPanel);
+            planosPanel.add(planoPanel);
         }
         
-        JScrollPane scrollPane = new JScrollPane(instalacionesPanel);
+        JScrollPane scrollPane = new JScrollPane(planosPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Botón volver
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton volverBtn = new JButton("⬅ ITZULI");
+        volverBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        volverBtn.setPreferredSize(new Dimension(150, 40));
+        volverBtn.addActionListener(e -> cambiarPanelCentral(crearPanelInstalaciones()));
+        bottomPanel.add(volverBtn);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         return mainPanel;
     }
     
     // Panel para mostrar un plano específico
-    private JPanel crearPanelPlanoEspecifico(String izenaInstalacion) {
+    private JPanel crearPanelPlanoEspecifico(String izenaInstalacion, String nombrePlano) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         
         PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
@@ -602,7 +691,7 @@ public class SOSsenseApp {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
-        JLabel tituloLabel = new JLabel("PLANOA: " + izenaInstalacion);
+        JLabel tituloLabel = new JLabel("PLANOA: " + izenaInstalacion + " - " + nombrePlano);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 18));
         tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
         
@@ -632,7 +721,7 @@ public class SOSsenseApp {
         JButton volverBtn = new JButton("ITZULI");
         volverBtn.addActionListener(e -> {
             panelPlano.detenerActualizacion();
-            cambiarPanelCentral(crearPanelSeleccionPlanos());
+            cambiarPanelCentral(crearPanelSeleccionPlanos(izenaInstalacion));
         });
         
         controlPanel.add(actualizarBtn);
@@ -797,53 +886,216 @@ public class SOSsenseApp {
     // Panel para mostrar contacto
     private JPanel crearPanelContacto() {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         
+        // Título principal
         JLabel titulo = new JLabel("KONTAKTUA");
-        titulo.setFont(new Font("Arial", Font.BOLD, 36));
+        titulo.setFont(new Font("Arial", Font.BOLD, 40));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 40, 10));
+        titulo.setForeground(new Color(41, 128, 185));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
         mainPanel.add(titulo, BorderLayout.NORTH);
         
-        JPanel contactPanel = new JPanel(new GridLayout(0, 1, 15, 15));
-        contactPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        // Panel central con scroll
+        JPanel centerWrapper = new JPanel(new BorderLayout());
+        JPanel contactPanel = new JPanel();
+        contactPanel.setLayout(new BoxLayout(contactPanel, BoxLayout.Y_AXIS));
+        contactPanel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        
+        // Subtítulo y descripción
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        headerPanel.setBackground(new Color(236, 240, 241));
+        headerPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
         
         JLabel subtitulo = new JLabel("S.O.S.sense - Monitorizazio Sistema");
-        subtitulo.setFont(new Font("Arial", Font.BOLD, 22));
-        subtitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(subtitulo);
+        subtitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        subtitulo.setForeground(new Color(52, 73, 94));
+        headerPanel.add(subtitulo);
         
-        JLabel telefonoLabel = new JLabel("Telefonoa: +34 943 123 456");
-        telefonoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        telefonoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(telefonoLabel);
+        headerPanel.add(Box.createVerticalStrut(10));
         
-        JLabel emailLabel = new JLabel("Email: info@sossense.eus");
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        emailLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(emailLabel);
+        JLabel descripcion = new JLabel("<html><center>Sistema aurreratua instalazio industrialen monitorizaziorako.<br>Sentsore eta datu analisi bidezko irtenbide integrala.</center></html>");
+        descripcion.setFont(new Font("Arial", Font.PLAIN, 14));
+        descripcion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        descripcion.setForeground(new Color(127, 140, 141));
+        headerPanel.add(descripcion);
         
-        JLabel webLabel = new JLabel("Web: www.sossense.eus");
-        webLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        webLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(webLabel);
+        contactPanel.add(headerPanel);
+        contactPanel.add(Box.createVerticalStrut(25));
         
-        JLabel direccionTitulo = new JLabel("Helbidea:");
-        direccionTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        direccionTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(direccionTitulo);
+        // Panel de información de contacto
+        JPanel infoPanel = new JPanel(new GridLayout(0, 2, 20, 15));
+        infoPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(52, 152, 219), 2),
+                "Kontaktu Informazioa",
+                javax.swing.border.TitledBorder.LEFT,
+                javax.swing.border.TitledBorder.TOP,
+                new Font("Arial", Font.BOLD, 16),
+                new Color(52, 152, 219)
+            ),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
         
-        JLabel direccion = new JLabel("Nafarros Himbidea 16");
-        direccion.setFont(new Font("Arial", Font.PLAIN, 18));
-        direccion.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(direccion);
+        // Teléfono
+        infoPanel.add(crearInfoLabel("📞 Telefonoa:", true));
+        infoPanel.add(crearInfoLabel("+34 943 123 456", false));
         
-        JLabel ciudad = new JLabel("20500 Arrasate, Gipuzkoa");
-        ciudad.setFont(new Font("Arial", Font.PLAIN, 18));
-        ciudad.setHorizontalAlignment(SwingConstants.CENTER);
-        contactPanel.add(ciudad);
+        // Email
+        infoPanel.add(crearInfoLabel("📧 Email:", true));
+        infoPanel.add(crearInfoLabel("info@sossense.eus", false));
         
-        mainPanel.add(contactPanel, BorderLayout.CENTER);
+        // Email Soporte
+        infoPanel.add(crearInfoLabel("🛠️ Laguntza Teknikoa:", true));
+        infoPanel.add(crearInfoLabel("support@sossense.eus", false));
+        
+        // Web
+        infoPanel.add(crearInfoLabel("🌐 Web Orria:", true));
+        infoPanel.add(crearInfoLabel("www.sossense.eus", false));
+        
+        // Teléfono emergencias
+        infoPanel.add(crearInfoLabel("🚨 Larrialdiak:", true));
+        infoPanel.add(crearInfoLabel("+34 943 999 888", false));
+        
+        // Fax
+        infoPanel.add(crearInfoLabel("📠 Faxa:", true));
+        infoPanel.add(crearInfoLabel("+34 943 123 457", false));
+        
+        contactPanel.add(infoPanel);
+        contactPanel.add(Box.createVerticalStrut(25));
+        
+        // Panel de dirección
+        JPanel direccionPanel = new JPanel();
+        direccionPanel.setLayout(new BoxLayout(direccionPanel, BoxLayout.Y_AXIS));
+        direccionPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(46, 204, 113), 2),
+                "Helbidea",
+                javax.swing.border.TitledBorder.LEFT,
+                javax.swing.border.TitledBorder.TOP,
+                new Font("Arial", Font.BOLD, 16),
+                new Color(46, 204, 113)
+            ),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
+        JLabel direccion1 = new JLabel("📍 Nafarros Himbidea 16");
+        direccion1.setFont(new Font("Arial", Font.PLAIN, 16));
+        direccion1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        direccionPanel.add(direccion1);
+        
+        direccionPanel.add(Box.createVerticalStrut(8));
+        
+        JLabel direccion2 = new JLabel("20500 Arrasate, Gipuzkoa");
+        direccion2.setFont(new Font("Arial", Font.PLAIN, 16));
+        direccion2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        direccionPanel.add(direccion2);
+        
+        direccionPanel.add(Box.createVerticalStrut(8));
+        
+        JLabel pais = new JLabel("Euskadi, España");
+        pais.setFont(new Font("Arial", Font.PLAIN, 16));
+        pais.setAlignmentX(Component.CENTER_ALIGNMENT);
+        direccionPanel.add(pais);
+        
+        contactPanel.add(direccionPanel);
+        contactPanel.add(Box.createVerticalStrut(25));
+        
+        // Panel de horarios
+        JPanel horariosPanel = new JPanel(new GridLayout(0, 2, 15, 10));
+        horariosPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(155, 89, 182), 2),
+                "Arreta Ordutegia",
+                javax.swing.border.TitledBorder.LEFT,
+                javax.swing.border.TitledBorder.TOP,
+                new Font("Arial", Font.BOLD, 16),
+                new Color(155, 89, 182)
+            ),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
+        horariosPanel.add(crearInfoLabel("🕐 Astelehenetik Ostiralera:", true));
+        horariosPanel.add(crearInfoLabel("08:00 - 18:00", false));
+        
+        horariosPanel.add(crearInfoLabel("🕐 Larunbata:", true));
+        horariosPanel.add(crearInfoLabel("09:00 - 14:00", false));
+        
+        horariosPanel.add(crearInfoLabel("🕐 Igandea:", true));
+        horariosPanel.add(crearInfoLabel("Itxita", false));
+        
+        horariosPanel.add(crearInfoLabel("🚨 Laguntza Teknikoa 24/7:", true));
+        horariosPanel.add(crearInfoLabel("Beti eskuragarri", false));
+        
+        contactPanel.add(horariosPanel);
+        contactPanel.add(Box.createVerticalStrut(25));
+        
+        // Panel de redes sociales
+        JPanel socialPanel = new JPanel(new GridLayout(0, 2, 15, 10));
+        socialPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(new Color(231, 76, 60), 2),
+                "Sare Sozialak",
+                javax.swing.border.TitledBorder.LEFT,
+                javax.swing.border.TitledBorder.TOP,
+                new Font("Arial", Font.BOLD, 16),
+                new Color(231, 76, 60)
+            ),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
+        socialPanel.add(crearInfoLabel("📘 Facebook:", true));
+        socialPanel.add(crearInfoLabel("@sossense.oficial", false));
+        
+        socialPanel.add(crearInfoLabel("🐦 Twitter:", true));
+        socialPanel.add(crearInfoLabel("@sossense", false));
+        
+        socialPanel.add(crearInfoLabel("📷 Instagram:", true));
+        socialPanel.add(crearInfoLabel("@sossense_monitorizazioa", false));
+        
+        socialPanel.add(crearInfoLabel("💼 LinkedIn:", true));
+        socialPanel.add(crearInfoLabel("S.O.S.sense Sistemas", false));
+        
+        contactPanel.add(socialPanel);
+        contactPanel.add(Box.createVerticalStrut(20));
+        
+        // Nota final
+        JPanel notaPanel = new JPanel();
+        notaPanel.setLayout(new BoxLayout(notaPanel, BoxLayout.Y_AXIS));
+        notaPanel.setBackground(new Color(255, 243, 205));
+        notaPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(243, 156, 18), 2),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
+        JLabel notaTitulo = new JLabel("ℹ️ Informazio Gehigarria");
+        notaTitulo.setFont(new Font("Arial", Font.BOLD, 14));
+        notaTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        notaTitulo.setForeground(new Color(243, 156, 18));
+        notaPanel.add(notaTitulo);
+        
+        notaPanel.add(Box.createVerticalStrut(8));
+        
+        JLabel notaTexto = new JLabel("<html><center>Instalazio berri baten interesa baduzu edo zalantzarik baduzu,<br>jar zaitez gurekin harremanetan. Pozik lagunduko dizugu!</center></html>");
+        notaTexto.setFont(new Font("Arial", Font.PLAIN, 12));
+        notaTexto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        notaPanel.add(notaTexto);
+        
+        contactPanel.add(notaPanel);
+        
+        // Añadir scroll
+        JScrollPane scrollPane = new JScrollPane(contactPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        centerWrapper.add(scrollPane, BorderLayout.CENTER);
+        
+        mainPanel.add(centerWrapper, BorderLayout.CENTER);
         
         return mainPanel;
     }
@@ -859,6 +1111,18 @@ public class SOSsenseApp {
         panel.add(tituloLabel, BorderLayout.WEST);
         panel.add(valorLabel, BorderLayout.CENTER);
         return panel;
+    }
+    
+    private JLabel crearInfoLabel(String texto, boolean negrita) {
+        JLabel label = new JLabel(texto);
+        if (negrita) {
+            label.setFont(new Font("Arial", Font.BOLD, 15));
+            label.setForeground(new Color(52, 73, 94));
+        } else {
+            label.setFont(new Font("Arial", Font.PLAIN, 15));
+            label.setForeground(new Color(52, 73, 94));
+        }
+        return label;
     }
 
 }
