@@ -12,11 +12,56 @@ public class PanelPlano extends JPanel {
     private Timer timerActualizacion;
     private SensorPlano sensorSeleccionado;
     
+    // Nueva variable para la imagen
+    private Image imagenPlano; 
+    
     public PanelPlano(PlanoInstalacion plano) {
         this.plano = plano;
         this.sensorSeleccionado = null;
         setPreferredSize(new Dimension(plano.getAncho(), plano.getAlto()));
         setBackground(Color.WHITE);
+        
+        // --- LOGICA PARA ELEGIR LA IMAGEN SEGUN EL NOMBRE ---
+        String nombreInstalacion = plano.getNombreInstalacion();
+        String rutaImagen = "";
+
+        // Asignamos una imagen específica según el nombre de la instalación
+        // Asegúrate de que los nombres coincidan con los que tienes en KudeatuInstalazioak.java
+        if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
+            rutaImagen = "/sossense/img/plano_hospital.jpg";
+        } 
+        else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
+            rutaImagen = "/sossense/img/plano_universidad.jpg";
+        }
+        else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
+            rutaImagen = "/sossense/img/plano_fabrica.jpg";
+        }
+        else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
+            rutaImagen = "/sossense/img/plano_escuela.jpg";
+        }
+        else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
+            rutaImagen = "/sossense/img/plano_laboratorio.jpg";
+        }
+        else {
+            // Imagen por defecto si no coincide con ninguno (o usa el plano.jpg genérico)
+            rutaImagen = "/sossense/img/plano_default.jpg";
+        }
+
+        // Cargar la imagen seleccionada
+        try {
+            java.net.URL imgUrl = getClass().getResource(rutaImagen);
+            if (imgUrl != null) {
+                imagenPlano = new ImageIcon(imgUrl).getImage();
+            } else {
+                // Si falla la específica, intentamos cargar una genérica o avisamos
+                System.err.println("No se encontró la imagen: " + rutaImagen);
+                // Opcional: cargar un fallback
+                // imagenPlano = new ImageIcon(getClass().getResource("/sossense/img/plano.jpg")).getImage();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // ------------------------------------------
         
         // Configurar eventos del ratón
         addMouseListener(new MouseAdapter() {
@@ -37,15 +82,14 @@ public class PanelPlano extends JPanel {
         timerActualizacion.start();
     }
     
+    // ... (El método buscarSensorClickeado se mantiene igual) ...
     private void buscarSensorClickeado(int x, int y) {
         for (SensorPlano sensor : plano.getSentsoreak()) {
             int distancia = (int) Math.sqrt(Math.pow(x - sensor.getX(), 2) + 
                                           Math.pow(y - sensor.getY(), 2));
-            if (distancia <= 15) { // Radio del sensor
+            if (distancia <= 15) { 
                 sensorSeleccionado = sensor;
                 repaint();
-                
-                // Mostrar información del sensor
                 JOptionPane.showMessageDialog(this,
                     sensor.getInfo(),
                     "Información del Sensor",
@@ -64,22 +108,33 @@ public class PanelPlano extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                             RenderingHints.VALUE_ANTIALIAS_ON);
         
-        // Dibujar fondo del edificio
-        g2d.setColor(new Color(240, 240, 240));
-        g2d.fillRect(10, 10, getWidth() - 20, getHeight() - 20);
+        // --- MODIFICADO: Dibujar imagen de fondo o color gris si falla ---
+        int margen = 10;
+        int anchoDibujo = getWidth() - (margen * 2);
+        int altoDibujo = getHeight() - (margen * 2);
+
+        if (imagenPlano != null) {
+            // Dibujamos la imagen dentro del margen (10, 10) estirándola para que encaje
+            g2d.drawImage(imagenPlano, margen, margen, anchoDibujo, altoDibujo, this);
+        } else {
+            // Fallback: Si no hay imagen, usamos el gris de antes
+            g2d.setColor(new Color(240, 240, 240));
+            g2d.fillRect(margen, margen, anchoDibujo, altoDibujo);
+        }
+        // ----------------------------------------------------------------
         
-        // Dibujar contorno del edificio
+        // Dibujar contorno del edificio (borde negro encima de la imagen)
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(3));
-        g2d.drawRect(10, 10, getWidth() - 20, getHeight() - 20);
+        g2d.drawRect(margen, margen, anchoDibujo, altoDibujo);
+        
+        // ... (El resto del código: dibujar sensores, leyenda, título, etc. se mantiene igual) ...
         
         // Dibujar sensores
         for (SensorPlano sensor : plano.getSentsoreak()) {
-            // Dibujar círculo del sensor
             g2d.setColor(sensor.getColor());
             g2d.fillOval(sensor.getX() - 10, sensor.getY() - 10, 20, 20);
             
-            // Dibujar borde
             if (sensor == sensorSeleccionado) {
                 g2d.setColor(Color.BLUE);
                 g2d.setStroke(new BasicStroke(3));
@@ -89,7 +144,6 @@ public class PanelPlano extends JPanel {
             }
             g2d.drawOval(sensor.getX() - 10, sensor.getY() - 10, 20, 20);
             
-            // Dibujar ID del sensor (pequeño)
             g2d.setColor(Color.BLACK);
             g2d.setFont(new Font("Arial", Font.BOLD, 9));
             String id = sensor.getId();
@@ -98,10 +152,9 @@ public class PanelPlano extends JPanel {
             g2d.drawString(id, sensor.getX() - idWidth/2, sensor.getY() + 4);
         }
         
-        // Dibujar leyenda
         dibujarLeyenda(g2d);
         
-        // Dibujar título
+        // Título y estadísticas...
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 20));
         String titulo = "Plano: " + plano.getNombreInstalacion();
@@ -109,7 +162,6 @@ public class PanelPlano extends JPanel {
         int tituloWidth = fm.stringWidth(titulo);
         g2d.drawString(titulo, (getWidth() - tituloWidth) / 2, 30);
         
-        // Dibujar estadísticas
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
         String stats = "Sentsoreak: " + plano.getTotalSentsoreak() + 
                       " | Alerta: " + plano.getSentsoreakAlerta() + 
@@ -117,8 +169,8 @@ public class PanelPlano extends JPanel {
         int statsWidth = fm.stringWidth(stats);
         g2d.drawString(stats, (getWidth() - statsWidth) / 2, getHeight() - 20);
     }
-    
 
+    // ... (Resto de métodos: dibujarLeyenda y detenerActualizacion se mantienen igual) ...
     private void dibujarLeyenda(Graphics2D g2d) {
         int x = getWidth() - 150;
         int y = 50;
@@ -160,5 +212,4 @@ public class PanelPlano extends JPanel {
             timerActualizacion.stop();
         }
     }
-
 }
