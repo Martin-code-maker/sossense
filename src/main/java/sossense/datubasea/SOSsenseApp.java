@@ -56,7 +56,7 @@ public class SOSsenseApp {
         menuToggle.setPreferredSize(new Dimension(48, 48));
         menuToggle.addActionListener(e -> toggleMenu());
 
-        JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 15));
         leftTopPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
         leftTopPanel.add(menuToggle);
         topPanel.add(leftTopPanel, BorderLayout.WEST);
