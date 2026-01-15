@@ -28,19 +28,19 @@ public class PanelPlano extends JPanel {
         // Asignamos una imagen específica según el nombre de la instalación
         // Asegúrate de que los nombres coincidan con los que tienes en KudeatuInstalazioak.java
         if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
-            rutaImagen = "/sossense/img/plano_hospital.jpg";
+            rutaImagen = "/sossense/img/plano_hospital.png";
         } 
         else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
-            rutaImagen = "/sossense/img/plano_universidad.jpg";
+            rutaImagen = "/sossense/img/plano_universidad.png";
         }
         else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
-            rutaImagen = "/sossense/img/plano_fabrica.jpg";
+            rutaImagen = "/sossense/img/plano_fabrica.png";
         }
         else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
-            rutaImagen = "/sossense/img/plano_escuela.jpg";
+            rutaImagen = "/sossense/img/plano_escuela.png";
         }
         else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
-            rutaImagen = "/sossense/img/plano_laboratorio.jpg";
+            rutaImagen = "/sossense/img/plano_laboratorio.png";
         }
         else {
             // Imagen por defecto si no coincide con ninguno (o usa el plano.jpg genérico)
