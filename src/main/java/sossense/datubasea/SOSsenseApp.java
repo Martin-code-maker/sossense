@@ -47,7 +47,7 @@ public class SOSsenseApp {
         topPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
         topPanel.setPreferredSize(new Dimension(0, 80));
 
-        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/sossense/img/image-removebg-preview.png"));
+        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/sossense/img/hamburguesa_menua.png"));
         Image scaled = rawIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         JButton menuToggle = new JButton(new ImageIcon(scaled));
         menuToggle.setBorderPainted(false);
@@ -67,46 +67,81 @@ public class SOSsenseApp {
         title.setForeground(Color.BLACK);
         topPanel.add(title, BorderLayout.CENTER);
         
-        // Botón de cerrar a la derecha
-        JButton closeButton = new JButton("Irten");
-        closeButton.setFont(new Font("Arial", Font.BOLD, 12));
-        closeButton.setForeground(Color.WHITE);
-        closeButton.setBackground(Color.RED);
-        closeButton.setBorderPainted(false);
-        closeButton.setFocusPainted(false);
-        closeButton.setPreferredSize(new Dimension(70, 50));
+        // ==================== PANEL DERECHO CON BOTONES ====================
+        JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
+        rightTopPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
         
-        // Efecto hover para el botón de cerrar
-        closeButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                closeButton.setBackground(new Color(200, 0, 0));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                closeButton.setBackground(Color.RED);
+        // Botón de volver al inicio de sesión (mismo icono que el menú)
+        ImageIcon logoutIcon = new ImageIcon(getClass().getResource("/sossense/img/saioa_itxi.jpg"));
+        Image logoutScaled = logoutIcon.getImage().getScaledInstance(42, 42, Image.SCALE_SMOOTH);
+        JButton logoutButton = new JButton(new ImageIcon(logoutScaled));
+        logoutButton.setBorderPainted(false);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setContentAreaFilled(false);
+        logoutButton.setPreferredSize(new Dimension(60, 60));
+        logoutButton.setToolTipText("Volver al inicio de sesión");
+        logoutButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                frame,
+                "Saioa itxi nahi duzu?",
+                "Saioa Itxi",
+                JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                frame.dispose();
+                // Volver al login
+                sossense.modelo.LoginModeloa m = new sossense.modelo.LoginModeloa();
+                sossense.kontrolatzailea.LoginKontrolatzailea k = new sossense.kontrolatzailea.LoginKontrolatzailea(m);
+                new sossense.bista.LoginPanela(m, k);
             }
         });
         
-        // Acción para cerrar la aplicación
-        closeButton.addActionListener(new ActionListener() {
+        // Botón de perfil (avatar)
+        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/sossense/img/user.jpg"));
+        Image avatarScaled = avatarIcon.getImage().getScaledInstance(55, 55, Image.SCALE_SMOOTH);
+        JButton profileButton = new JButton(new ImageIcon(avatarScaled)) {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                int confirm = JOptionPane.showConfirmDialog(
-                    frame,
-                    "Aplikazioa itxi nahi duzu?",
-                    "Amaitu",
-                    JOptionPane.YES_NO_OPTION
-                );
-                if (confirm == JOptionPane.YES_OPTION) {
-                    System.exit(0);
-                }
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Dibujar círculo de fondo blanco
+                g2.setColor(Color.WHITE);
+                g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
+                
+                // Recortar la imagen en forma circular
+                g2.setClip(new java.awt.geom.Ellipse2D.Float(0, 0, getWidth() - 1, getHeight() - 1));
+                
+                super.paintComponent(g2);
+                
+                // Dibujar borde circular
+                g2.setClip(null);
+                g2.setColor(new Color(0xD3, 0x85, 0x7E));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawOval(0, 0, getWidth() - 1, getHeight() - 1);
+                
+                g2.dispose();
             }
+        };
+        profileButton.setBorderPainted(false);
+        profileButton.setFocusPainted(false);
+        profileButton.setContentAreaFilled(false);
+        profileButton.setPreferredSize(new Dimension(60, 60));
+        profileButton.setToolTipText("Perfil de usuario");
+        profileButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame,
+                "Erabiltzaile Profila\n\n" +
+                "Izena: Admin\n" +
+                "Rola: Administratzailea\n" +
+                "Email: admin@sossense.eus",
+                "Profila",
+                JOptionPane.INFORMATION_MESSAGE);
         });
         
-        // Panel para el botón
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
-        buttonPanel.add(closeButton);
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+        rightTopPanel.add(profileButton);
+        rightTopPanel.add(logoutButton);
+        
+        topPanel.add(rightTopPanel, BorderLayout.EAST);
 
         // ==================== PANEL DEL MENÚ LATERAL ====================
         JPanel menuPanel = crearMenuPanel(frame);
