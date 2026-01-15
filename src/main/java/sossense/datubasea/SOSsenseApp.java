@@ -197,7 +197,7 @@ public class SOSsenseApp {
         menuPanel.add(Box.createVerticalStrut(24));
         
         // Botones del menú - AÑADIDO "PLANOAK"
-        String[] itemsMenu = {"INSTALACION GUZTIAK", "PLANOAK", "GEHITU BERRIA", "ESTATISTIKAK", "BILATU", "KONTAKTUA"};
+        String[] itemsMenu = {"INSTALACION GUZTIAK", "PLANOAK", "GEHITU BERRIA", "ESTATISTIKAK", "KONTAKTUA"};
         for (String item : itemsMenu) {
             JButton menuButton = new JButton(item) {
                 private boolean isSelected = false;
@@ -260,12 +260,6 @@ public class SOSsenseApp {
                         cambiarPanelCentral(crearPanelEstadisticas());
                     });
                     break;
-                case "BILATU":
-                    menuButton.addActionListener(e -> {
-                        selectButton(menuButton);
-                        cambiarPanelCentral(crearPanelBuscador());
-                    });
-                    break;
                 case "KONTAKTUA":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
@@ -315,9 +309,30 @@ public class SOSsenseApp {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         
+        // Panel de búsqueda
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        JLabel lblBuscar = new JLabel("Bilatu:");
+        lblBuscar.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        JTextField searchField = new JTextField(25);
+        searchField.setFont(new Font("Arial", Font.PLAIN, 14));
+        
+        JButton buscarBtn = new JButton("BILATU");
+        buscarBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        buscarBtn.setPreferredSize(new Dimension(100, 30));
+        
+        searchPanel.add(lblBuscar);
+        searchPanel.add(searchField);
+        searchPanel.add(buscarBtn);
+        
+        mainPanel.add(searchPanel, BorderLayout.NORTH);
+        
         // Panel con scroll para las instalaciones
         JPanel instalacionesPanel = new JPanel();
         instalacionesPanel.setLayout(new BoxLayout(instalacionesPanel, BoxLayout.Y_AXIS));
+        instalacionesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         
         // Obtener todas las instalaciones
         List<Instalazioa> instalaciones = gestion.getInstalaciones();
@@ -327,12 +342,47 @@ public class SOSsenseApp {
             instalacionesPanel.add(Box.createVerticalStrut(10));
         }
         
-        JScrollPane scrollPane = new JScrollPane(instalacionesPanel);
+        // Panel envolvente para que no se expandan
+        JPanel contenedorPanel = new JPanel();
+        contenedorPanel.setLayout(new BoxLayout(contenedorPanel, BoxLayout.Y_AXIS));
+        contenedorPanel.add(instalacionesPanel);
+        contenedorPanel.add(Box.createVerticalGlue());
+        
+        JScrollPane scrollPane = new JScrollPane(contenedorPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        scrollPane.getVerticalScrollBar().setUnitIncrement(25); //Velocidad de scroll más rápida
+        scrollPane.getVerticalScrollBar().setUnitIncrement(25);
         
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Funcionalidad de búsqueda al presionar el botón o Enter
+        java.awt.event.ActionListener buscarAction = e -> {
+            String filtro = searchField.getText().toLowerCase().trim();
+            instalacionesPanel.removeAll();
+            
+            if (filtro.isEmpty()) {
+                // Si no hay filtro, mostrar todas
+                for (Instalazioa inst : instalaciones) {
+                    instalacionesPanel.add(crearPanelInstalacion(inst));
+                    instalacionesPanel.add(Box.createVerticalStrut(10));
+                }
+            } else {
+                // Mostrar solo las que coincidan
+                for (Instalazioa inst : instalaciones) {
+                    if (inst.getIzena().toLowerCase().contains(filtro) || 
+                        inst.getMota().toLowerCase().contains(filtro) ||
+                        inst.getHelbidea().toLowerCase().contains(filtro)) {
+                        instalacionesPanel.add(crearPanelInstalacion(inst));
+                        instalacionesPanel.add(Box.createVerticalStrut(10));
+                    }
+                }
+            }
+            
+            instalacionesPanel.revalidate();
+            instalacionesPanel.repaint();
+        };
+        
+        buscarBtn.addActionListener(buscarAction);
+        searchField.addActionListener(buscarAction);
         
         return mainPanel;
     }
@@ -372,7 +422,13 @@ public class SOSsenseApp {
         panel.setOpaque(false);
         panel.setLayout(new GridBagLayout());
         // Aumentamos el padding interno del panel (antes 15, ahora 20)
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Limitar el tamaño máximo del panel de instalación
+        // Altura máxima: 250 píxeles (aproximadamente un tercio del panel)
+        Dimension maxSize = new Dimension(Integer.MAX_VALUE, 250);
+        panel.setMaximumSize(maxSize);
+        panel.setPreferredSize(new Dimension(800, 250)); 
         
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -761,92 +817,6 @@ public class SOSsenseApp {
         
         JScrollPane scrollPane = new JScrollPane(textArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-        
-        return mainPanel;
-    }
-    
-    // Panel para buscar instalación
-    private JPanel crearPanelBuscador() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
-        JLabel titulo = new JLabel("BILATU INSTALAZIOA");
-        titulo.setFont(new Font("Arial", Font.BOLD, 32));
-        titulo.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
-        mainPanel.add(titulo, BorderLayout.NORTH);
-        
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 20));
-        
-        JLabel lblBuscar = new JLabel("Izena:");
-        lblBuscar.setFont(new Font("Arial", Font.BOLD, 18));
-        
-        JTextField searchField = new JTextField(25);
-        searchField.setFont(new Font("Arial", Font.PLAIN, 16));
-        
-        JButton buscarBtn = new JButton("BILATU");
-        buscarBtn.setFont(new Font("Arial", Font.BOLD, 16));
-        
-        searchPanel.add(lblBuscar);
-        searchPanel.add(searchField);
-        searchPanel.add(buscarBtn);
-        
-        JPanel resultPanel = new JPanel(new BorderLayout());
-        resultPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        
-        JLabel resultLabel = new JLabel("");
-        resultLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        resultPanel.add(resultLabel, BorderLayout.NORTH);
-        
-        JPanel infoPanel = new JPanel(new GridLayout(0, 1, 10, 10));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        resultPanel.add(infoPanel, BorderLayout.CENTER);
-        
-        JPanel buttonResultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        resultPanel.add(buttonResultPanel, BorderLayout.SOUTH);
-        
-        buscarBtn.addActionListener(e -> {
-            String izena = searchField.getText();
-            infoPanel.removeAll();
-            buttonResultPanel.removeAll();
-            
-            if (izena != null && !izena.trim().isEmpty()) {
-                Instalazioa inst = gestion.buscarInstalacion(izena);
-                if (inst != null) {
-                    resultLabel.setText("Instalazioa aurkituta:");
-                    resultLabel.setForeground(new Color(0, 150, 0));
-                    
-                    infoPanel.add(crearEtiquetaInformacion("Izena:", inst.getIzena()));
-                    infoPanel.add(crearEtiquetaInformacion("Mota:", inst.getMota()));
-                    infoPanel.add(crearEtiquetaInformacion("Sentsoreak:", String.valueOf(inst.getSentsoreak())));
-                    infoPanel.add(crearEtiquetaInformacion("Egoera:", inst.getEgoera()));
-                    infoPanel.add(crearEtiquetaInformacion("Helbidea:", inst.getHelbidea()));
-                    
-                    JButton verPlanoBtn = new JButton("IKUSI PLANOA");
-                    verPlanoBtn.setFont(new Font("Arial", Font.BOLD, 14));
-                    verPlanoBtn.addActionListener(ev -> {
-                        cambiarPanelCentral(crearPanelPlanoEspecifico(inst.getIzena()));
-                    });
-                    buttonResultPanel.add(verPlanoBtn);
-                    
-                } else {
-                    resultLabel.setText("Ez da instalaziorik aurkitu '" + izena + "' izenarekin.");
-                    resultLabel.setForeground(Color.RED);
-                }
-            } else {
-                resultLabel.setText("Sartu instalazioaren izena bilaketa egiteko.");
-                resultLabel.setForeground(Color.GRAY);
-            }
-            
-            resultPanel.revalidate();
-            resultPanel.repaint();
-        });
-        
-        searchField.addActionListener(e -> buscarBtn.doClick());
-        
-        mainPanel.add(searchPanel, BorderLayout.CENTER);
-        mainPanel.add(resultPanel, BorderLayout.SOUTH);
         
         return mainPanel;
     }
