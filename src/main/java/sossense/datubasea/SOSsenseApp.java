@@ -18,11 +18,13 @@ public class SOSsenseApp {
         gestion = new KudeatuInstalazioak();
         crearInterfaz();
         // MQTT erabili gabe funtzionatzeko, zati hau komentatu
+        /*
         try {
             Mqtt mqtt = new Mqtt();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        */
     }
     
     public void bistaratuApp(){

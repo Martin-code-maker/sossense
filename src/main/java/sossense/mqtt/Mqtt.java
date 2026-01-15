@@ -8,6 +8,12 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Mqtt implements MqttCallback {
 
     public static final String BROKER = "tcp://172.16.0.10:1883";
@@ -97,7 +103,30 @@ public class Mqtt implements MqttCallback {
         switch(topic) {
             case TOPIC_TEMPERATURE:
                 this.valueTemperature = Double.parseDouble(content);
-                System.out.println("Temperatura: "+this.valueTemperature);
+                System.out.println("Gas: "+this.valueTemperature);
+
+            try {
+                // 1. Crear carpeta 'logs' si no existe
+                File carpetaLogs = new File("logs");
+                if (!carpetaLogs.exists()) {
+                    carpetaLogs.mkdir();
+                    System.out.println("Karpeta 'logs' sortuta");
+                }
+                
+                // 2. Guardar datos en archivo simple
+                FileWriter writer = new FileWriter("logs/datuak.txt", true);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
+                String timestamp = sdf.format(new Date());
+                
+                writer.write(timestamp + " | Gas: " + content);
+                writer.close();
+                
+                System.out.println("Gordeta: logs/datuak.txt");
+                
+            } catch (IOException e) {
+                System.err.println("Errorea: " + e.getMessage());
+            }
+
                 break;
             default:
                 break;
