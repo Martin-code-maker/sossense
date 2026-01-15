@@ -15,6 +15,7 @@ public class SOSsenseApp {
     private KudeatuInstalazioak gestion;
     JFrame frame = new JFrame("S.O.S.sense");
     private JPanel menuPanel;
+    private JPanel centerPanel;
     private boolean menuExpanded = true;
     private final int menuExpandedWidth = 180;
     private final int menuCollapsedWidth = 18;
@@ -147,7 +148,7 @@ public class SOSsenseApp {
         JPanel menuPanel = crearMenuPanel(frame);
 
         // ==================== PANEL PRINCIPAL ====================
-        JPanel centerPanel = crearPanelInstalaciones();
+        centerPanel = crearPanelInstalaciones();
 
         // ==================== PANEL INFERIOR ====================
         JPanel bottomPanel = crearPanelInferior(frame);
@@ -236,37 +237,37 @@ public class SOSsenseApp {
                 case "INSTALACION GUZTIAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        mostrarTodasInstalaciones(frame);
+                        cambiarPanelCentral(crearPanelInstalaciones());
                     });
                     break;
-                case "PLANOAK":  // NUEVO BOTÓN
+                case "PLANOAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        mostrarPlanos(frame);
+                        cambiarPanelCentral(crearPanelSeleccionPlanos());
                     });
                     break;
                 case "GEHITU BERRIA":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        agregarNuevaInstalacion(frame);
+                        cambiarPanelCentral(crearPanelAgregarInstalacion());
                     });
                     break;
                 case "ESTATISTIKAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        mostrarEstadisticas(frame);
+                        cambiarPanelCentral(crearPanelEstadisticas());
                     });
                     break;
                 case "BILATU":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        buscarInstalacion(frame);
+                        cambiarPanelCentral(crearPanelBuscador());
                     });
                     break;
                 case "KONTAKTUA":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        mostrarContacto(frame);
+                        cambiarPanelCentral(crearPanelContacto());
                     });
                     break;
             }
@@ -409,171 +410,208 @@ public class SOSsenseApp {
         return bottomPanel;
     }
     
+    // Método para cambiar el contenido del panel central
+    private void cambiarPanelCentral(JPanel nuevoPanel) {
+        frame.getContentPane().remove(centerPanel);
+        centerPanel = nuevoPanel;
+        frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        frame.revalidate();
+        frame.repaint();
+    }
+    
     // Métodos para las acciones del menú
     
-    private void mostrarTodasInstalaciones(JFrame frame) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== INSTALAZIO GUZTIAK ===\n\n");
-        
-        List<Instalazioa> instalaciones = gestion.getInstalaciones();
-        for (int i = 0; i < instalaciones.size(); i++) {
-            Instalazioa inst = instalaciones.get(i);
-            sb.append(i + 1).append(". ").append(inst.toString()).append("\n");
-        }
-        
-        JTextArea textArea = new JTextArea(sb.toString());
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(500, 300));
-        
-        JOptionPane.showMessageDialog(frame, scrollPane, "Instalazio Guztiak", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    private void mostrarPlanos(JFrame frame) {
-        // Crear diálogo para seleccionar instalación
-        List<Instalazioa> instalaciones = gestion.getInstalaciones();
-        String[] opciones = new String[instalaciones.size()];
-        
-        for (int i = 0; i < instalaciones.size(); i++) {
-            opciones[i] = instalaciones.get(i).getIzena();
-        }
-        
-        String seleccion = (String) JOptionPane.showInputDialog(
-            frame,
-            "Aukeratu instalazio bat planoak ikusteko:",
-            "PLANOAK - Instalazioen zerrenda",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opciones,
-            opciones[0]
-        );
-        
-        if (seleccion != null) {
-            // Crear plano para la instalación seleccionada
-            PlanoInstalacion plano = new PlanoInstalacion(seleccion);
-            
-            // Crear ventana para mostrar el plano
-            JDialog planoDialog = new JDialog(frame, "Plano: " + seleccion, true);
-            planoDialog.setLayout(new BorderLayout());
-            planoDialog.setSize(900, 700);
-            planoDialog.setLocationRelativeTo(frame);
-            
-            // Crear panel del plano
-            PanelPlano panelPlano = new PanelPlano(plano);
-            JScrollPane scrollPane = new JScrollPane(panelPlano);
-            planoDialog.add(scrollPane, BorderLayout.CENTER);
-            
-            // Panel de controles inferior
-            JPanel controlPanel = new JPanel(new FlowLayout());
-            
-            JButton actualizarBtn = new JButton("EGUNERATU DATUAK");
-            actualizarBtn.addActionListener(e -> {
-                plano.simularNivelesHumo();
-                panelPlano.repaint();
-            });
-            
-            JButton cerrarBtn = new JButton("ITXI");
-            cerrarBtn.addActionListener(e -> {
-                panelPlano.detenerActualizacion();
-                planoDialog.dispose();
-            });
-            
-            controlPanel.add(actualizarBtn);
-            controlPanel.add(cerrarBtn);
-            
-            // Panel de información
-            JPanel infoPanel = new JPanel(new GridLayout(2, 1));
-            infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            
-            JLabel infoLabel = new JLabel(
-                "<html><div style='text-align: center;'>" +
-                "<b>INSTRUKZIOAK:</b><br>" +
-                "1. Klikatu sentsore baten gainean informazioa ikusteko<br>" +
-                "2. Sentsoreak kolorez aldatzen dira humo mailaren arabera<br>" +
-                "3. Datuak automatikoki eguneratzen dira 3 segundoro</div></html>"
-            );
-            
-            JLabel statsLabel = new JLabel(
-                "Sentsoreak: " + plano.getTotalSentsoreak() + 
-                " | Alerta egoeran: " + plano.getSentsoreakAlerta() + 
-                " | Larriak: " + plano.getSentsoreakCriticos()
-            );
-            statsLabel.setFont(new Font("Arial", Font.BOLD, 14));
-            statsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            
-            infoPanel.add(infoLabel);
-            infoPanel.add(statsLabel);
-            
-            // Añadir todo al diálogo
-            planoDialog.add(infoPanel, BorderLayout.NORTH);
-            planoDialog.add(controlPanel, BorderLayout.SOUTH);
-            
-            planoDialog.setVisible(true);
-        }
-    }
-    
-    private void agregarNuevaInstalacion(JFrame frame) {
-        // Diálogo para añadir nueva instalación
-        JDialog addDialog = new JDialog(frame, "Gehitu Instalazio Berria", true);
-        addDialog.setLayout(new BorderLayout());
-        addDialog.setSize(500, 400);
-        addDialog.setLocationRelativeTo(frame);
-        
-        // Panel principal con GridBagLayout
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+    // Panel para seleccionar planos
+    private JPanel crearPanelSeleccionPlanos() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JLabel titulo = new JLabel("PLANOAK - Aukeratu instalazio bat");
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        JPanel instalacionesPanel = new JPanel(new GridLayout(0, 2, 15, 15));
+        instalacionesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        List<Instalazioa> instalaciones = gestion.getInstalaciones();
+        for (Instalazioa inst : instalaciones) {
+            JPanel instPanel = new JPanel(new BorderLayout());
+            instPanel.setBackground(inst.getKolorFondo());
+            instPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(inst.getKolorea(), 3),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            ));
+            
+            JLabel nombreLabel = new JLabel(inst.getIzena());
+            nombreLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            nombreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            
+            JLabel motaLabel = new JLabel(inst.getMota());
+            motaLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            motaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            
+            JLabel sensoresLabel = new JLabel("Sentsoreak: " + inst.getSentsoreak());
+            sensoresLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            sensoresLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            
+            JPanel infoPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+            infoPanel.setOpaque(false);
+            infoPanel.add(nombreLabel);
+            infoPanel.add(motaLabel);
+            infoPanel.add(sensoresLabel);
+            
+            instPanel.add(infoPanel, BorderLayout.CENTER);
+            
+            instPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            instPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    cambiarPanelCentral(crearPanelPlanoEspecifico(inst.getIzena()));
+                }
+            });
+            
+            instalacionesPanel.add(instPanel);
+        }
+        
+        JScrollPane scrollPane = new JScrollPane(instalacionesPanel);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        return mainPanel;
+    }
+    
+    // Panel para mostrar un plano específico
+    private JPanel crearPanelPlanoEspecifico(String izenaInstalacion) {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        
+        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
+        
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        JLabel tituloLabel = new JLabel("PLANOA: " + izenaInstalacion);
+        tituloLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        tituloLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        JLabel statsLabel = new JLabel("Sentsoreak: " + plano.getTotalSentsoreak() + 
+            " | Alerta egoeran: " + plano.getSentsoreakAlerta() + 
+            " | Larriak: " + plano.getSentsoreakCriticos());
+        statsLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        statsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        infoPanel.add(tituloLabel);
+        infoPanel.add(statsLabel);
+        
+        PanelPlano panelPlano = new PanelPlano(plano);
+        JScrollPane scrollPane = new JScrollPane(panelPlano);
+        
+        JPanel controlPanel = new JPanel(new FlowLayout());
+        
+        JButton actualizarBtn = new JButton("EGUNERATU DATUAK");
+        actualizarBtn.addActionListener(e -> {
+            plano.simularNivelesHumo();
+            panelPlano.repaint();
+            statsLabel.setText("Sentsoreak: " + plano.getTotalSentsoreak() + 
+                " | Alerta egoeran: " + plano.getSentsoreakAlerta() + 
+                " | Larriak: " + plano.getSentsoreakCriticos());
+        });
+        
+        JButton volverBtn = new JButton("ITZULI");
+        volverBtn.addActionListener(e -> {
+            panelPlano.detenerActualizacion();
+            cambiarPanelCentral(crearPanelSeleccionPlanos());
+        });
+        
+        controlPanel.add(actualizarBtn);
+        controlPanel.add(volverBtn);
+        
+        mainPanel.add(infoPanel, BorderLayout.NORTH);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(controlPanel, BorderLayout.SOUTH);
+        
+        return mainPanel;
+    }
+    
+    // Panel para agregar nueva instalación
+    private JPanel crearPanelAgregarInstalacion() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JLabel titulo = new JLabel("GEHITU INSTALAZIO BERRIA");
+        titulo.setFont(new Font("Arial", Font.BOLD, 28));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
+        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
         
-        // Campos del formulario
         gbc.gridx = 0;
         gbc.gridy = 0;
-        mainPanel.add(new JLabel("Izena:"), gbc);
+        JLabel lblIzena = new JLabel("Izena:");
+        lblIzena.setFont(new Font("Arial", Font.BOLD, 16));
+        formPanel.add(lblIzena, gbc);
         
         gbc.gridx = 1;
-        JTextField izenaField = new JTextField(20);
-        mainPanel.add(izenaField, gbc);
+        JTextField izenaField = new JTextField(25);
+        izenaField.setFont(new Font("Arial", Font.PLAIN, 14));
+        formPanel.add(izenaField, gbc);
         
         gbc.gridx = 0;
         gbc.gridy = 1;
-        mainPanel.add(new JLabel("Sentsore kopurua:"), gbc);
+        JLabel lblSentsoreak = new JLabel("Sentsore kopurua:");
+        lblSentsoreak.setFont(new Font("Arial", Font.BOLD, 16));
+        formPanel.add(lblSentsoreak, gbc);
         
         gbc.gridx = 1;
-        JTextField sensoresField = new JTextField(10);
-        mainPanel.add(sensoresField, gbc);
+        JTextField sensoresField = new JTextField(25);
+        sensoresField.setFont(new Font("Arial", Font.PLAIN, 14));
+        formPanel.add(sensoresField, gbc);
         
         gbc.gridx = 0;
         gbc.gridy = 2;
-        mainPanel.add(new JLabel("Egoera:"), gbc);
+        JLabel lblEgoera = new JLabel("Egoera:");
+        lblEgoera.setFont(new Font("Arial", Font.BOLD, 16));
+        formPanel.add(lblEgoera, gbc);
         
         gbc.gridx = 1;
         String[] egoeras = {"NORMALA", "LARRIA", "ARINGARRI", "KALTEA", "MANTENIMIENTO"};
         JComboBox<String> egoeraCombo = new JComboBox<>(egoeras);
-        mainPanel.add(egoeraCombo, gbc);
+        egoeraCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+        formPanel.add(egoeraCombo, gbc);
         
         gbc.gridx = 0;
         gbc.gridy = 3;
-        mainPanel.add(new JLabel("Helbidea:"), gbc);
+        JLabel lblHelbidea = new JLabel("Helbidea:");
+        lblHelbidea.setFont(new Font("Arial", Font.BOLD, 16));
+        formPanel.add(lblHelbidea, gbc);
         
         gbc.gridx = 1;
-        JTextField helbideaField = new JTextField(20);
-        mainPanel.add(helbideaField, gbc);
+        JTextField helbideaField = new JTextField(25);
+        helbideaField.setFont(new Font("Arial", Font.PLAIN, 14));
+        formPanel.add(helbideaField, gbc);
         
         gbc.gridx = 0;
         gbc.gridy = 4;
-        mainPanel.add(new JLabel("Mota:"), gbc);
+        JLabel lblMota = new JLabel("Mota:");
+        lblMota.setFont(new Font("Arial", Font.BOLD, 16));
+        formPanel.add(lblMota, gbc);
         
         gbc.gridx = 1;
         String[] motas = {"HOSPITAL", "UNIVERSIDAD", "ESCOLA", "FABRICA", "LABORATORIO", "OFICINA", "ALMACEN"};
         JComboBox<String> motaCombo = new JComboBox<>(motas);
-        mainPanel.add(motaCombo, gbc);
+        motaCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+        formPanel.add(motaCombo, gbc);
         
-        // Panel de botones
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+        
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        
         JButton agregarBtn = new JButton("GEHITU");
-        JButton cancelarBtn = new JButton("UTZI");
-        
+        agregarBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        agregarBtn.setPreferredSize(new Dimension(150, 40));
         agregarBtn.addActionListener(e -> {
             try {
                 String izena = izenaField.getText();
@@ -583,102 +621,204 @@ public class SOSsenseApp {
                 String mota = (String) motaCombo.getSelectedItem();
                 
                 if (izena.isEmpty() || helbidea.isEmpty()) {
-                    JOptionPane.showMessageDialog(addDialog, 
+                    JOptionPane.showMessageDialog(frame, 
                         "Mesedez, bete izena eta helbidea.", 
                         "Errorea", 
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
-                // Crear y agregar la nueva instalación
                 Instalazioa nuevaInst = new Instalazioa(izena, sentsoreak, egoera, helbidea, mota);
                 gestion.agregarInstalacion(nuevaInst);
                 
-                JOptionPane.showMessageDialog(addDialog, 
+                JOptionPane.showMessageDialog(frame, 
                     "Instalazioa ondo gehitu da!", 
                     "Arrakasta", 
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                addDialog.dispose();
-                frame.dispose();
-                new SOSsenseApp(); // Recargar la aplicación
+                cambiarPanelCentral(crearPanelInstalaciones());
                 
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(addDialog, 
+                JOptionPane.showMessageDialog(frame, 
                     "Sartu zenbaki balioduna sentsore kopururako.", 
                     "Errorea", 
                     JOptionPane.ERROR_MESSAGE);
             }
         });
         
-        cancelarBtn.addActionListener(e -> addDialog.dispose());
+        JButton cancelarBtn = new JButton("UTZI");
+        cancelarBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        cancelarBtn.setPreferredSize(new Dimension(150, 40));
+        cancelarBtn.addActionListener(e -> cambiarPanelCentral(crearPanelInstalaciones()));
         
         buttonPanel.add(agregarBtn);
         buttonPanel.add(cancelarBtn);
         
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        mainPanel.add(buttonPanel, gbc);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         
-        addDialog.add(mainPanel, BorderLayout.CENTER);
-        addDialog.setVisible(true);
+        return mainPanel;
     }
     
-    private void mostrarEstadisticas(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, 
-            gestion.getEstadisticas(), 
-            "Estatistikak", 
-            JOptionPane.INFORMATION_MESSAGE);
+    // Panel para mostrar estadísticas
+    private JPanel crearPanelEstadisticas() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JLabel titulo = new JLabel("ESTATISTIKAK");
+        titulo.setFont(new Font("Arial", Font.BOLD, 32));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
+        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        JTextArea textArea = new JTextArea(gestion.getEstadisticas());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Courier New", Font.PLAIN, 16));
+        textArea.setMargin(new Insets(20, 20, 20, 20));
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        return mainPanel;
     }
     
-    private void buscarInstalacion(JFrame frame) {
-        String izena = JOptionPane.showInputDialog(frame, 
-            "Sartu instalazioaren izena:", 
-            "Bilatu", 
-            JOptionPane.QUESTION_MESSAGE);
+    // Panel para buscar instalación
+    private JPanel crearPanelBuscador() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        if (izena != null && !izena.trim().isEmpty()) {
-            Instalazioa inst = gestion.buscarInstalacion(izena);
-            if (inst != null) {
-                // Mostrar diálogo con más información
-                JDialog infoDialog = new JDialog(frame, "Instalazioa Aurkituta", true);
-                infoDialog.setLayout(new BorderLayout());
-                infoDialog.setSize(400, 300);
-                infoDialog.setLocationRelativeTo(frame);
-                
-                JPanel infoPanel = new JPanel(new GridLayout(6, 1, 10, 10));
-                infoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-                
-                infoPanel.add(crearEtiquetaInformacion("Izena:", inst.getIzena()));
-                infoPanel.add(crearEtiquetaInformacion("Mota:", inst.getMota()));
-                infoPanel.add(crearEtiquetaInformacion("Sentsoreak:", String.valueOf(inst.getSentsoreak())));
-                infoPanel.add(crearEtiquetaInformacion("Egoera:", inst.getEgoera()));
-                infoPanel.add(crearEtiquetaInformacion("Helbidea:", inst.getHelbidea()));
-                
-                // Botón para ver plano
-                JButton verPlanoBtn = new JButton("IKUSI PLANOA");
-                verPlanoBtn.addActionListener(e -> {
-                    infoDialog.dispose();
-                    mostrarPlanoEspecifico(frame, inst.getIzena());
-                });
-                infoPanel.add(verPlanoBtn);
-                
-                JButton cerrarBtn = new JButton("ITXI");
-                cerrarBtn.addActionListener(e -> infoDialog.dispose());
-                
-                infoDialog.add(infoPanel, BorderLayout.CENTER);
-                infoDialog.add(cerrarBtn, BorderLayout.SOUTH);
-                infoDialog.setVisible(true);
-                
+        JLabel titulo = new JLabel("BILATU INSTALAZIOA");
+        titulo.setFont(new Font("Arial", Font.BOLD, 32));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
+        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 20));
+        
+        JLabel lblBuscar = new JLabel("Izena:");
+        lblBuscar.setFont(new Font("Arial", Font.BOLD, 18));
+        
+        JTextField searchField = new JTextField(25);
+        searchField.setFont(new Font("Arial", Font.PLAIN, 16));
+        
+        JButton buscarBtn = new JButton("BILATU");
+        buscarBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        
+        searchPanel.add(lblBuscar);
+        searchPanel.add(searchField);
+        searchPanel.add(buscarBtn);
+        
+        JPanel resultPanel = new JPanel(new BorderLayout());
+        resultPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        
+        JLabel resultLabel = new JLabel("");
+        resultLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        resultPanel.add(resultLabel, BorderLayout.NORTH);
+        
+        JPanel infoPanel = new JPanel(new GridLayout(0, 1, 10, 10));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        resultPanel.add(infoPanel, BorderLayout.CENTER);
+        
+        JPanel buttonResultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        resultPanel.add(buttonResultPanel, BorderLayout.SOUTH);
+        
+        buscarBtn.addActionListener(e -> {
+            String izena = searchField.getText();
+            infoPanel.removeAll();
+            buttonResultPanel.removeAll();
+            
+            if (izena != null && !izena.trim().isEmpty()) {
+                Instalazioa inst = gestion.buscarInstalacion(izena);
+                if (inst != null) {
+                    resultLabel.setText("Instalazioa aurkituta:");
+                    resultLabel.setForeground(new Color(0, 150, 0));
+                    
+                    infoPanel.add(crearEtiquetaInformacion("Izena:", inst.getIzena()));
+                    infoPanel.add(crearEtiquetaInformacion("Mota:", inst.getMota()));
+                    infoPanel.add(crearEtiquetaInformacion("Sentsoreak:", String.valueOf(inst.getSentsoreak())));
+                    infoPanel.add(crearEtiquetaInformacion("Egoera:", inst.getEgoera()));
+                    infoPanel.add(crearEtiquetaInformacion("Helbidea:", inst.getHelbidea()));
+                    
+                    JButton verPlanoBtn = new JButton("IKUSI PLANOA");
+                    verPlanoBtn.setFont(new Font("Arial", Font.BOLD, 14));
+                    verPlanoBtn.addActionListener(ev -> {
+                        cambiarPanelCentral(crearPanelPlanoEspecifico(inst.getIzena()));
+                    });
+                    buttonResultPanel.add(verPlanoBtn);
+                    
+                } else {
+                    resultLabel.setText("Ez da instalaziorik aurkitu '" + izena + "' izenarekin.");
+                    resultLabel.setForeground(Color.RED);
+                }
             } else {
-                JOptionPane.showMessageDialog(frame, 
-                    "Ez da instalaziorik aurkitu '" + izena + "' izenarekin.", 
-                    "Ez Aurkituta", 
-                    JOptionPane.WARNING_MESSAGE);
+                resultLabel.setText("Sartu instalazioaren izena bilaketa egiteko.");
+                resultLabel.setForeground(Color.GRAY);
             }
-        }
+            
+            resultPanel.revalidate();
+            resultPanel.repaint();
+        });
+        
+        searchField.addActionListener(e -> buscarBtn.doClick());
+        
+        mainPanel.add(searchPanel, BorderLayout.CENTER);
+        mainPanel.add(resultPanel, BorderLayout.SOUTH);
+        
+        return mainPanel;
+    }
+    
+    // Panel para mostrar contacto
+    private JPanel crearPanelContacto() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        
+        JLabel titulo = new JLabel("KONTAKTUA");
+        titulo.setFont(new Font("Arial", Font.BOLD, 36));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 40, 10));
+        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        JPanel contactPanel = new JPanel(new GridLayout(0, 1, 15, 15));
+        contactPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        
+        JLabel subtitulo = new JLabel("S.O.S.sense - Monitorizazio Sistema");
+        subtitulo.setFont(new Font("Arial", Font.BOLD, 22));
+        subtitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(subtitulo);
+        
+        JLabel telefonoLabel = new JLabel("Telefonoa: +34 943 123 456");
+        telefonoLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        telefonoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(telefonoLabel);
+        
+        JLabel emailLabel = new JLabel("Email: info@sossense.eus");
+        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        emailLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(emailLabel);
+        
+        JLabel webLabel = new JLabel("Web: www.sossense.eus");
+        webLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        webLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(webLabel);
+        
+        JLabel direccionTitulo = new JLabel("Helbidea:");
+        direccionTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        direccionTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(direccionTitulo);
+        
+        JLabel direccion = new JLabel("Nafarros Himbidea 16");
+        direccion.setFont(new Font("Arial", Font.PLAIN, 18));
+        direccion.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(direccion);
+        
+        JLabel ciudad = new JLabel("20500 Arrasate, Gipuzkoa");
+        ciudad.setFont(new Font("Arial", Font.PLAIN, 18));
+        ciudad.setHorizontalAlignment(SwingConstants.CENTER);
+        contactPanel.add(ciudad);
+        
+        mainPanel.add(contactPanel, BorderLayout.CENTER);
+        
+        return mainPanel;
     }
     
     private JPanel crearEtiquetaInformacion(String titulo, String valor) {
@@ -693,79 +833,5 @@ public class SOSsenseApp {
         panel.add(valorLabel, BorderLayout.CENTER);
         return panel;
     }
-    
-    private void mostrarPlanoEspecifico(JFrame frame, String izenaInstalacion) {
-        // Crear plano para la instalación específica
-        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
-        
-        // Crear ventana para mostrar el plano
-        JDialog planoDialog = new JDialog(frame, "Plano: " + izenaInstalacion, true);
-        planoDialog.setLayout(new BorderLayout());
-        planoDialog.setSize(900, 700);
-        planoDialog.setLocationRelativeTo(frame);
-        
-        // Crear panel del plano
-        PanelPlano panelPlano = new PanelPlano(plano);
-        JScrollPane scrollPane = new JScrollPane(panelPlano);
-        planoDialog.add(scrollPane, BorderLayout.CENTER);
-        
-        // Panel de controles inferior
-        JPanel controlPanel = new JPanel(new FlowLayout());
-        
-        JButton actualizarBtn = new JButton("EGUNERATU DATUAK");
-        actualizarBtn.addActionListener(e -> {
-            plano.simularNivelesHumo();
-            panelPlano.repaint();
-        });
-        
-        JButton cerrarBtn = new JButton("ITXI");
-        cerrarBtn.addActionListener(e -> {
-            panelPlano.detenerActualizacion();
-            planoDialog.dispose();
-        });
-        
-        controlPanel.add(actualizarBtn);
-        controlPanel.add(cerrarBtn);
-        
-        // Panel de información
-        JPanel infoPanel = new JPanel(new GridLayout(2, 1));
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        JLabel infoLabel = new JLabel(
-            "<html><div style='text-align: center;'>" +
-            "<b>" + izenaInstalacion + "</b><br>" +
-            "Haz clic en los sentsoreak para ver información detallada</div></html>"
-        );
-        
-        JLabel statsLabel = new JLabel(
-            "Total sentsoreak: " + plano.getTotalSentsoreak() + 
-            " | En alerta: " + plano.getSentsoreakAlerta() + 
-            " | Críticos: " + plano.getSentsoreakCriticos()
-        );
-        statsLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        statsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        infoPanel.add(infoLabel);
-        infoPanel.add(statsLabel);
-        
-        // Añadir todo al diálogo
-        planoDialog.add(infoPanel, BorderLayout.NORTH);
-        planoDialog.add(controlPanel, BorderLayout.SOUTH);
-        
-        planoDialog.setVisible(true);
-    }
-    
-    private void mostrarContacto(JFrame frame) {
-        JOptionPane.showMessageDialog(frame,
-            "S.O.S.sense - Monitorizazio Sistema\n\n" +
-            "Kontaktua:\n" +
-            "Telefonoa: +34 943 123 456\n" +
-            "Email: info@sossense.eus\n" +
-            "Web: www.sossense.eus\n\n" +
-            "Helbidea: Nafarros Himbidea 16\n20500 Arrasate, Gipuzkoa",
-            "Kontaktua",
-            JOptionPane.INFORMATION_MESSAGE);
-    }
-    
 
 }
