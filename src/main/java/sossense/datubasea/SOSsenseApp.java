@@ -2,6 +2,8 @@ package sossense.datubasea;
 
 import javax.swing.*;
 
+import sossense.kontrolatzailea.SOSsenseKontrolatzailea;
+import sossense.modelo.SOSsenseModeloa;
 import sossense.mqtt.Mqtt;
 
 import java.awt.*;
@@ -12,17 +14,19 @@ import java.util.ArrayList;
 
 public class SOSsenseApp {
 
-    private KudeatuInstalazioak gestion;
+    private final SOSsenseModeloa model;
+    private final SOSsenseKontrolatzailea controller;
     JFrame frame = new JFrame("S.O.S.sense");
     private JPanel menuPanel;
     private JPanel centerPanel;
     private boolean menuExpanded = true;
     private final int menuExpandedWidth = 180;
     private final int menuCollapsedWidth = 18;
-    private List<JButton> menuButtons = new ArrayList<>();
+    private final List<JButton> menuButtons = new ArrayList<>();
     
     public SOSsenseApp() {
-        gestion = new KudeatuInstalazioak();
+        this.model = new SOSsenseModeloa();
+        this.controller = new SOSsenseKontrolatzailea(model);
         crearInterfaz();
         // MQTT erabili gabe funtzionatzeko, zati hau komentatu
         /*
@@ -297,10 +301,8 @@ public class SOSsenseApp {
     }
     
     private JPanel crearPanelInstalaciones() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
         
-        // Panel de búsqueda
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
@@ -320,20 +322,12 @@ public class SOSsenseApp {
         
         mainPanel.add(searchPanel, BorderLayout.NORTH);
         
-        // Panel con scroll para las instalaciones
         JPanel instalacionesPanel = new JPanel();
         instalacionesPanel.setLayout(new BoxLayout(instalacionesPanel, BoxLayout.Y_AXIS));
         instalacionesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         
-        // Obtener todas las instalaciones
-        List<Instalazioa> instalaciones = gestion.getInstalaciones();
+        bistaratuInstalazioak(instalacionesPanel, controller.lortuInstalazioak());
         
-        for (Instalazioa inst : instalaciones) {
-            instalacionesPanel.add(crearPanelInstalacion(inst));
-            instalacionesPanel.add(Box.createVerticalStrut(10));
-        }
-        
-        // Panel envolvente para que no se expandan
         JPanel contenedorPanel = new JPanel();
         contenedorPanel.setLayout(new BoxLayout(contenedorPanel, BoxLayout.Y_AXIS));
         contenedorPanel.add(instalacionesPanel);
@@ -345,37 +339,26 @@ public class SOSsenseApp {
         
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         
-        // Funcionalidad de búsqueda al presionar el botón o Enter
         java.awt.event.ActionListener buscarAction = e -> {
-            String filtro = searchField.getText().toLowerCase().trim();
-            instalacionesPanel.removeAll();
-            
-            if (filtro.isEmpty()) {
-                // Si no hay filtro, mostrar todas
-                for (Instalazioa inst : instalaciones) {
-                    instalacionesPanel.add(crearPanelInstalacion(inst));
-                    instalacionesPanel.add(Box.createVerticalStrut(10));
-                }
-            } else {
-                // Mostrar solo las que coincidan
-                for (Instalazioa inst : instalaciones) {
-                    if (inst.getIzena().toLowerCase().contains(filtro) || 
-                        inst.getMota().toLowerCase().contains(filtro) ||
-                        inst.getHelbidea().toLowerCase().contains(filtro)) {
-                        instalacionesPanel.add(crearPanelInstalacion(inst));
-                        instalacionesPanel.add(Box.createVerticalStrut(10));
-                    }
-                }
-            }
-            
-            instalacionesPanel.revalidate();
-            instalacionesPanel.repaint();
+            String filtro = searchField.getText();
+            List<Instalazioa> filtradas = controller.bilatuInstalazioak(filtro);
+            bistaratuInstalazioak(instalacionesPanel, filtradas);
         };
         
         buscarBtn.addActionListener(buscarAction);
         searchField.addActionListener(buscarAction);
         
         return mainPanel;
+    }
+    
+    private void bistaratuInstalazioak(JPanel instalacionesPanel, List<Instalazioa> instalazioak) {
+        instalacionesPanel.removeAll();
+        for (Instalazioa inst : instalazioak) {
+            instalacionesPanel.add(crearPanelInstalacion(inst));
+            instalacionesPanel.add(Box.createVerticalStrut(10));
+        }
+        instalacionesPanel.revalidate();
+        instalacionesPanel.repaint();
     }
     
     // Método auxiliar para obtener la ruta de la imagen según el tipo (mota)
@@ -559,7 +542,7 @@ public class SOSsenseApp {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Buscar la instalación
-        Instalazioa instalacion = gestion.buscarInstalacion(nombreInstalacion);
+        Instalazioa instalacion = controller.bilatuInstalazioa(nombreInstalacion);
         if (instalacion == null) {
             JLabel errorLabel = new JLabel("Ez da instalaziorik aurkitu: " + nombreInstalacion);
             errorLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -830,8 +813,7 @@ public class SOSsenseApp {
                     return;
                 }
                 
-                Instalazioa nuevaInst = new Instalazioa(izena, sentsoreak, egoera, helbidea, mota);
-                gestion.agregarInstalacion(nuevaInst);
+                controller.gehituInstalazioa(izena, sentsoreak, egoera, helbidea, mota);
                 
                 JOptionPane.showMessageDialog(frame, 
                     "Instalazioa ondo gehitu da!", 
@@ -872,7 +854,7 @@ public class SOSsenseApp {
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
         mainPanel.add(titulo, BorderLayout.NORTH);
         
-        JTextArea textArea = new JTextArea(gestion.getEstadisticas());
+        JTextArea textArea = new JTextArea(controller.lortuEstadistikak());
         textArea.setEditable(false);
         textArea.setFont(new Font("Courier New", Font.PLAIN, 16));
         textArea.setMargin(new Insets(20, 20, 20, 20));
