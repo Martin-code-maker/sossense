@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class SOSsenseApp {
 
@@ -596,6 +599,16 @@ public class SOSsenseApp {
             return mainPanel;
         }
 
+        // Cargar planos desde el archivo planos.txt
+        List<PlanoInfo> planosInstalacion = cargarPlanosDeInstalacion(nombreInstalacion);
+        if (planosInstalacion.isEmpty()) {
+            JLabel errorLabel = new JLabel("Ez dago planorik instalazio honetarako: " + nombreInstalacion);
+            errorLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            mainPanel.add(errorLabel, BorderLayout.CENTER);
+            return mainPanel;
+        }
+
         // Header con degradado y sombra
         JPanel headerPanel = new JPanel(new BorderLayout()) {
             @Override
@@ -634,36 +647,35 @@ public class SOSsenseApp {
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Panel con las tarjetas de planos
-        JPanel planosPanel = new JPanel(new GridLayout(2, 2, 25, 25));
+        // Panel con las tarjetas de planos - dinámico según cantidad
+        int numPlanos = planosInstalacion.size();
+        int columnas = Math.min(2, numPlanos); // Máximo 2 columnas
+        int filas = (int) Math.ceil(numPlanos / 2.0);
+        JPanel planosPanel = new JPanel(new GridLayout(filas, columnas, 25, 25));
         planosPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
         planosPanel.setBackground(new Color(245, 245, 245));
 
-        // Lista de plantas con iconos y colores
-        String[][] planoDatos = {
-                { "Sotanoa", "🔦", "#B8860B" },
-                { "Behe Solairua", "🏠", "#4169E1" },
-                { "1. Solairua", "🏢", "#32CD32" },
-                { "2. Solairua", "🏗️", "#FF6347" }
-        };
+        // Iconos y colores por defecto para variar
+        String[] iconos = {"🏠", "🏢", "🏗️", "🔦", "📍", "🏛️"};
+        String[] coloresHex = {"#4169E1", "#32CD32", "#FF6347", "#B8860B", "#9370DB", "#FF69B4"};
 
-        for (String[] datos : planoDatos) {
-            String nombrePlano = datos[0];
-            String icono = datos[1];
-            String colorHex = datos[2];
-            Color colorAccent = Color.decode(colorHex);
+        for (int i = 0; i < planosInstalacion.size(); i++) {
+            PlanoInfo planoInfo = planosInstalacion.get(i);
+            String icono = iconos[i % iconos.length];
+            Color colorAccent = Color.decode(coloresHex[i % coloresHex.length]);
 
-            // Plano temporal para contar sensores críticos
-            PlanoInstalacion planoTemp = new PlanoInstalacion(nombreInstalacion);
+            // Crear PlanoInstalacion para contar sensores críticos
+            PlanoInstalacion planoTemp = new PlanoInstalacion(planoInfo);
             int sensoresCriticos = planoTemp.getSentsoreakCriticos();
 
             planosPanel.add(crearTarjetaPlano(
-                    nombrePlano,
+                    planoInfo.getNombrePlano(),
                     icono,
                     colorAccent,
                     instalacion,
                     nombreInstalacion,
-                    sensoresCriticos));
+                    sensoresCriticos,
+                    planoInfo));
         }
 
         JScrollPane scrollPane = new JScrollPane(planosPanel);
@@ -723,7 +735,7 @@ public class SOSsenseApp {
     }
 
     private JPanel crearTarjetaPlano(String nombrePlano, String icono, Color colorAccent,
-            Instalazioa instalacion, String nombreInstalacion, int sensoresCriticos) {
+            Instalazioa instalacion, String nombreInstalacion, int sensoresCriticos, PlanoInfo planoInfo) {
 
         final boolean[] hover = { false };
         final boolean enAlerta = sensoresCriticos >= 3;
@@ -831,7 +843,7 @@ public class SOSsenseApp {
         planoPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cambiarPanelCentral(crearPanelPlanoEspecifico(nombreInstalacion, nombrePlano));
+                cambiarPanelCentral(crearPanelPlanoEspecifico(nombreInstalacion, nombrePlano, planoInfo));
             }
 
             @Override
@@ -850,7 +862,7 @@ public class SOSsenseApp {
         return planoPanel;
     }
 
-    private JPanel crearPanelPlanoEspecifico(String izenaInstalacion, String nombrePlano) {
+    private JPanel crearPanelPlanoEspecifico(String izenaInstalacion, String nombrePlano, PlanoInfo planoInfo) {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -863,7 +875,7 @@ public class SOSsenseApp {
             return mainPanel;
         }
 
-        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
+        PlanoInstalacion plano = new PlanoInstalacion(planoInfo);
 
         JPanel headerPanel = new JPanel(new BorderLayout()) {
             @Override
@@ -1200,5 +1212,46 @@ public class SOSsenseApp {
         boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return boton;
+    }
+
+    // Método para cargar los planos de una instalación específica desde planos.txt
+    private List<PlanoInfo> cargarPlanosDeInstalacion(String nombreInstalacion) {
+        List<PlanoInfo> planos = new ArrayList<>();
+        String archivo = "datos/planos.txt";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // Ignorar líneas vacías y comentarios
+                if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
+                    continue;
+                }
+                
+                // Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
+                String[] partes = linea.split("\\|");
+                if (partes.length >= 7) {
+                    String instalacion = partes[0].trim();
+                    
+                    // Solo añadir si coincide con la instalación buscada
+                    if (instalacion.equalsIgnoreCase(nombreInstalacion)) {
+                        String nombrePlano = partes[1].trim();
+                        String imagenFondo = partes[2].trim();
+                        int ancho = Integer.parseInt(partes[3].trim());
+                        int alto = Integer.parseInt(partes[4].trim());
+                        int sensoresMin = Integer.parseInt(partes[5].trim());
+                        int sensoresMax = Integer.parseInt(partes[6].trim());
+                        
+                        planos.add(new PlanoInfo(instalacion, nombrePlano, imagenFondo, 
+                                                ancho, alto, sensoresMin, sensoresMax));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de planos: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Error al parsear números del archivo de planos: " + e.getMessage());
+        }
+        
+        return planos;
     }
 }
