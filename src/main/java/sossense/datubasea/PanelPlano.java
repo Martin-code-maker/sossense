@@ -16,35 +16,46 @@ public class PanelPlano extends JPanel {
     private Image imagenPlano; 
     
     public PanelPlano(PlanoInstalacion plano) {
+        this(plano, null);
+    }
+    
+    public PanelPlano(PlanoInstalacion plano, String nombreImagenFondo) {
         this.plano = plano;
         this.sensorSeleccionado = null;
         setPreferredSize(new Dimension(plano.getAncho(), plano.getAlto()));
         setBackground(Color.WHITE);
         
         // --- LOGICA PARA ELEGIR LA IMAGEN SEGUN EL NOMBRE ---
-        String nombreInstalacion = plano.getNombreInstalacion();
         String rutaImagen = "";
+        
+        // Si se proporciona un nombre de imagen específico, usarlo
+        if (nombreImagenFondo != null && !nombreImagenFondo.isEmpty()) {
+            rutaImagen = "/sossense/img/" + nombreImagenFondo;
+        } else {
+            // Si no, usar la lógica original basada en el nombre de la instalación
+            String nombreInstalacion = plano.getNombreInstalacion();
 
-        // Asignamos una imagen específica según el nombre de la instalación
-        // Asegúrate de que los nombres coincidan con los que tienes en KudeatuInstalazioak.java
-        if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
-            rutaImagen = "/sossense/img/plano_hospital.png";
-        } 
-        else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
-            rutaImagen = "/sossense/img/plano_universidad.png";
-        }
-        else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
-            rutaImagen = "/sossense/img/plano_fabrica.png";
-        }
-        else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
-            rutaImagen = "/sossense/img/plano_escuela.png";
-        }
-        else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
-            rutaImagen = "/sossense/img/plano_laboratorio.png";
-        }
-        else {
-            // Imagen por defecto si no coincide con ninguno (o usa el plano.jpg genérico)
-            rutaImagen = "/sossense/img/plano_default.jpg";
+            // Asignamos una imagen específica según el nombre de la instalación
+            // Asegúrate de que los nombres coincidan con los que tienes en KudeatuInstalazioak.java
+            if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
+                rutaImagen = "/sossense/img/plano_hospital.png";
+            } 
+            else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
+                rutaImagen = "/sossense/img/plano_universidad.png";
+            }
+            else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
+                rutaImagen = "/sossense/img/plano_fabrica.png";
+            }
+            else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
+                rutaImagen = "/sossense/img/plano_escuela.png";
+            }
+            else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
+                rutaImagen = "/sossense/img/plano_laboratorio.png";
+            }
+            else {
+                // Imagen por defecto si no coincide con ninguno (o usa el plano.jpg genérico)
+                rutaImagen = "/sossense/img/plano_default.jpg";
+            }
         }
 
         // Cargar la imagen seleccionada

@@ -1,0 +1,23 @@
+# Configuración de planos por instalación
+# Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
+# Cada línea representa un plano. Varias líneas con el mismo nombre_instalacion = varios planos
+
+MU-ko OSPITALA|Planta Baja|plano_hospital.jpg|800|600|15|25
+MU-ko OSPITALA|Planta 1|plano_hospital.jpg|800|600|18|28
+MU-ko OSPITALA|Planta 2|plano_hospital.jpg|800|600|12|20
+MU-ko OSPITALA|UCI|plano_hospital.jpg|800|600|8|15
+
+MU-ko UNIBERTSITATEA|Planta Baja|plano_universidad.jpg|800|600|10|18
+MU-ko UNIBERTSITATEA|Planta 1|plano_universidad.jpg|800|600|12|20
+MU-ko UNIBERTSITATEA|Biblioteca|plano_universidad.jpg|800|600|8|12
+
+Mondragon Fabrika|Planta Principal|plano_fabrica.jpg|800|600|25|35
+Mondragon Fabrika|Almacén|plano_fabrica.jpg|800|600|15|22
+Mondragon Fabrika|Oficinas|plano_fabrica.jpg|800|600|10|15
+
+Eskola Nagusia|Planta Baja|plano_escuela.jpg|800|600|8|14
+Eskola Nagusia|Planta 1|plano_escuela.jpg|800|600|10|16
+
+Ikerketa Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|15|25
+Ikerketa Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|12|18
+Ikerketa Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|8|12
