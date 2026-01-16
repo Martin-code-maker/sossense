@@ -10,17 +10,40 @@ import java.io.IOException;
 public class PlanoInstalacion {
 
     private String nombreInstalacion;
+    private String nombrePlano;
     private int ancho;
     private int alto;
     private List<SensorPlano> sentsoreak;
     private Random random;
     private List<String> plantas;
     private List<String> areas;
+    private int sensoresMin;
+    private int sensoresMax;
     
     public PlanoInstalacion(String nombreInstalacion) {
         this.nombreInstalacion = nombreInstalacion;
+        this.nombrePlano = "Plano General";
         this.ancho = 800;
         this.alto = 600;
+        this.sensoresMin = 15;
+        this.sensoresMax = 34;
+        this.sentsoreak = new ArrayList<>();
+        this.random = new Random();
+        this.plantas = new ArrayList<>();
+        this.areas = new ArrayList<>();
+        cargarUbicaciones();
+        generarSentsoreak();
+        simularNivelesHumo();
+    }
+    
+    // Nuevo constructor con PlanoInfo
+    public PlanoInstalacion(PlanoInfo planoInfo) {
+        this.nombreInstalacion = planoInfo.getNombreInstalacion();
+        this.nombrePlano = planoInfo.getNombrePlano();
+        this.ancho = planoInfo.getAncho();
+        this.alto = planoInfo.getAlto();
+        this.sensoresMin = planoInfo.getSensoresMin();
+        this.sensoresMax = planoInfo.getSensoresMax();
         this.sentsoreak = new ArrayList<>();
         this.random = new Random();
         this.plantas = new ArrayList<>();
@@ -31,7 +54,8 @@ public class PlanoInstalacion {
     }
     
     private void generarSentsoreak() {
-        int numSentsoreak = 15 + random.nextInt(20); // Entre 15 y 34 sentsoreak
+        int rango = sensoresMax - sensoresMin;
+        int numSentsoreak = sensoresMin + random.nextInt(rango + 1);
         
         for (int i = 1; i <= numSentsoreak; i++) {
             int x = 50 + random.nextInt(ancho - 100);
@@ -134,6 +158,10 @@ public class PlanoInstalacion {
     
     public String getNombreInstalacion() {
         return nombreInstalacion;
+    }
+    
+    public String getNombrePlano() {
+        return nombrePlano;
     }
     
     public int getAncho() {
