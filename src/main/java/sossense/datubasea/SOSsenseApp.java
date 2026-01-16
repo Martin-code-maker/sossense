@@ -1077,115 +1077,6 @@ public class SOSsenseApp {
 
         return mainPanel;
     }
-<<<<<<< HEAD
-    
-    // Panel para mostrar contacto
-    // Panel de contacto minimalista y elegante
-    // Panel de contacto minimalista - VERSIÓN GRANDE
-    private JPanel crearPanelContacto() {
-        // 1. Panel Principal
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(250, 250, 250)); 
-
-        // 2. Tarjeta Central (Card)
-        JPanel card = new JPanel();
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(Color.WHITE);
-        
-        // CAMBIO: Mucho más padding (antes 50/80 -> ahora 70/130)
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
-            BorderFactory.createEmptyBorder(70, 130, 70, 130) 
-        ));
-        
-        // Título (Fuente aumentada a 32)
-        JLabel titulo = new JLabel("KONTAKTUA");
-        titulo.setFont(new Font("Arial", Font.BOLD, 32)); 
-        titulo.setForeground(new Color(50, 50, 50));
-        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        // Separador (Un poco más ancho)
-        JSeparator separator = new JSeparator();
-        separator.setMaximumSize(new Dimension(60, 5));
-        separator.setForeground(new Color(0xE1, 0x9D, 0x8E)); 
-        separator.setBackground(new Color(0xE1, 0x9D, 0x8E));
-        separator.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        // Panel de datos (Más espacio vertical entre elementos: 50px)
-        JPanel infoPanel = new JPanel(new GridLayout(3, 1, 50, 50));
-        infoPanel.setBackground(Color.WHITE);
-        infoPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 50, 0));
-        
-        // Añadimos la info
-        infoPanel.add(crearFilaContacto("📍", "HELBIDEA", "Nafarroa Hiribidea 16, Arrasate"));
-        infoPanel.add(crearFilaContacto("📧", "EMAILA", "info@sossense.eus"));
-        infoPanel.add(crearFilaContacto("📞", "TELEFONOA", "+34 943 123 456"));
-
-        // Pie de página (Fuente aumentada a 16)
-        JLabel webLabel = new JLabel("www.sossense.eus");
-        webLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        webLabel.setForeground(new Color(0xE1, 0x9D, 0x8E));
-        webLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Montaje
-        card.add(titulo);
-        card.add(Box.createVerticalStrut(25));
-        card.add(separator);
-        card.add(infoPanel);
-        card.add(Box.createVerticalGlue()); 
-        card.add(webLabel);
-
-        mainPanel.add(card);
-        return mainPanel;
-    }
-
-    // Helper para crear filas de contacto con estilo uniforme
-    // Helper con fuentes aumentadas
-    private JPanel crearFilaContacto(String icono, String titulo, String texto) {
-        JPanel panel = new JPanel(new BorderLayout(25, 0)); // Más separación icono-texto
-        panel.setBackground(Color.WHITE);
-        
-        // Icono gigante (40px)
-        JLabel lblIcono = new JLabel(icono);
-        lblIcono.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 42)); 
-        
-        // Panel de texto
-        JPanel txtPanel = new JPanel(new GridLayout(2, 1, 0, 5));
-        txtPanel.setBackground(Color.WHITE);
-        
-        // Título pequeño (12px)
-        JLabel lblTitulo = new JLabel(titulo);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 12));
-        lblTitulo.setForeground(Color.GRAY);
-        
-        // Texto principal grande (22px)
-        JLabel lblTexto = new JLabel(texto);
-        lblTexto.setFont(new Font("Arial", Font.PLAIN, 22)); 
-        lblTexto.setForeground(new Color(40, 40, 40));
-        
-        txtPanel.add(lblTitulo);
-        txtPanel.add(lblTexto);
-        
-        panel.add(lblIcono, BorderLayout.WEST);
-        panel.add(txtPanel, BorderLayout.CENTER);
-        
-        return panel;
-    }
-    
-    private JPanel crearEtiquetaInformacion(String titulo, String valor) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel tituloLabel = new JLabel(titulo);
-        tituloLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        JLabel valorLabel = new JLabel(valor);
-        valorLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        
-        panel.add(tituloLabel, BorderLayout.WEST);
-        panel.add(valorLabel, BorderLayout.CENTER);
-        return panel;
-    }
-    
-=======
 
     private JPanel crearPanelContacto() {
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -1380,7 +1271,6 @@ public class SOSsenseApp {
         return mainPanel;
     }
 
->>>>>>> 8ef6861c935b21b35e3c31a7ae863b4ff1a3103b
     private JLabel crearInfoLabel(String texto, boolean negrita) {
         JLabel label = new JLabel(texto);
         if (negrita) {
