@@ -66,7 +66,7 @@ public class PlanoInstalacion {
     }
     
     private void cargarUbicaciones() {
-        String archivo = "datos/ubicaciones.txt";
+        String archivo = "datos/planos.txt";
         
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
@@ -76,28 +76,44 @@ public class PlanoInstalacion {
                     continue;
                 }
                 
-                if (linea.startsWith("PLANTAS=")) {
-                    String[] plantasArray = linea.substring(8).split(",");
-                    for (String planta : plantasArray) {
-                        plantas.add(planta.trim());
-                    }
-                } else if (linea.startsWith("AREAS=")) {
-                    String[] areasArray = linea.substring(6).split(",");
-                    for (String area : areasArray) {
-                        areas.add(area.trim());
+                // Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
+                String[] partes = linea.split("\\|");
+                if (partes.length >= 2) {
+                    String plano = partes[1].trim();
+                    
+                    // Añadir el nombre del plano a la lista de plantas si no existe
+                    if (!plantas.contains(plano)) {
+                        plantas.add(plano);
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de ubicaciones: " + e.getMessage());
+            System.err.println("Error al leer el archivo de planos: " + e.getMessage());
             // Cargar valores por defecto si falla la lectura
             cargarUbicacionesPorDefecto();
         }
         
-        // Si no se cargaron datos, usar valores por defecto
-        if (plantas.isEmpty() || areas.isEmpty()) {
+        // Si no se cargaron plantas, usar valores por defecto
+        if (plantas.isEmpty()) {
             cargarUbicacionesPorDefecto();
         }
+        
+        // Cargar áreas por defecto
+        cargarAreasPorDefecto();
+    }
+    
+    private void cargarAreasPorDefecto() {
+        areas.clear();
+        areas.add("Pasillo Principal");
+        areas.add("Oficina");
+        areas.add("Sala de Máquinas");
+        areas.add("Cocina");
+        areas.add("Baños");
+        areas.add("Almacén");
+        areas.add("Laboratorio");
+        areas.add("Aula");
+        areas.add("Habitación");
+        areas.add("Vestíbulo");
     }
     
     private void cargarUbicacionesPorDefecto() {

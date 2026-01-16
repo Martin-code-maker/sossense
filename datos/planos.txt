@@ -2,22 +2,204 @@
 # Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
 # Cada línea representa un plano. Varias líneas con el mismo nombre_instalacion = varios planos
 
-MU-ko OSPITALA|Planta Baja|plano_hospital.jpg|800|600|15|25
-MU-ko OSPITALA|Planta 1|plano_hospital.jpg|800|600|18|28
-MU-ko OSPITALA|Planta 2|plano_hospital.jpg|800|600|12|20
-MU-ko OSPITALA|UCI|plano_hospital.jpg|800|600|8|15
+MU-ko OSPITALA|Planta Baja|plano_hospital.jpg|800|600|12|30
+MU-ko OSPITALA|Planta 1|plano_hospital.jpg|800|600|14|33
+MU-ko OSPITALA|Planta 2|plano_hospital.jpg|800|600|9|24
+MU-ko OSPITALA|UCI|plano_hospital.jpg|800|600|6|18
 
-MU-ko UNIBERTSITATEA|Planta Baja|plano_universidad.jpg|800|600|10|18
-MU-ko UNIBERTSITATEA|Planta 1|plano_universidad.jpg|800|600|12|20
-MU-ko UNIBERTSITATEA|Biblioteca|plano_universidad.jpg|800|600|8|12
+MU-ko UNIBERTSITATEA|Planta Baja|plano_universidad.jpg|800|600|5|10
+MU-ko UNIBERTSITATEA|Planta 1|plano_universidad.jpg|800|600|5|10
+MU-ko UNIBERTSITATEA|Biblioteca|plano_universidad.jpg|800|600|5|10
 
-Mondragon Fabrika|Planta Principal|plano_fabrica.jpg|800|600|25|35
-Mondragon Fabrika|Almacén|plano_fabrica.jpg|800|600|15|22
-Mondragon Fabrika|Oficinas|plano_fabrica.jpg|800|600|10|15
+Mondragon Fabrika|Planta Principal|plano_fabrica.jpg|800|600|11|24
+Mondragon Fabrika|Almacén|plano_fabrica.jpg|800|600|7|15
+Mondragon Fabrika|Oficinas|plano_fabrica.jpg|800|600|5|17
 
-Eskola Nagusia|Planta Baja|plano_escuela.jpg|800|600|8|14
-Eskola Nagusia|Planta 1|plano_escuela.jpg|800|600|10|16
+Eskola Nagusia|Planta Baja|plano_escuela.jpg|800|600|5|10
+Eskola Nagusia|Planta 1|plano_escuela.jpg|800|600|5|10
 
-Ikerketa Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|15|25
-Ikerketa Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|12|18
-Ikerketa Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|8|12
+Ikerketa Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|12
+Ikerketa Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Ikerketa Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Osakidetza Azkoitia|Planta Baja|plano_hospital.jpg|800|600|9|22
+Osakidetza Azkoitia|Planta 1|plano_hospital.jpg|800|600|10|25
+Osakidetza Azkoitia|Planta 2|plano_hospital.jpg|800|600|7|18
+Osakidetza Azkoitia|UCI|plano_hospital.jpg|800|600|5|13
+
+Eibar Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Eibar Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+CAF Fabrika|Planta Principal|plano_fabrica.jpg|800|600|17|36
+CAF Fabrika|Almacén|plano_fabrica.jpg|800|600|10|22
+CAF Fabrika|Oficinas|plano_fabrica.jpg|800|600|8|26
+
+Donostia Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|10
+Donostia Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|11
+Donostia Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|10
+
+Arrasate Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|16
+Arrasate Ikastola|Planta 1|plano_escuela.jpg|800|600|5|16
+
+Orona Fabrika|Planta Principal|plano_fabrica.jpg|800|600|16|33
+Orona Fabrika|Almacén|plano_fabrica.jpg|800|600|9|21
+Orona Fabrika|Oficinas|plano_fabrica.jpg|800|600|8|24
+
+Durango Ospitalea|Planta Baja|plano_hospital.jpg|800|600|11|27
+Durango Ospitalea|Planta 1|plano_hospital.jpg|800|600|13|30
+Durango Ospitalea|Planta 2|plano_hospital.jpg|800|600|8|21
+Durango Ospitalea|UCI|plano_hospital.jpg|800|600|5|16
+
+Bergara Ikerketa|Laboratorio Principal|plano_laboratorio.jpg|800|600|6|15
+Bergara Ikerketa|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Bergara Ikerketa|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Tolosa Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Tolosa Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Fagor Fabrika|Planta Principal|plano_fabrica.jpg|800|600|13|28
+Fagor Fabrika|Almacén|plano_fabrica.jpg|800|600|8|18
+Fagor Fabrika|Oficinas|plano_fabrica.jpg|800|600|6|20
+
+Gasteiz Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|11
+Gasteiz Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|12
+Gasteiz Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|16
+
+Irun Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Irun Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Zarautz Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|13
+Zarautz Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Zarautz Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Gernika Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|15
+Gernika Ikastola|Planta 1|plano_escuela.jpg|800|600|5|15
+
+Irizar Fabrika|Planta Principal|plano_fabrica.jpg|800|600|12|26
+Irizar Fabrika|Almacén|plano_fabrica.jpg|800|600|7|16
+Irizar Fabrika|Oficinas|plano_fabrica.jpg|800|600|6|19
+
+Ondarroa Ospitalea|Planta Baja|plano_hospital.jpg|800|600|10|25
+Ondarroa Ospitalea|Planta 1|plano_hospital.jpg|800|600|12|28
+Ondarroa Ospitalea|Planta 2|plano_hospital.jpg|800|600|8|20
+Ondarroa Ospitalea|UCI|plano_hospital.jpg|800|600|5|15
+
+Eibar Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|10
+Eibar Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|10
+Eibar Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|10
+
+Pasaia Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Pasaia Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Laudio Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Laudio Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Elgoibar Fabrika|Planta Principal|plano_fabrica.jpg|800|600|14|30
+Elgoibar Fabrika|Almacén|plano_fabrica.jpg|800|600|8|19
+Elgoibar Fabrika|Oficinas|plano_fabrica.jpg|800|600|7|22
+
+Errenteria Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|14
+Errenteria Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Errenteria Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Barakaldo Ospitalea|Planta Baja|plano_hospital.jpg|800|600|11|29
+Barakaldo Ospitalea|Planta 1|plano_hospital.jpg|800|600|13|32
+Barakaldo Ospitalea|Planta 2|plano_hospital.jpg|800|600|9|23
+Barakaldo Ospitalea|UCI|plano_hospital.jpg|800|600|6|17
+
+Lasarte Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Lasarte Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Amorebieta Fabrika|Planta Principal|plano_fabrica.jpg|800|600|12|25
+Amorebieta Fabrika|Almacén|plano_fabrica.jpg|800|600|7|15
+Amorebieta Fabrika|Oficinas|plano_fabrica.jpg|800|600|6|18
+
+Leioa Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|11
+Leioa Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|12
+Leioa Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|15
+
+Andoain Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Andoain Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Bilbao Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|6|16
+Bilbao Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|11
+Bilbao Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|16
+
+Zumaia Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Zumaia Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Tubacex Fabrika|Planta Principal|plano_fabrica.jpg|800|600|15|32
+Tubacex Fabrika|Almacén|plano_fabrica.jpg|800|600|9|20
+Tubacex Fabrika|Oficinas|plano_fabrica.jpg|800|600|7|23
+
+Zumarraga Ospitalea|Planta Baja|plano_hospital.jpg|800|600|8|21
+Zumarraga Ospitalea|Planta 1|plano_hospital.jpg|800|600|10|23
+Zumarraga Ospitalea|Planta 2|plano_hospital.jpg|800|600|6|16
+Zumarraga Ospitalea|UCI|plano_hospital.jpg|800|600|5|12
+
+Oñati Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|10
+Oñati Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|10
+Oñati Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|10
+
+Deba Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Deba Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Azpeitia Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|17
+Azpeitia Ikastola|Planta 1|plano_escuela.jpg|800|600|5|17
+
+Ormazabal Fabrika|Planta Principal|plano_fabrica.jpg|800|600|13|27
+Ormazabal Fabrika|Almacén|plano_fabrica.jpg|800|600|7|17
+Ormazabal Fabrika|Oficinas|plano_fabrica.jpg|800|600|6|19
+
+Bizkaia Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|13
+Bizkaia Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Bizkaia Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Lekeitio Ospitalea|Planta Baja|plano_hospital.jpg|800|600|8|19
+Lekeitio Ospitalea|Planta 1|plano_hospital.jpg|800|600|9|22
+Lekeitio Ospitalea|Planta 2|plano_hospital.jpg|800|600|6|15
+Lekeitio Ospitalea|UCI|plano_hospital.jpg|800|600|5|12
+
+Hernani Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Hernani Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Beasain Fabrika|Planta Principal|plano_fabrica.jpg|800|600|14|30
+Beasain Fabrika|Almacén|plano_fabrica.jpg|800|600|8|18
+Beasain Fabrika|Oficinas|plano_fabrica.jpg|800|600|7|21
+
+Getxo Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|10
+Getxo Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|10
+Getxo Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|10
+
+Hondarribia Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Hondarribia Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Eskoriatza Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|13
+Eskoriatza Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
+Eskoriatza Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+
+Legazpi Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|10
+Legazpi Ikastola|Planta 1|plano_escuela.jpg|800|600|5|10
+
+Danobat Fabrika|Planta Principal|plano_fabrica.jpg|800|600|15|32
+Danobat Fabrika|Almacén|plano_fabrica.jpg|800|600|9|20
+Danobat Fabrika|Oficinas|plano_fabrica.jpg|800|600|7|23
+
+Mungia Ospitalea|Planta Baja|plano_hospital.jpg|800|600|7|18
+Mungia Ospitalea|Planta 1|plano_hospital.jpg|800|600|8|20
+Mungia Ospitalea|Planta 2|plano_hospital.jpg|800|600|5|14
+Mungia Ospitalea|UCI|plano_hospital.jpg|800|600|5|11
+
+Deusto Unibertsitatea|Planta Baja|plano_universidad.jpg|800|600|5|12
+Deusto Unibertsitatea|Planta 1|plano_universidad.jpg|800|600|5|13
+Deusto Unibertsitatea|Biblioteca|plano_universidad.jpg|800|600|5|17
+
+Usurbil Kirol Zentroa|Planta Baja|plano_kirol.jpg|800|600|5|10
+Usurbil Kirol Zentroa|Gimnasio|plano_kirol.jpg|800|600|5|10
+
+Araba Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|6|15
+Araba Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|11
+Araba Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|15
+
+Errenteria Ikastola|Planta Baja|plano_escuela.jpg|800|600|5|15
+Errenteria Ikastola|Planta 1|plano_escuela.jpg|800|600|5|15
