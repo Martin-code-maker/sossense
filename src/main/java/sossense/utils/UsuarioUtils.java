@@ -13,13 +13,13 @@ public class UsuarioUtils {
         String hash = HashUtils.sha256(contraseña);
         System.out.println("DEBUG - Usuario: " + usuario + ", Hash calculado: " + hash);
 
-        // Buscar usuarios.txt en el directorio padre del proyecto
+        // Buscar usuarios.txt en la carpeta datos
         String projectRoot = System.getProperty("user.dir");
-        File file = new File(projectRoot, "sossense/usuarios.txt");
+        File file = new File(projectRoot, "datos/usuarios.txt");
         
-        // Si no existe en sossense/, intentar en el directorio raíz
+        // Si no existe en datos/, intentar en sossense/datos/
         if (!file.exists()) {
-            file = new File(projectRoot, "usuarios.txt");
+            file = new File(projectRoot, "sossense/datos/usuarios.txt");
         }
         
         System.out.println("DEBUG - Buscando archivo en: " + file.getAbsolutePath());
