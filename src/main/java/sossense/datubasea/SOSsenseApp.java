@@ -908,16 +908,11 @@ public class SOSsenseApp {
             return mainPanel;
         }
 
-<<<<<<< HEAD
         // 1. Guardamos la instalación activa para el MQTT
         this.instalacionActiva = izenaInstalacion;
-=======
+        
+        // 2. Creamos el plano con la información del archivo planos.txt
         PlanoInstalacion plano = new PlanoInstalacion(planoInfo);
->>>>>>> dbddbfabb7af2e55351aaa40ac23adf45991c2ba
-
-        // 2. Creamos el plano y desactivamos la simulación para recibir datos reales
-        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
-        plano.setSimulacionActiva(false); // <--- IMPORTANTE: Desactivar simulación aleatoria
 
         // 3. Crear Header (Título y degradado)
         JPanel headerPanel = new JPanel(new BorderLayout()) {
