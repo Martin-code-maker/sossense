@@ -1,136 +1,131 @@
 package sossense.mqtt;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter; // Necesario para borrar el fichero
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
 
 public class Mqtt implements MqttCallback {
 
     public static final String BROKER = "tcp://172.16.0.10:1883";
-    public static final String CLENT_ID = "TemperatureSimulator";
+    public static final String CLENT_ID = "SOSsenseClient";
     public static final int QoS = 2;
+    public static final String TOPIC_GAS = "SOSsense"; // Ajusta tu topic
 
-    public static final String TOPIC_TEMPERATURE = "SOSsense"; // Lo que quiere queremos leer
-   
-    private final MqttClient client;
+    private MqttClient client;
+    
+    // --- NUEVAS VARIABLES ---
+    private List<Double> bufferLecturas = new ArrayList<>();
+    private int contadorTotal = 0;
+    private final int LIMITE_MEDIA = 10;   // Hacer media cada 10 valores
+    private final int LIMITE_BORRADO = 100; // Borrar fichero cada 100 valores
+    
+    // Para avisar a la interfaz gráfica
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    private volatile double valueTemperature;
-   
-
-    public Mqtt(String broker, String clientId) throws MqttException {
-        this.valueTemperature = 0.0;
-     
+    public Mqtt() throws MqttException {
         MemoryPersistence persistence = new MemoryPersistence();
-        this.client = new MqttClient(broker, clientId, persistence);
-
+        client = new MqttClient(BROKER, CLENT_ID, persistence);
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
-        this.client.setCallback(this);
-   
-        System.out.println("[MQTT] Connecting to broker: " + broker);
-        this.client.connect(connOpts);
-        System.out.println("[MQTT] Connected");
-
-        System.out.println("[MQTT] Subscribe " + TOPIC_TEMPERATURE);
-        client.subscribe(TOPIC_TEMPERATURE, QoS);
-
-        System.out.println("[MQTT] Ready");
+        
+        client.setCallback(this);
+        System.out.println("[MQTT] Conectando a: " + BROKER);
+        client.connect(connOpts);
+        System.out.println("[MQTT] Conectado");
+        
+        client.subscribe(TOPIC_GAS, QoS);
+        System.out.println("[MQTT] Suscrito a " + TOPIC_GAS);
     }
-
-    // Kontruktorea
-    public Mqtt() throws MqttException {
-        this(BROKER, CLENT_ID);
+    
+    // Método para que la App se pueda suscribir a las alertas de gas
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
-
-    public void disconnect() throws MqttException {
-        this.client.disconnect();
-    }
-
-    void publish(String topic, String content) throws MqttException {
-        MqttMessage message = new MqttMessage(content.getBytes());
-        message.setQos(QoS);
-        this.client.publish(topic, message);
-    }
-
-   
-
-    public double getTemperature() {
-        return this.valueTemperature;
-    }
-
-  
 
     @Override
     public void connectionLost(Throwable cause) {
-        // Called when the connection to the server has been lost.
-        // An application may choose to implement reconnection
-        // logic at this point. This sample simply exits.
-        System.err.println("Connection to MQTT broker lost!" + cause);
-        System.exit(1);
+        System.err.println("[MQTT] Conexión perdida!");
     }
 
     @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        // Called when a message has been delivered to the
-        // server. The token passed in here is the same one
-        // that was passed to or returned from the original call to publish.
-        // This allows applications to perform asynchronous
-        // delivery without blocking until delivery completes.
-        //
-        // If the connection to the server breaks before delivery has completed
-        // delivery of a message will complete after the client has re-connected.
-        // The getPendingTokens method will provide tokens for any messages
-        // that are still to be delivered.
-    }
+    public void deliveryComplete(IMqttDeliveryToken token) {}
 
     @Override
-    public void messageArrived(String topic, MqttMessage message) throws MqttException {
-        // Called when a message arrives from the server that matches any
-        // subscription made by the client
-    
-        String content = new String(message.getPayload());
-
-        switch(topic) {
-            case TOPIC_TEMPERATURE:
-                this.valueTemperature = Double.parseDouble(content);
-                System.out.println("Gas: "+this.valueTemperature);
-
-            try {
-                // 1. Crear carpeta 'logs' si no existe
-                File carpetaLogs = new File("logs");
-                if (!carpetaLogs.exists()) {
-                    carpetaLogs.mkdir();
-                    System.out.println("Karpeta 'logs' sortuta");
-                }
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        String contenido = new String(message.getPayload());
+        
+        try {
+            double valorActual = Double.parseDouble(contenido);
+            
+            // 1. Guardar dato en el fichero
+            guardarEnLog(valorActual);
+            
+            // 2. Añadir al buffer para la media
+            bufferLecturas.add(valorActual);
+            contadorTotal++;
+            
+            // 3. ¿Tenemos ya 10 valores para hacer la media?
+            if (bufferLecturas.size() >= LIMITE_MEDIA) {
+                double media = calcularMedia();
+                System.out.println("Media (10 valores): " + media);
                 
-                // 2. Guardar datos en archivo simple
-                FileWriter writer = new FileWriter("logs/datuak.txt", true);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/dd/MM HH:mm:ss");
-                String timestamp = sdf.format(new Date());
+                // AVISAR A LA APP (UI) PARA QUE ACTUALICE EL SENSOR
+                support.firePropertyChange("DATO_GAS_ACTUALIZADO", null, media);
                 
-                writer.write(timestamp + " | Gas: " + content);
-                writer.close();
-                
-                System.out.println("Gordeta: logs/datuak.txt");
-                
-            } catch (IOException e) {
-                System.err.println("Errorea: " + e.getMessage());
+                // Limpiar el buffer para los siguientes 10
+                bufferLecturas.clear();
             }
-
-                break;
-            default:
-                break;
+            
+            // 4. ¿Hemos llegado a 100 valores totales? -> Limpiar fichero
+            if (contadorTotal >= LIMITE_BORRADO) {
+                limpiarFicheroLog();
+                contadorTotal = 0;
+                System.out.println("[LOG] Fichero reseteado por límite de capacidad.");
+            }
+            
+        } catch (NumberFormatException e) {
+            System.err.println("Error al leer valor numérico: " + contenido);
         }
     }
+    
+    private double calcularMedia() {
+        double suma = 0;
+        for (Double val : bufferLecturas) {
+            suma += val;
+        }
+        return suma / bufferLecturas.size();
+    }
 
+    private void guardarEnLog(double valor) {
+        try {
+            File carpeta = new File("logs");
+            if (!carpeta.exists()) carpeta.mkdir();
+            
+            FileWriter writer = new FileWriter("logs/datuak.txt", true);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            writer.write(sdf.format(new Date()) + " | Gas: " + valor + "\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void limpiarFicheroLog() {
+        try {
+            // Sobrescribir el fichero (false en el constructor de FileWriter) lo deja vacío
+            new PrintWriter("logs/datuak.txt").close();
+        } catch (IOException e) {
+            System.err.println("No se pudo limpiar el log.");
+        }
+    }
 }

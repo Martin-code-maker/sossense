@@ -86,7 +86,7 @@ public class PanelPlano extends JPanel {
         timerActualizacion = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plano.actualizarNivelesHumo();
+                //plano.actualizarNivelesHumo();
                 repaint();
             }
         });
@@ -221,6 +221,19 @@ public class PanelPlano extends JPanel {
     public void detenerActualizacion() {
         if (timerActualizacion != null) {
             timerActualizacion.stop();
+        }
+    }
+
+    // Método nuevo para actualizar un sensor concreto desde fuera (MQTT)
+    public void actualizarSensorEspecifico(String idSensor, int valorHumo) {
+        if (plano != null) {
+            for (SensorPlano sensor : plano.getSentsoreak()) {
+                if (sensor.getId().equalsIgnoreCase(idSensor)) {
+                    sensor.setNivelHumo(valorHumo);
+                    repaint(); // Redibujar el mapa para ver el cambio de color
+                    return;
+                }
+            }
         }
     }
 }

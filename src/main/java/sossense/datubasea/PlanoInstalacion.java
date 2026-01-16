@@ -143,8 +143,15 @@ public class PlanoInstalacion {
             sensor.setNivelHumo(nivelBase);
         }
     }
+
+    private boolean simulacionActiva = true; // Por defecto true
+
+    public void setSimulacionActiva(boolean activa) {
+        this.simulacionActiva = activa;
+    }
     
     public void actualizarNivelesHumo() {
+        if (!simulacionActiva) return; // Si es false, no hace nada (respeta MQTT)
         for (SensorPlano sensor : sentsoreak) {
             int cambio = random.nextInt(11) - 5; // Cambio entre -5 y +5
             int nuevoNivel = sensor.getNivelHumo() + cambio;

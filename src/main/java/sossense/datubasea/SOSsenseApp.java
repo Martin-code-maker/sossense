@@ -23,19 +23,52 @@ public class SOSsenseApp {
     private final int menuExpandedWidth = 180;
     private final int menuCollapsedWidth = 18;
     private final List<JButton> menuButtons = new ArrayList<>();
+    // Variable para guardar el plano que el usuario está viendo actualmente
+    private PanelPlano panelPlanoActivo = null;
+    private String instalacionActiva = "";
+
 
     public SOSsenseApp() {
         this.model = new SOSsenseModeloa();
         this.controller = new SOSsenseKontrolatzailea(model);
         crearInterfaz();
-        // MQTT erabili gabe funtzionatzeko, zati hau komentatu
-        /*
-         * try {
-         * Mqtt mqtt = new Mqtt();
-         * } catch (Exception ex) {
-         * ex.printStackTrace();
-         * }
-         */
+        
+        // --- CONEXIÓN MQTT ---
+        try {
+            sossense.mqtt.Mqtt mqtt = new sossense.mqtt.Mqtt();
+            
+            // Cuando MQTT calcule la media de 10 valores...
+            mqtt.addPropertyChangeListener(evt -> {
+                if ("DATO_GAS_ACTUALIZADO".equals(evt.getPropertyName())) {
+                    double valorMedia = (double) evt.getNewValue();
+                    
+                    // Solo actualizamos si el usuario está mirando el mapa de la Fábrica
+                    if (panelPlanoActivo != null && "Mondragon Fabrika".equalsIgnoreCase(instalacionActiva)) {
+                        
+                        // Actualizar el sensor S1 (que siempre existe)
+                        panelPlanoActivo.actualizarSensorEspecifico("S1", (int) valorMedia);
+                        
+                        System.out.println(">>> Mapa actualizado: S1 = " + valorMedia);
+                    }
+                }
+            });
+            
+        } catch (Exception ex) {
+            System.err.println("Error conectando MQTT: " + ex.getMessage());
+        }
+        // ---------------------
+    }
+
+    // Método nuevo para buscar el sensor y actualizarlo
+    private void actualizarSensorConMqtt(String nombreInstalacion, double valorGas) {
+        // Buscamos la instalación
+        // NOTA: Esto requiere que tengas acceso a los planos desde aquí o a través del controlador.
+        // Como ejemplo rápido, si tuviéramos acceso al objeto 'plano' activo:
+        
+        System.out.println("Actualizando mapa con valor medio: " + valorGas);
+        
+        // Lógica ideal: Pasar este valor al controlador para que actualice el SensorPlano específico
+        // controller.actualizarSensorGas(nombreInstalacion, "S1", valorGas);
     }
 
     public void bistaratuApp() {
@@ -863,8 +896,14 @@ public class SOSsenseApp {
             return mainPanel;
         }
 
-        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
+        // 1. Guardamos la instalación activa para el MQTT
+        this.instalacionActiva = izenaInstalacion;
 
+        // 2. Creamos el plano y desactivamos la simulación para recibir datos reales
+        PlanoInstalacion plano = new PlanoInstalacion(izenaInstalacion);
+        plano.setSimulacionActiva(false); // <--- IMPORTANTE: Desactivar simulación aleatoria
+
+        // 3. Crear Header (Título y degradado)
         JPanel headerPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -900,10 +939,16 @@ public class SOSsenseApp {
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
+        // 4. Creamos el Panel visual del plano
         PanelPlano panelPlano = new PanelPlano(plano);
+        
+        // 5. Guardamos la referencia global para que el MQTT sepa dónde pintar
+        this.panelPlanoActivo = panelPlano; 
+
         JScrollPane scrollPane = new JScrollPane(panelPlano);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 3));
 
+        // 6. Panel de control (Botones)
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         controlPanel.setBackground(new Color(245, 245, 245));
         controlPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -912,14 +957,17 @@ public class SOSsenseApp {
 
         JButton actualizarBtn = crearBotonEstilizado("🔄 EGUNERATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
         actualizarBtn.addActionListener(e -> {
-            plano.simularNivelesHumo();
+            // Si quieres forzar una actualización manual (opcional si usas MQTT)
+            // plano.simularNivelesHumo(); 
             panelPlano.repaint();
-            // Aquí puedes actualizar las estadísticas si las tuvieras en esta vista
         });
 
         JButton volverBtn = crearBotonEstilizado("⬅ ATZERA", new Color(0xE2, 0x80, 0x76), Color.WHITE);
         volverBtn.addActionListener(e -> {
             panelPlano.detenerActualizacion();
+            // Limpiamos referencias al salir
+            this.panelPlanoActivo = null;
+            this.instalacionActiva = "";
             cambiarPanelCentral(crearPanelSeleccionPlanos(izenaInstalacion));
         });
 
