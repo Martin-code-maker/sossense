@@ -36,7 +36,8 @@ public class SOSsenseApp {
         this.controller = new SOSsenseKontrolatzailea(model);
         crearInterfaz();
         
-        // --- CONEXIÓN MQTT ---
+        // --- CONEXIÓN MQTT DESACTIVADA (SIN RED) ---
+        /*
         try {
             sossense.mqtt.Mqtt mqtt = new sossense.mqtt.Mqtt();
             
@@ -59,6 +60,8 @@ public class SOSsenseApp {
         } catch (Exception ex) {
             System.err.println("Error conectando MQTT: " + ex.getMessage());
         }
+        */
+        System.out.println("[APP] Modo offline - MQTT desactivado");
         // ---------------------
     }
 
