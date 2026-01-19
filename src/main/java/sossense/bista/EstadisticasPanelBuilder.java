@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.text.DecimalFormat;
+import java.awt.Toolkit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,6 @@ public class EstadisticasPanelBuilder {
     private final SOSsenseKontrolatzailea controller;
     private JLabel totalInstLabel;
     private JLabel totalSensLabel;
-    private JLabel mediaLabel;
     private DefaultTableModel tipoModel;
     private DefaultTableModel estadoModel;
     private Map<String, Long> porTipoData = new LinkedHashMap<>();
@@ -52,38 +51,37 @@ public class EstadisticasPanelBuilder {
 
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setMaximumSize(new Dimension(Integer.MAX_VALUE, Math.max(400, Toolkit.getDefaultToolkit().getScreenSize().height - 240)));
 
-        JPanel resumenPanel = new JPanel(new GridLayout(1, 3, 12, 0));
-        resumenPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        JPanel resumenPanel = new JPanel(new GridLayout(1, 2, 12, 0));
+        resumenPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
         totalInstLabel = new JLabel();
         totalSensLabel = new JLabel();
-        mediaLabel = new JLabel();
         resumenPanel.add(createStatCard("Instalazio kopurua", totalInstLabel, new Color(0xD3, 0x85, 0x7E)));
         resumenPanel.add(createStatCard("Sentsoreak guztira", totalSensLabel, new Color(0xF6, 0xB2, 0xB2)));
-        resumenPanel.add(createStatCard("Sentsoreak/inst.", mediaLabel, new Color(0xD6, 0x92, 0x92)));
         content.add(resumenPanel);
 
-        content.add(Box.createVerticalStrut(16));
+        content.add(Box.createVerticalStrut(8));
 
         JPanel tablasPanel = new JPanel(new GridLayout(1, 2, 12, 0));
-        JPanel motaPanel = new JPanel();
-        motaPanel.setLayout(new BoxLayout(motaPanel, BoxLayout.Y_AXIS));
-        tipoModel = createTableModel();
-        motaPanel.add(wrapTable("Mota bakoitzeko", tipoModel));
-        motaPanel.add(Box.createVerticalStrut(10));
-        motaPanel.add(createBarChart("Mota grafikoa"));
-        tablasPanel.add(motaPanel);
 
-        JPanel egoeraPanel = new JPanel();
-        egoeraPanel.setLayout(new BoxLayout(egoeraPanel, BoxLayout.Y_AXIS));
+        JPanel ezkerPanel = new JPanel();
+        ezkerPanel.setLayout(new BoxLayout(ezkerPanel, BoxLayout.Y_AXIS));
+        tipoModel = createTableModel();
+        ezkerPanel.add(wrapTable("Mota bakoitzeko", tipoModel));
+        ezkerPanel.add(Box.createVerticalStrut(8));
         estadoModel = createTableModel();
-        egoeraPanel.add(wrapTable("Egoeraren arabera", estadoModel));
-        tablasPanel.add(egoeraPanel);
+        ezkerPanel.add(wrapTable("Egoeraren arabera", estadoModel));
+        tablasPanel.add(ezkerPanel);
+
+        JPanel eskuinPanel = new JPanel();
+        eskuinPanel.setLayout(new BoxLayout(eskuinPanel, BoxLayout.Y_AXIS));
+        eskuinPanel.add(createBarChart("Mota grafikoa"));
+        tablasPanel.add(eskuinPanel);
+
         content.add(tablasPanel);
 
-        JScrollPane scrollPane = new JScrollPane(content);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(content, BorderLayout.CENTER);
 
         // Datos iniciales
         refreshData();
@@ -108,7 +106,7 @@ public class EstadisticasPanelBuilder {
         titleLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         titleLabel.setForeground(Color.BLACK);
 
-        valueLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        valueLabel.setFont(new Font("Arial", Font.BOLD, 26));
         valueLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         valueLabel.setForeground(Color.BLACK);
 
@@ -155,13 +153,16 @@ public class EstadisticasPanelBuilder {
                 }
             }
         };
-        barCanvas.setPreferredSize(new Dimension(0, 220));
+        barCanvas.setPreferredSize(new Dimension(0, 180));
         chartPanel.add(barCanvas, BorderLayout.CENTER);
         return chartPanel;
     }
 
     private JPanel wrapTable(String title, DefaultTableModel model) {
         JTable table = new JTable(model);
+        table.setRowHeight(26);
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 15));
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E)), title));
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
@@ -186,18 +187,14 @@ public class EstadisticasPanelBuilder {
         List<Instalazioa> instalazioak = controller.lortuInstalazioak();
         int totalInstalaciones = instalazioak.size();
         int totalSensores = instalazioak.stream().mapToInt(Instalazioa::getSentsoreak).sum();
-        double mediaSensores = totalInstalaciones == 0 ? 0 : (double) totalSensores / totalInstalaciones;
-
-        DecimalFormat df = new DecimalFormat("0.0");
         totalInstLabel.setText(String.valueOf(totalInstalaciones));
         totalSensLabel.setText(String.valueOf(totalSensores));
-        mediaLabel.setText(df.format(mediaSensores));
 
         Map<String, Long> porTipo = instalazioak.stream()
                 .collect(Collectors.groupingBy(inst -> normalize(inst.getMota(), "Ezezaguna"), Collectors.counting()));
 
         Map<String, Long> porEstado = instalazioak.stream()
-                .collect(Collectors.groupingBy(inst -> normalize(inst.getEgoera(), "Egoera ezezaguna"), Collectors.counting()));
+            .collect(Collectors.groupingBy(inst -> normalize(inst.getEgoera(), "Egoera ezezaguna"), Collectors.counting()));
 
         Map<String, Long> porTipoOrdenado = porTipo.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
