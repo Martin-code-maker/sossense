@@ -14,6 +14,7 @@ import sossense.datubasea.PlanoRepository;
 import sossense.datubasea.AppContext;
 import sossense.datubasea.PlanoInfo;
 import sossense.datubasea.SensorLayout;
+import sossense.utils.UIUtils;
 
 public class AgregarInstalacionPanelBuilder {
 
@@ -37,81 +38,106 @@ public class AgregarInstalacionPanelBuilder {
 
     public JPanel build() {
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mainPanel.setBackground(new Color(250, 250, 250));
 
+        // Título con estilo acorde al proyecto
+        JPanel tituloPanel = new JPanel(new BorderLayout());
+        tituloPanel.setBackground(new Color(250, 250, 250));
+        tituloPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
         JLabel titulo = new JLabel("GEHITU INSTALAZIO BERRIA");
-        titulo.setFont(new Font("Arial", Font.BOLD, 28));
+        titulo.setFont(new Font("Arial", Font.BOLD, 32));
+        titulo.setForeground(new Color(50, 50, 50));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
-        mainPanel.add(titulo, BorderLayout.NORTH);
+        
+        // Línea separadora con color del proyecto
+        JSeparator separador = new JSeparator();
+        separador.setForeground(new Color(0xE1, 0x9D, 0x8E));
+        separador.setBackground(new Color(0xE1, 0x9D, 0x8E));
+        
+        tituloPanel.add(titulo, BorderLayout.CENTER);
+        tituloPanel.add(separador, BorderLayout.SOUTH);
+        mainPanel.add(tituloPanel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
+            BorderFactory.createEmptyBorder(30, 40, 30, 40)
+        ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(12, 15, 12, 15);
 
         // Datos básicos
         gbc.gridx = 0; gbc.gridy = 0;
         JLabel lblIzena = new JLabel("Izena:");
-        lblIzena.setFont(new Font("Arial", Font.BOLD, 16));
+        lblIzena.setFont(new Font("Arial", Font.BOLD, 14));
+        lblIzena.setForeground(new Color(50, 50, 50));
         formPanel.add(lblIzena, gbc);
 
         gbc.gridx = 1;
-        JTextField izenaField = new JTextField(25);
-        izenaField.setFont(new Font("Arial", Font.PLAIN, 14));
+        JTextField izenaField = crearCampoEstilizado(25);
         formPanel.add(izenaField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
         JLabel lblHelbidea = new JLabel("Helbidea:");
-        lblHelbidea.setFont(new Font("Arial", Font.BOLD, 16));
+        lblHelbidea.setFont(new Font("Arial", Font.BOLD, 14));
+        lblHelbidea.setForeground(new Color(50, 50, 50));
         formPanel.add(lblHelbidea, gbc);
 
         gbc.gridx = 1;
-        JTextField helbideaField = new JTextField(25);
-        helbideaField.setFont(new Font("Arial", Font.PLAIN, 14));
+        JTextField helbideaField = crearCampoEstilizado(25);
         formPanel.add(helbideaField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
         JLabel lblMota = new JLabel("Mota:");
-        lblMota.setFont(new Font("Arial", Font.BOLD, 16));
+        lblMota.setFont(new Font("Arial", Font.BOLD, 14));
+        lblMota.setForeground(new Color(50, 50, 50));
         formPanel.add(lblMota, gbc);
 
         gbc.gridx = 1;
         String[] motas = { "FABRIKA", "OSPITALEA", "LABORATORIO", "IKASTOLA", "UNIBERTSITATEA" };
-        JComboBox<String> motaCombo = new JComboBox<>(motas);
-        motaCombo.setFont(new Font("Arial", Font.PLAIN, 14));
+        JComboBox<String> motaCombo = crearComboEstilizado(motas);
         formPanel.add(motaCombo, gbc);
 
         // Planta eta sentsoreak
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.gridwidth = 2;
         JPanel plantaPanel = new JPanel(new GridBagLayout());
-        plantaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-                "Planten konfigurazioa", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14)));
+        plantaPanel.setBackground(new Color(248, 248, 248));
+        plantaPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0xE1, 0x9D, 0x8E), 2),
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
 
         GridBagConstraints pg = new GridBagConstraints();
-        pg.insets = new Insets(6, 6, 6, 6);
+        pg.insets = new Insets(8, 8, 8, 8);
         pg.fill = GridBagConstraints.HORIZONTAL;
 
         pg.gridx = 0; pg.gridy = 0;
         JLabel lblPlantaIzena = new JLabel("Planta izena:");
         lblPlantaIzena.setFont(new Font("Arial", Font.BOLD, 13));
+        lblPlantaIzena.setForeground(new Color(50, 50, 50));
         plantaPanel.add(lblPlantaIzena, pg);
 
         pg.gridx = 1;
-        JTextField plantaIzenaField = new JTextField(18);
-        plantaIzenaField.setFont(new Font("Arial", Font.PLAIN, 13));
+        JTextField plantaIzenaField = crearCampoEstilizado(18);
         plantaPanel.add(plantaIzenaField, pg);
 
         pg.gridx = 0; pg.gridy = 1;
         JLabel lblSensores = new JLabel("Sentsoreak (id,x,y,kokapena):");
         lblSensores.setFont(new Font("Arial", Font.BOLD, 13));
+        lblSensores.setForeground(new Color(50, 50, 50));
         plantaPanel.add(lblSensores, pg);
 
         pg.gridx = 1;
         JTextArea sensoresArea = new JTextArea(4, 25);
+        sensoresArea.setFont(new Font("Courier New", Font.PLAIN, 12));
         sensoresArea.setLineWrap(true);
         sensoresArea.setWrapStyleWord(true);
+        sensoresArea.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        sensoresArea.setBackground(Color.WHITE);
         JScrollPane sensoresScroll = new JScrollPane(sensoresArea);
         sensoresScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         plantaPanel.add(sensoresScroll, pg);
@@ -119,23 +145,26 @@ public class AgregarInstalacionPanelBuilder {
         pg.gridx = 1; pg.gridy = 2;
         JLabel hintLabel = new JLabel("Adibidea: S1,120,80,Pasilo nagusia; S2,300,210,Bulegoak");
         hintLabel.setFont(new Font("Arial", Font.ITALIC, 11));
-        hintLabel.setForeground(Color.DARK_GRAY);
+        hintLabel.setForeground(new Color(120, 120, 120));
         plantaPanel.add(hintLabel, pg);
 
         DefaultListModel<String> plantasModel = new DefaultListModel<>();
         JList<String> plantasList = new JList<>(plantasModel);
         plantasList.setVisibleRowCount(5);
+        plantasList.setFont(new Font("Arial", Font.PLAIN, 12));
         JScrollPane plantasScroll = new JScrollPane(plantasList);
+        plantasScroll.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
         plantasScroll.setPreferredSize(new Dimension(360, 100));
 
         List<PlanoInfo> planoDefinituak = new ArrayList<>();
         JLabel resumenLabel = new JLabel("0 planta, 0 sentsore");
         resumenLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        resumenLabel.setForeground(new Color(0xE1, 0x9D, 0x8E));
 
         pg.gridx = 0; pg.gridy = 3;
         pg.gridwidth = 2;
-        JButton gehituPlantaBtn = new JButton("Planta gehitu");
-        gehituPlantaBtn.setFont(new Font("Arial", Font.BOLD, 13));
+        JButton gehituPlantaBtn = UIUtils.crearBotonEstilizado("PLANTA GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        gehituPlantaBtn.setPreferredSize(new Dimension(180, 35));
         gehituPlantaBtn.addActionListener(e -> {
             String izenaPlanta = plantaIzenaField.getText().trim();
             if (izenaPlanta.isEmpty()) {
@@ -174,22 +203,36 @@ public class AgregarInstalacionPanelBuilder {
         gbc.gridy = 4;
         gbc.gridwidth = 1;
         JLabel lblSentsoreak = new JLabel("Sentsore kopurua (autom.):");
-        lblSentsoreak.setFont(new Font("Arial", Font.BOLD, 16));
+        lblSentsoreak.setFont(new Font("Arial", Font.BOLD, 14));
+        lblSentsoreak.setForeground(new Color(50, 50, 50));
         formPanel.add(lblSentsoreak, gbc);
 
         gbc.gridx = 1;
-        JTextField sensoresField = new JTextField(25);
-        sensoresField.setFont(new Font("Arial", Font.PLAIN, 14));
+        JTextField sensoresField = crearCampoEstilizado(25);
         sensoresField.setEditable(false);
+        sensoresField.setBackground(new Color(240, 240, 240));
         sensoresField.setToolTipText("Kontua automatikoki kalkulatzen da sartutako sentsoreen arabera");
         formPanel.add(sensoresField, gbc);
 
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        JPanel scrollFormPanel = new JPanel(new BorderLayout());
+        scrollFormPanel.setBackground(new Color(250, 250, 250));
+        scrollFormPanel.add(formPanel, BorderLayout.NORTH);
+        scrollFormPanel.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(scrollFormPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        JButton agregarBtn = new JButton("GEHITU");
-        agregarBtn.setFont(new Font("Arial", Font.BOLD, 16));
-        agregarBtn.setPreferredSize(new Dimension(150, 40));
+        buttonPanel.setBackground(new Color(250, 250, 250));
+        buttonPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        
+        JButton agregarBtn = UIUtils.crearBotonEstilizado("GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        agregarBtn.setPreferredSize(new Dimension(160, 45));
         agregarBtn.addActionListener(e -> {
             String izena = izenaField.getText().trim();
             String helbidea = helbideaField.getText().trim();
@@ -229,7 +272,17 @@ public class AgregarInstalacionPanelBuilder {
                 guardarSensoresTxt(izena, eguneratuak);
 
                 JOptionPane.showMessageDialog(mainPanel, "Instalazioa eta planoak gorde dira!", "Arrakasta", JOptionPane.INFORMATION_MESSAGE);
-                navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build());
+                
+                // Limpiar el formulario en lugar de redirigir
+                izenaField.setText("");
+                helbideaField.setText("");
+                motaCombo.setSelectedIndex(0);
+                sensoresField.setText("");
+                plantasModel.clear();
+                planoDefinituak.clear();
+                plantaIzenaField.setText("");
+                sensoresArea.setText("");
+                resumenLabel.setText("0 planta, 0 sentsore");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(mainPanel,
                         "Ezin izan da instalazioa gorde: " + ex.getMessage(),
@@ -238,15 +291,30 @@ public class AgregarInstalacionPanelBuilder {
             }
         });
 
-        JButton cancelarBtn = new JButton("UTZI");
-        cancelarBtn.setFont(new Font("Arial", Font.BOLD, 16));
-        cancelarBtn.setPreferredSize(new Dimension(150, 40));
+        JButton cancelarBtn = UIUtils.crearBotonEstilizado("UTZI", new Color(180, 180, 180), new Color(50, 50, 50));
+        cancelarBtn.setPreferredSize(new Dimension(160, 45));
         cancelarBtn.addActionListener(e -> navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build()));
 
         buttonPanel.add(agregarBtn);
         buttonPanel.add(cancelarBtn);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         return mainPanel;
+    }
+
+    private JTextField crearCampoEstilizado(int columnas) {
+        JTextField campo = new JTextField(columnas);
+        campo.setFont(new Font("Arial", Font.PLAIN, 13));
+        campo.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200)),
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        return campo;
+    }
+
+    private JComboBox<String> crearComboEstilizado(String[] items) {
+        JComboBox<String> combo = new JComboBox<>(items);
+        combo.setFont(new Font("Arial", Font.PLAIN, 13));
+        return combo;
     }
 
     private List<SensorLayout> parsearSensores(String raw, String nombrePlanta, Component parent) {
