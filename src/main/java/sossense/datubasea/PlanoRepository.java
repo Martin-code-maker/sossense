@@ -1,0 +1,47 @@
+package sossense.datubasea;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlanoRepository {
+
+    private final String archivo;
+
+    public PlanoRepository(String archivo) {
+        this.archivo = archivo;
+    }
+
+    public List<PlanoInfo> cargarPlanosDeInstalacion(String nombreInstalacion) {
+        List<PlanoInfo> planos = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
+                    continue;
+                }
+                String[] partes = linea.split("\\|");
+                if (partes.length >= 7) {
+                    String instalacion = partes[0].trim();
+                    if (instalacion.equalsIgnoreCase(nombreInstalacion)) {
+                        String nombrePlano = partes[1].trim();
+                        String imagenFondo = partes[2].trim();
+                        int ancho = Integer.parseInt(partes[3].trim());
+                        int alto = Integer.parseInt(partes[4].trim());
+                        int sensoresMin = Integer.parseInt(partes[5].trim());
+                        int sensoresMax = Integer.parseInt(partes[6].trim());
+                        planos.add(new PlanoInfo(instalacion, nombrePlano, imagenFondo,
+                                ancho, alto, sensoresMin, sensoresMax));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo de planos: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Error al parsear números del archivo de planos: " + e.getMessage());
+        }
+        return planos;
+    }
+}

@@ -34,7 +34,7 @@ public class Mqtt implements MqttCallback {
 
     public Mqtt() throws MqttException {
         // --- CONEXIÓN A MQTT COMENTADA (SIN RED) ---
-        /*
+        
         MemoryPersistence persistence = new MemoryPersistence();
         client = new MqttClient(BROKER, CLENT_ID, persistence);
         MqttConnectOptions connOpts = new MqttConnectOptions();
@@ -47,8 +47,9 @@ public class Mqtt implements MqttCallback {
         
         client.subscribe(TOPIC_GAS, QoS);
         System.out.println("[MQTT] Suscrito a " + TOPIC_GAS);
-        */
+        
         System.out.println("[MQTT] Modo offline - conexión desactivada");
+        
     }
     
     // Método para que la App se pueda suscribir a las alertas de gas
