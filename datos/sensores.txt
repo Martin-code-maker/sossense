@@ -213,7 +213,3 @@ CAF Fabrika|Oficinas|C_OF_05|400|400|Finantzak
 CAF Fabrika|Oficinas|C_OF_06|600|400|Zuzendaritza
 CAF Fabrika|Oficinas|C_OF_07|100|300|Server Gela
 CAF Fabrika|Oficinas|C_OF_08|700|300|Artxiboa
-Markel|Markel|M1|100|100|Markel - Nagusia
-Markel2|Bat|S1|100|200|BAT
-Markel2|Bi|Bi|400|200|Bi
-Markel2|Hiru|Hiru|200|100|Hiru

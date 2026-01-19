@@ -77,7 +77,7 @@ public class AgregarInstalacionPanelBuilder {
         formPanel.add(lblMota, gbc);
 
         gbc.gridx = 1;
-        String[] motas = { "HOSPITAL", "UNIVERSIDAD", "ESCOLA", "FABRICA", "LABORATORIO", "OFICINA", "ALMACEN" };
+        String[] motas = { "FABRIKA", "OSPITALEA", "LABORATORIO", "IKASTOLA", "UNIBERTSITATEA" };
         JComboBox<String> motaCombo = new JComboBox<>(motas);
         motaCombo.setFont(new Font("Arial", Font.PLAIN, 14));
         formPanel.add(motaCombo, gbc);

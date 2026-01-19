@@ -9,11 +9,21 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class KudeatuInstalazioak {
 
     private static final String ARCHIVO_INSTALACIONES = "datos/instalaciones.txt";
+    private static final Set<String> MOTA_BAIMENDUAK = new HashSet<>(Arrays.asList(
+            "FABRIKA",
+            "OSPITALEA",
+            "LABORATORIO",
+            "IKASTOLA",
+            "UNIBERTSITATEA"
+    ));
     private List<Instalazioa> instalazioZerrenda;
     
     public KudeatuInstalazioak() {
@@ -38,6 +48,11 @@ public class KudeatuInstalazioak {
                     // Egoera hasierakoa ez da hartu fitxategitik: dinamikoki eguneratuko da sentsoreen arabera
                     String direccion = partes[3].trim();
                     String tipo = partes[4].trim();
+
+                    if (!motaBaimendua(tipo)) {
+                        System.err.println("Mota ezezaguna instalazioan: " + nombre + " -> " + tipo + ". Saltatzen...");
+                        continue; // tipo ez bada baliozkoa, ez kargatu
+                    }
                     
                     // Si hay color personalizado
                     if (partes.length >= 6) {
@@ -87,6 +102,9 @@ public class KudeatuInstalazioak {
     // Métodos CRUD (Create, Read, Update, Delete)
     
     public void agregarInstalacion(Instalazioa instalacion) {
+        if (!motaBaimendua(instalacion.getMota())) {
+            throw new IllegalArgumentException("Mota baliogabea: " + instalacion.getMota());
+        }
         agregarInstalacionInternal(instalacion, true);
     }
 
@@ -227,6 +245,10 @@ public class KudeatuInstalazioak {
     }
 
     private void guardarInstalacionEnArchivo(Instalazioa instalacion) {
+        if (!motaBaimendua(instalacion.getMota())) {
+            System.err.println("Ez da gorde: mota baliogabea " + instalacion.getMota());
+            return;
+        }
         try (java.io.FileWriter fw = new java.io.FileWriter(ARCHIVO_INSTALACIONES, true)) {
             StringBuilder sb = new StringBuilder();
             sb.append(instalacion.getIzena()).append('|')
@@ -239,6 +261,11 @@ public class KudeatuInstalazioak {
         } catch (IOException e) {
             System.err.println("Ezin izan da instalazioa gorde fitxategian: " + e.getMessage());
         }
+    }
+
+    private boolean motaBaimendua(String mota) {
+        if (mota == null) return false;
+        return MOTA_BAIMENDUAK.contains(mota.trim().toUpperCase());
     }
 
     // Eguneratu egoerak sensores.txt fitxategiko balioen arabera.
