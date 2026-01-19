@@ -90,12 +90,12 @@ public class SeleccionPlanosPanelBuilder {
         planosPanel.setBackground(new Color(245, 245, 245));
 
         String[] iconos = {"🏠", "🏢", "🏗️", "🔦", "📍", "🏛️"};
-        String[] coloresHex = {"#4169E1", "#32CD32", "#FF6347", "#B8860B", "#9370DB", "#FF69B4"};
+        Color verdeBase = Color.decode("#10c531"); // verde default para todas las plantas
 
         for (int i = 0; i < planosInstalacion.size(); i++) {
             PlanoInfo planoInfo = planosInstalacion.get(i);
             String icono = iconos[i % iconos.length];
-            Color colorAccent = Color.decode(coloresHex[i % coloresHex.length]);
+            Color colorAccent = verdeBase;
             PlanoInstalacion planoTemp = new PlanoInstalacion(planoInfo);
             int sensoresCriticos = planoTemp.getSentsoreakCriticos();
             planosPanel.add(crearTarjetaPlano(planoInfo.getNombrePlano(), icono, colorAccent,

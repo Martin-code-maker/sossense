@@ -26,51 +26,59 @@ public class PanelPlano extends JPanel {
         setBackground(Color.WHITE);
         
         // --- LOGICA PARA ELEGIR LA IMAGEN SEGUN EL NOMBRE ---
-        String rutaImagen = "";
-        
-        // Si se proporciona un nombre de imagen específico, usarlo
-        if (nombreImagenFondo != null && !nombreImagenFondo.isEmpty()) {
-            rutaImagen = "/sossense/img/" + nombreImagenFondo;
-        } else {
-            // Si no, usar la lógica original basada en el nombre de la instalación
-            String nombreInstalacion = plano.getNombreInstalacion();
+        String nombreInstalacion = plano.getNombreInstalacion();
 
-            // Asignamos una imagen específica según el nombre de la instalación
-            // Asegúrate de que los nombres coincidan con los que tienes en KudeatuInstalazioak.java
+        java.util.List<String> rutas = new java.util.ArrayList<>();
+        if (nombreImagenFondo != null && !nombreImagenFondo.isEmpty()) {
+            // Añadimos la ruta tal cual del fichero de datos
+            rutas.add("/sossense/img/" + nombreImagenFondo);
+            // Fallback automático si en datos figura .jpg pero el recurso es .png
+            if (nombreImagenFondo.toLowerCase().endsWith(".jpg")) {
+                rutas.add("/sossense/img/" + nombreImagenFondo.substring(0, nombreImagenFondo.length() - 4) + ".png");
+            }
+            if (nombreImagenFondo.toLowerCase().endsWith(".png")) {
+                rutas.add("/sossense/img/" + nombreImagenFondo.substring(0, nombreImagenFondo.length() - 4) + ".jpg");
+            }
+        } else {
+            // Lógica por nombre de instalación
             if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
-                rutaImagen = "/sossense/img/plano_hospital.png";
-            } 
+                rutas.add("/sossense/img/plano_hospital.png");
+            }
             else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
-                rutaImagen = "/sossense/img/plano_universidad.png";
+                rutas.add("/sossense/img/plano_universidad.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
-                rutaImagen = "/sossense/img/plano_fabrica.png";
+                rutas.add("/sossense/img/plano_fabrica.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
-                rutaImagen = "/sossense/img/plano_escuela.png";
+                rutas.add("/sossense/img/plano_escuela.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
-                rutaImagen = "/sossense/img/plano_laboratorio.png";
+                rutas.add("/sossense/img/plano_laboratorio.png");
             }
             else {
-                // Imagen por defecto si no coincide con ninguno (o usa el plano.jpg genérico)
-                rutaImagen = "/sossense/img/plano_default.jpg";
+                rutas.add("/sossense/img/plano_default.png");
             }
         }
 
-        // Cargar la imagen seleccionada
-        try {
-            java.net.URL imgUrl = getClass().getResource(rutaImagen);
-            if (imgUrl != null) {
-                imagenPlano = new ImageIcon(imgUrl).getImage();
-            } else {
-                // Si falla la específica, intentamos cargar una genérica o avisamos
-                System.err.println("No se encontró la imagen: " + rutaImagen);
-                // Opcional: cargar un fallback
-                // imagenPlano = new ImageIcon(getClass().getResource("/sossense/img/plano.jpg")).getImage();
+        // Aseguramos un fallback genérico al final
+        rutas.add("/sossense/img/plano_default.png");
+
+        // Cargar la primera imagen disponible
+        for (String ruta : rutas) {
+            try {
+                java.net.URL imgUrl = getClass().getResource(ruta);
+                if (imgUrl != null) {
+                    imagenPlano = new ImageIcon(imgUrl).getImage();
+                    break;
+                }
+            } catch (Exception e) {
+                // Continuar probando siguientes rutas
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        if (imagenPlano == null) {
+            System.err.println("No se encontró ninguna imagen de plano para " + nombreInstalacion + " (intentado: " + rutas + ")");
         }
         // ------------------------------------------
         

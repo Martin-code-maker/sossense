@@ -30,3 +30,7 @@ Osakidetza Azkoitia|UCI|plano_hospital.jpg|800|600|5|13
 CAF Fabrika|Planta Principal|plano_fabrica.jpg|800|600|17|36
 CAF Fabrika|Almacén|plano_fabrica.jpg|800|600|10|22
 CAF Fabrika|Oficinas|plano_fabrica.jpg|800|600|8|26
+Markel|Markel|plano_default.png|800|600|1|1
+Markel2|Bat|plano_hospital.png|800|600|1|1
+Markel2|Bi|plano_hospital.png|800|600|1|1
+Markel2|Hiru|plano_hospital.png|800|600|1|1

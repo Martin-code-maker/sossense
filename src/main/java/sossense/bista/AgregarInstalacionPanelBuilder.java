@@ -17,6 +17,9 @@ import sossense.datubasea.SensorLayout;
 
 public class AgregarInstalacionPanelBuilder {
 
+    private static final int DEFAULT_ANCHO = 800;
+    private static final int DEFAULT_ALTO = 600;
+
     private final SOSsenseKontrolatzailea controller;
     private final Navigator navigator;
     private final PlanoRepository planoRepo;
@@ -101,20 +104,6 @@ public class AgregarInstalacionPanelBuilder {
         plantaPanel.add(plantaIzenaField, pg);
 
         pg.gridx = 0; pg.gridy = 1;
-        JLabel lblTamaina = new JLabel("Tamaina (zabal/altu):");
-        lblTamaina.setFont(new Font("Arial", Font.BOLD, 13));
-        plantaPanel.add(lblTamaina, pg);
-
-        pg.gridx = 1;
-        JPanel sizePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        JTextField anchoField = new JTextField("800", 6);
-        JTextField altoField = new JTextField("600", 6);
-        sizePanel.add(anchoField);
-        sizePanel.add(new JLabel("x"));
-        sizePanel.add(altoField);
-        plantaPanel.add(sizePanel, pg);
-
-        pg.gridx = 0; pg.gridy = 2;
         JLabel lblSensores = new JLabel("Sentsoreak (id,x,y,kokapena):");
         lblSensores.setFont(new Font("Arial", Font.BOLD, 13));
         plantaPanel.add(lblSensores, pg);
@@ -127,7 +116,7 @@ public class AgregarInstalacionPanelBuilder {
         sensoresScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         plantaPanel.add(sensoresScroll, pg);
 
-        pg.gridx = 1; pg.gridy = 3;
+        pg.gridx = 1; pg.gridy = 2;
         JLabel hintLabel = new JLabel("Adibidea: S1,120,80,Pasilo nagusia; S2,300,210,Bulegoak");
         hintLabel.setFont(new Font("Arial", Font.ITALIC, 11));
         hintLabel.setForeground(Color.DARK_GRAY);
@@ -143,46 +132,40 @@ public class AgregarInstalacionPanelBuilder {
         JLabel resumenLabel = new JLabel("0 planta, 0 sentsore");
         resumenLabel.setFont(new Font("Arial", Font.BOLD, 12));
 
-        pg.gridx = 0; pg.gridy = 4;
+        pg.gridx = 0; pg.gridy = 3;
         pg.gridwidth = 2;
         JButton gehituPlantaBtn = new JButton("Planta gehitu");
         gehituPlantaBtn.setFont(new Font("Arial", Font.BOLD, 13));
         gehituPlantaBtn.addActionListener(e -> {
-            try {
-                String izenaPlanta = plantaIzenaField.getText().trim();
-                if (izenaPlanta.isEmpty()) {
-                    JOptionPane.showMessageDialog(mainPanel, "Idatzi planta izena.", "Abisua", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                int ancho = Integer.parseInt(anchoField.getText().trim());
-                int alto = Integer.parseInt(altoField.getText().trim());
-                List<SensorLayout> sentsoreakPlanta = parsearSensores(sensoresArea.getText().trim(), izenaPlanta, mainPanel);
-                if (sentsoreakPlanta.isEmpty()) {
-                    JOptionPane.showMessageDialog(mainPanel, "Gutxienez sentsore bat gehitu behar da.", "Abisua", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                PlanoInfo planoInfo = new PlanoInfo("", izenaPlanta, "", ancho, alto,
-                    sentsoreakPlanta.size(), sentsoreakPlanta.size(), sentsoreakPlanta);
-                planoDefinituak.add(planoInfo);
-                plantasModel.addElement(izenaPlanta + " (" + sentsoreakPlanta.size() + " sentsore)");
-
-                plantaIzenaField.setText("");
-                sensoresArea.setText("");
-
-                int totalSens = planoDefinituak.stream().mapToInt(p -> p.getSensoresDefinidos().size()).sum();
-                resumenLabel.setText(planoDefinituak.size() + " planta, " + totalSens + " sentsore");
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(mainPanel, "Ancho/Alto balio osoak izan behar dira.", "Errorea", JOptionPane.ERROR_MESSAGE);
+            String izenaPlanta = plantaIzenaField.getText().trim();
+            if (izenaPlanta.isEmpty()) {
+                JOptionPane.showMessageDialog(mainPanel, "Idatzi planta izena.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+
+            List<SensorLayout> sentsoreakPlanta = parsearSensores(sensoresArea.getText().trim(), izenaPlanta, mainPanel);
+            if (sentsoreakPlanta.isEmpty()) {
+                JOptionPane.showMessageDialog(mainPanel, "Gutxienez sentsore bat gehitu behar da.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            PlanoInfo planoInfo = new PlanoInfo("", izenaPlanta, "", DEFAULT_ANCHO, DEFAULT_ALTO,
+                sentsoreakPlanta.size(), sentsoreakPlanta.size(), sentsoreakPlanta);
+            planoDefinituak.add(planoInfo);
+            plantasModel.addElement(izenaPlanta + " (" + sentsoreakPlanta.size() + " sentsore)");
+
+            plantaIzenaField.setText("");
+            sensoresArea.setText("");
+
+            int totalSens = planoDefinituak.stream().mapToInt(p -> p.getSensoresDefinidos().size()).sum();
+            resumenLabel.setText(planoDefinituak.size() + " planta, " + totalSens + " sentsore");
         });
         plantaPanel.add(gehituPlantaBtn, pg);
 
-        pg.gridx = 0; pg.gridy = 5; pg.gridwidth = 2;
+        pg.gridx = 0; pg.gridy = 4; pg.gridwidth = 2;
         plantaPanel.add(plantasScroll, pg);
 
-        pg.gridy = 6;
+        pg.gridy = 5;
         plantaPanel.add(resumenLabel, pg);
 
         formPanel.add(plantaPanel, gbc);
@@ -310,7 +293,25 @@ public class AgregarInstalacionPanelBuilder {
         if (planos == null || planos.isEmpty()) {
             return;
         }
-        try (FileWriter fw = new FileWriter("datos/sensores.txt", true)) {
+        java.nio.file.Path ruta = java.nio.file.Paths.get("datos/sensores.txt");
+        boolean necesitaSaltoInicial = false;
+        try {
+            if (java.nio.file.Files.exists(ruta) && java.nio.file.Files.size(ruta) > 0) {
+                // Si el fichero no termina en salto, añadimos uno antes de escribir
+                byte[] ult = java.nio.file.Files.readAllBytes(ruta);
+                if (ult.length > 0) {
+                    byte last = ult[ult.length - 1];
+                    necesitaSaltoInicial = last != '\n' && last != '\r';
+                }
+            }
+        } catch (IOException e) {
+            // Si falla la lectura no interrumpimos el guardado
+        }
+
+        try (FileWriter fw = new FileWriter(ruta.toFile(), true)) {
+            if (necesitaSaltoInicial) {
+                fw.write(System.lineSeparator());
+            }
             for (PlanoInfo plano : planos) {
                 for (SensorLayout sensor : plano.getSensoresDefinidos()) {
                     fw.write(instalacion + "|" + plano.getNombrePlano() + "|" + sensor.getId() + "|" + sensor.getX() + "|" + sensor.getY() + "|" + sensor.getUbicacion());
