@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileWriter;
 
 
 public class KudeatuInstalazioak {
@@ -34,7 +35,7 @@ public class KudeatuInstalazioak {
                 if (partes.length >= 5) {
                     String nombre = partes[0].trim();
                     int sensores = Integer.parseInt(partes[1].trim());
-                    String estado = partes[2].trim();
+                    // Egoera hasierakoa ez da hartu fitxategitik: dinamikoki eguneratuko da sentsoreen arabera
                     String direccion = partes[3].trim();
                     String tipo = partes[4].trim();
                     
@@ -45,12 +46,12 @@ public class KudeatuInstalazioak {
                             int r = Integer.parseInt(rgb[0].trim());
                             int g = Integer.parseInt(rgb[1].trim());
                             int b = Integer.parseInt(rgb[2].trim());
-                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo, new Color(r, g, b)), false);
+                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, "", direccion, tipo, new Color(r, g, b)), false);
                         } else {
-                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo), false);
+                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, "", direccion, tipo), false);
                         }
                     } else {
-                        agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo), false);
+                        agregarInstalacionInternal(new Instalazioa(nombre, sensores, "", direccion, tipo), false);
                     }
                 }
             }
@@ -69,7 +70,7 @@ public class KudeatuInstalazioak {
         agregarInstalacionInternal(new Instalazioa(
             "MU-ko OSPITALA",
             60,
-            "LARRIA",
+            "",
             "Nafarros Himbidea 16.20500 Arrasate, Gipuzkoa, Spain",
             "OSPITALEA"
         ), false);
@@ -77,7 +78,7 @@ public class KudeatuInstalazioak {
         agregarInstalacionInternal(new Instalazioa(
             "MU-ko UNIBERTSITATEA",
             20,
-            "NORMALA",
+            "",
             "Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain",
             "UNIBERTSITATEA"
         ), false);
@@ -230,7 +231,7 @@ public class KudeatuInstalazioak {
             StringBuilder sb = new StringBuilder();
             sb.append(instalacion.getIzena()).append('|')
               .append(instalacion.getSentsoreak()).append('|')
-              .append(instalacion.getEgoera()).append('|')
+              .append("").append('|')
               .append(instalacion.getHelbidea()).append('|')
               .append(instalacion.getMota());
             fw.write(sb.toString());
@@ -238,6 +239,60 @@ public class KudeatuInstalazioak {
         } catch (IOException e) {
             System.err.println("Ezin izan da instalazioa gorde fitxategian: " + e.getMessage());
         }
+    }
+
+    // Eguneratu egoerak sensores.txt fitxategiko balioen arabera.
+    // Logika: max balioa >=70 -> LARRIA; >=30 -> ARINGARRI; bestela NORMALA.
+    public boolean actualizarEgoerakDesdeSensores(String rutaSensores) {
+        Map<String, Integer> maximoPorInstalacion = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(rutaSensores))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
+                    continue;
+                }
+                String[] partes = linea.split("\\|");
+                if (partes.length >= 6) {
+                    String inst = partes[0].trim();
+                    try {
+                        int nivel = 0;
+                        // Si hay valor numérico de nivel en la 7ª columna, úsalo. Si no, intenta con la 6ª.
+                        if (partes.length >= 7) {
+                            nivel = Integer.parseInt(partes[6].trim());
+                        } else {
+                            nivel = Integer.parseInt(partes[5].trim());
+                        }
+                        int max = maximoPorInstalacion.getOrDefault(inst, 0);
+                        if (nivel > max) {
+                            maximoPorInstalacion.put(inst, nivel);
+                        }
+                    } catch (NumberFormatException ex) {
+                        // Saltar sensor mal formateado
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Ezin da irakurri sensores.txt: " + e.getMessage());
+        }
+
+        boolean changed = false;
+        for (Instalazioa inst : instalazioZerrenda) {
+            int maxNivel = maximoPorInstalacion.getOrDefault(inst.getIzena(), 0);
+            String berria;
+            if (maxNivel >= 70) {
+                berria = "LARRIA";
+            } else if (maxNivel >= 30) {
+                berria = "ARINGARRI";
+            } else {
+                berria = "NORMALA";
+            }
+            if (!berria.equalsIgnoreCase(inst.getEgoera())) {
+                inst.setEgoera(berria);
+                changed = true;
+            }
+        }
+        return changed;
     }
 
 }

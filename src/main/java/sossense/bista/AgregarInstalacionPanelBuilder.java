@@ -59,17 +59,6 @@ public class AgregarInstalacionPanelBuilder {
         formPanel.add(izenaField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        JLabel lblEgoera = new JLabel("Egoera:");
-        lblEgoera.setFont(new Font("Arial", Font.BOLD, 16));
-        formPanel.add(lblEgoera, gbc);
-
-        gbc.gridx = 1;
-        String[] egoeras = { "NORMALA", "LARRIA", "ARINGARRI", "KALTEA", "MANTENIMIENTO" };
-        JComboBox<String> egoeraCombo = new JComboBox<>(egoeras);
-        egoeraCombo.setFont(new Font("Arial", Font.PLAIN, 14));
-        formPanel.add(egoeraCombo, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
         JLabel lblHelbidea = new JLabel("Helbidea:");
         lblHelbidea.setFont(new Font("Arial", Font.BOLD, 16));
         formPanel.add(lblHelbidea, gbc);
@@ -79,7 +68,7 @@ public class AgregarInstalacionPanelBuilder {
         helbideaField.setFont(new Font("Arial", Font.PLAIN, 14));
         formPanel.add(helbideaField, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0; gbc.gridy = 2;
         JLabel lblMota = new JLabel("Mota:");
         lblMota.setFont(new Font("Arial", Font.BOLD, 16));
         formPanel.add(lblMota, gbc);
@@ -91,7 +80,7 @@ public class AgregarInstalacionPanelBuilder {
         formPanel.add(motaCombo, gbc);
 
         // Planta eta sentsoreak
-        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridx = 0; gbc.gridy = 3;
         gbc.gridwidth = 2;
         JPanel plantaPanel = new JPanel(new GridBagLayout());
         plantaPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY),
@@ -199,7 +188,7 @@ public class AgregarInstalacionPanelBuilder {
         formPanel.add(plantaPanel, gbc);
 
         // Resumen final de sentsoreak kalkulatzeko eremu irakurgarria
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
         JLabel lblSentsoreak = new JLabel("Sentsore kopurua (autom.):");
         lblSentsoreak.setFont(new Font("Arial", Font.BOLD, 16));
@@ -220,7 +209,6 @@ public class AgregarInstalacionPanelBuilder {
         agregarBtn.setPreferredSize(new Dimension(150, 40));
         agregarBtn.addActionListener(e -> {
             String izena = izenaField.getText().trim();
-            String egoera = (String) egoeraCombo.getSelectedItem();
             String helbidea = helbideaField.getText().trim();
             String mota = (String) motaCombo.getSelectedItem();
 
@@ -244,7 +232,7 @@ public class AgregarInstalacionPanelBuilder {
             sensoresField.setText(String.valueOf(totalSentsoreak));
 
             try {
-                controller.gehituInstalazioa(izena, totalSentsoreak, egoera, helbidea, mota);
+                controller.gehituInstalazioa(izena, totalSentsoreak, "", helbidea, mota);
                 // Establecer imagen de plano por tipo antes de persistir
                 String imagenTipo = lortuIrudiaMotarenArabera(mota);
                 List<PlanoInfo> eguneratuak = new ArrayList<>();

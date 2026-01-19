@@ -46,6 +46,14 @@ public class SOSsenseModeloa {
         support.firePropertyChange(INSTALAZIOAK_ALDAKETA, before, gestion.getInstalaciones());
     }
 
+    public boolean eguneratuEgoerakSensorretatik() {
+        boolean aldaketa = gestion.actualizarEgoerakDesdeSensores("datos/sensores.txt");
+        if (aldaketa) {
+            support.firePropertyChange(INSTALAZIOAK_ALDAKETA, null, gestion.getInstalaciones());
+        }
+        return aldaketa;
+    }
+
     public String lortuEstadistikak() {
         return gestion.getEstadisticas();
     }

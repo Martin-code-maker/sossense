@@ -2,6 +2,16 @@ package sossense.bista;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import javax.swing.Timer;
+import java.util.Map;
+import java.util.HashMap;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import javax.swing.Timer;
 import javax.swing.*;
 
 import sossense.datubasea.Instalazioa;
@@ -51,6 +61,7 @@ public class InstalacionesPanelBuilder {
         JPanel instalacionesPanel = new JPanel();
         instalacionesPanel.setLayout(new BoxLayout(instalacionesPanel, BoxLayout.Y_AXIS));
         instalacionesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        Map<String, JLabel> egoeraLabels = new HashMap<>();
 
         int[] paginaActual = {0};
         int itemsPorPagina = 5;
@@ -97,7 +108,7 @@ public class InstalacionesPanelBuilder {
             int inicio = paginaActual[0] * itemsPorPagina;
             int fin = Math.min(inicio + itemsPorPagina, todasInstalaciones.size());
             List<Instalazioa> instalaziakPagina = todasInstalaciones.subList(inicio, fin);
-            bistaratuInstalazioak(instalacionesPanel, instalaziakPagina);
+            bistaratuInstalazioak(instalacionesPanel, instalaziakPagina, egoeraLabels);
             paginaLabel.setText("Orria " + (paginaActual[0] + 1) + " / " + Math.max(1, totalPages));
             anteriorBtn.setEnabled(paginaActual[0] > 0);
             siguienteBtn.setEnabled(paginaActual[0] < totalPages - 1);
@@ -119,20 +130,35 @@ public class InstalacionesPanelBuilder {
         searchField.addActionListener(buscarAction);
 
         actualizarPagina.run();
+
+        Timer refresco = new Timer(1000, e -> {
+            controller.eguneratuEgoerakSensorretatik();
+            eguneratuEgoeraLabels(egoeraLabels);
+        });
+        refresco.start();
+
+        mainPanel.addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent e) {
+                if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0 && !mainPanel.isDisplayable()) {
+                    refresco.stop();
+                }
+            }
+        });
         return mainPanel;
     }
 
-    private void bistaratuInstalazioak(JPanel instalacionesPanel, List<Instalazioa> instalazioak) {
+    private void bistaratuInstalazioak(JPanel instalacionesPanel, List<Instalazioa> instalazioak, Map<String, JLabel> egoeraLabels) {
         instalacionesPanel.removeAll();
         for (Instalazioa inst : instalazioak) {
-            instalacionesPanel.add(crearPanelInstalacion(inst));
+            instalacionesPanel.add(crearPanelInstalacion(inst, egoeraLabels));
             instalacionesPanel.add(Box.createVerticalStrut(10));
         }
         instalacionesPanel.revalidate();
         instalacionesPanel.repaint();
     }
 
-    private JPanel crearPanelInstalacion(Instalazioa inst) {
+    private JPanel crearPanelInstalacion(Instalazioa inst, Map<String, JLabel> egoeraLabels) {
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -189,6 +215,7 @@ public class InstalacionesPanelBuilder {
         lblEgoeraValor.setForeground(inst.getKolorEgoera());
         panelEstado.add(lblEgoeraTitulo);
         panelEstado.add(lblEgoeraValor);
+        egoeraLabels.put(inst.getIzena(), lblEgoeraValor);
         panel.add(panelEstado, gbc);
 
         gbc.gridy = 3; gbc.weighty = 1.0; gbc.anchor = GridBagConstraints.SOUTHEAST; gbc.insets = new Insets(15, 0, 0, 0);
@@ -218,6 +245,17 @@ public class InstalacionesPanelBuilder {
             }
         });
         return panel;
+    }
+
+    private void eguneratuEgoeraLabels(Map<String, JLabel> egoeraLabels) {
+        List<Instalazioa> instalazioak = controller.lortuInstalazioak();
+        for (Instalazioa inst : instalazioak) {
+            JLabel lbl = egoeraLabels.get(inst.getIzena());
+            if (lbl != null) {
+                lbl.setText(inst.getEgoera());
+                lbl.setForeground(inst.getKolorEgoera());
+            }
+        }
     }
 
     private String lortuIrudiaMotarenArabera(String mota) {

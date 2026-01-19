@@ -26,8 +26,12 @@ public class SOSsenseKontrolatzailea {
     }
 
     public void gehituInstalazioa(String izena, int sentsoreak, String egoera, String helbidea, String mota) {
-        Instalazioa instalazioa = new Instalazioa(izena, sentsoreak, egoera, helbidea, mota);
+        Instalazioa instalazioa = new Instalazioa(izena, sentsoreak, "", helbidea, mota);
         model.gehituInstalazioa(instalazioa);
+    }
+
+    public boolean eguneratuEgoerakSensorretatik() {
+        return model.eguneratuEgoerakSensorretatik();
     }
 
     public String lortuEstadistikak() {
