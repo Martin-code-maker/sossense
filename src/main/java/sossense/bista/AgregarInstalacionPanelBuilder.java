@@ -3,6 +3,8 @@ package sossense.bista;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -173,7 +175,7 @@ public class AgregarInstalacionPanelBuilder {
                 }
 
                 PlanoInfo planoInfo = new PlanoInfo("", izenaPlanta, "", ancho, alto,
-                        sentsoreakPlanta.size(), sentsoreakPlanta.size(), sentsoreakPlanta);
+                    sentsoreakPlanta.size(), sentsoreakPlanta.size(), sentsoreakPlanta);
                 planoDefinituak.add(planoInfo);
                 plantasModel.addElement(izenaPlanta + " (" + sentsoreakPlanta.size() + " sentsore)");
 
@@ -253,6 +255,7 @@ public class AgregarInstalacionPanelBuilder {
                 }
 
                 planoRepo.guardarPlanos(izena, eguneratuak);
+                guardarSensoresTxt(izena, eguneratuak);
 
                 JOptionPane.showMessageDialog(mainPanel, "Instalazioa eta planoak gorde dira!", "Arrakasta", JOptionPane.INFORMATION_MESSAGE);
                 navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build());
@@ -313,6 +316,25 @@ public class AgregarInstalacionPanelBuilder {
             }
         }
         return sensores;
+    }
+
+    private void guardarSensoresTxt(String instalacion, List<PlanoInfo> planos) {
+        if (planos == null || planos.isEmpty()) {
+            return;
+        }
+        try (FileWriter fw = new FileWriter("datos/sensores.txt", true)) {
+            for (PlanoInfo plano : planos) {
+                for (SensorLayout sensor : plano.getSensoresDefinidos()) {
+                    fw.write(instalacion + "|" + plano.getNombrePlano() + "|" + sensor.getId() + "|" + sensor.getX() + "|" + sensor.getY() + "|" + sensor.getUbicacion());
+                    fw.write(System.lineSeparator());
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Ezin izan da sensors.txt eguneratu: " + e.getMessage(),
+                    "Errorea",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private String lortuIrudiaMotarenArabera(String mota) {

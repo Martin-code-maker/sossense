@@ -17,4 +17,9 @@ MU-ko OSPITALA|Planta 1|H10|350|250|Pasillo Central
 MU-ko OSPITALA|Planta 1|H11|150|150|Habitación 101
 MU-ko OSPITALA|Planta 2|H20|300|300|Quirófano A
 MU-ko OSPITALA|UCI|H30|400|300|Box 1
-MU-ko OSPITALA|UCI|H31|200|200|Box 2
+MU-ko OSPITALA|UCI|H31|200|200|Box 2Froga sensores|Lehenengoa|S1|35|234|Lehenengoa - Nagusia
+Froga sensores|Lehenengoa|S2|135|134|Lehenengoa - Nagusia
+Froga sensores|Lehenengoa|S3|435|34|Lehenengoa - Nagusia
+Froga sensores|Bigarrena|S1|37|274|Bigarrena - Bi
+Froga sensores|Bigarrena|S2|37|634|Bigarrena - Nagusia
+Froga sensores|Bigarrena|S3|335|334|Bigarrena - Nagusia

@@ -36,13 +36,8 @@ public class PlanoRepository {
                         int sensoresMin = Integer.parseInt(partes[5].trim());
                         int sensoresMax = Integer.parseInt(partes[6].trim());
 
-                        List<SensorLayout> sensoresDefinidos = new ArrayList<>();
-                        if (partes.length >= 8) {
-                            sensoresDefinidos.addAll(parseSensores(partes[7].trim(), nombrePlano));
-                        }
-
                         planos.add(new PlanoInfo(instalacion, nombrePlano, imagenFondo,
-                                ancho, alto, sensoresMin, sensoresMax, sensoresDefinidos));
+                                ancho, alto, sensoresMin, sensoresMax, new ArrayList<>()));
                     }
                 }
             }
@@ -78,47 +73,6 @@ public class PlanoRepository {
           .append(plano.getAlto()).append('|')
           .append(plano.getSensoresMin()).append('|')
           .append(plano.getSensoresMax());
-
-        if (plano.tieneSensoresDefinidos()) {
-            sb.append('|').append(serializarSensores(plano.getSensoresDefinidos(), plano.getNombrePlano()));
-        }
         return sb.toString();
-    }
-
-    private String serializarSensores(List<SensorLayout> sensores, String nombrePlano) {
-        List<String> serializados = new ArrayList<>();
-        for (SensorLayout sensor : sensores) {
-            String ubicacionLimpia = sensor.getUbicacion().replace('|', ' ').replace(';', ',');
-            serializados.add(sensor.getId() + "," + sensor.getX() + "," + sensor.getY() + "," + ubicacionLimpia);
-        }
-        return String.join(";", serializados);
-    }
-
-    private List<SensorLayout> parseSensores(String raw, String nombrePlano) {
-        List<SensorLayout> sensores = new ArrayList<>();
-        if (raw == null || raw.isEmpty()) {
-            return sensores;
-        }
-        String[] trozos = raw.split(";");
-        for (String trozo : trozos) {
-            String limpio = trozo.trim();
-            if (limpio.isEmpty()) {
-                continue;
-            }
-            String[] partesSensor = limpio.split(",", 4);
-            if (partesSensor.length < 4) {
-                continue;
-            }
-            try {
-                String id = partesSensor[0].trim();
-                int x = Integer.parseInt(partesSensor[1].trim());
-                int y = Integer.parseInt(partesSensor[2].trim());
-                String ubicacion = partesSensor[3].trim();
-                sensores.add(new SensorLayout(id, x, y, ubicacion));
-            } catch (NumberFormatException ex) {
-                System.err.println("Ezin izan da sentsorea parseatu planoan " + nombrePlano + ": " + trozo);
-            }
-        }
-        return sensores;
     }
 }

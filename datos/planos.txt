@@ -206,3 +206,5 @@ Errenteria Ikastola|Planta 1|plano_escuela.jpg|800|600|5|15Froga1|Lehen Solairua
 Froga2|Lehen solairua|plano_hospital.png|800|600|2|2|S1,120,200,Lehen solairua - Gela1;S2,20,100,Lehen solairua - Gela2
 Froga3|Berria|plano_hospital.png|800|600|5|5|S1,120,200,Berria - Gela1;S1,120,200,Berria - Gela1;S1,120,200,Berria - Gela1;S1,120,200,Berria - Gela1;S1,120,200,Berria - Gela1
 Froga manex|planta 1|plano_escuela.png|800|600|2|2|S1,100,80,planta 1 - PASS;S2,100,380,planta 1 - PASS
+Froga sensores|Lehenengoa|plano_laboratorio.png|800|600|3|3
+Froga sensores|Bigarrena|plano_laboratorio.png|800|600|3|3

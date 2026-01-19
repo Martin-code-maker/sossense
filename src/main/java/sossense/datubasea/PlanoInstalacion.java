@@ -17,6 +17,8 @@ public class PlanoInstalacion {
     private int alto;
     private List<SensorPlano> sentsoreak;
     private Random random;
+    private List<SensorLayout> sensoresDefinidos;
+    private String imagenFondo;
     
     // Variables de control
     private boolean simulacionActiva = true; 
@@ -35,42 +37,33 @@ public class PlanoInstalacion {
         
         this.sentsoreak = new ArrayList<>();
         this.random = new Random();
-        
-        // Cargar sensores REALES desde el fichero
-        cargarSensoresDesdeFichero();
-        
-        // Inicializar con valores simulados (para que no salgan en blanco al inicio)
+        this.sensoresDefinidos = new ArrayList<>();
+        this.imagenFondo = planoInfo.getImagenFondo();
+
+        cargarSensoresDesdeSensoresTxt();
         simularNivelesHumoIniciales();
     }
     
-    private void cargarSensoresDesdeFichero() {
+    private void cargarSensoresDesdeSensoresTxt() {
         String archivo = "datos/sensores.txt";
         boolean encontrado = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                // Ignorar comentarios y líneas vacías
                 if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
                     continue;
                 }
-                
                 String[] partes = linea.split("\\|");
-                // Formato esperado: Instalacion|Plano|ID|X|Y|Zona
                 if (partes.length >= 6) {
                     String inst = partes[0].trim();
                     String plan = partes[1].trim();
-                    
-                    // Solo cargamos los sensores que coincidan con ESTE edificio y ESTA planta
                     if (inst.equalsIgnoreCase(this.nombreInstalacion) && 
                         plan.equalsIgnoreCase(this.nombrePlano)) {
-                        
                         String id = partes[2].trim();
                         int x = Integer.parseInt(partes[3].trim());
                         int y = Integer.parseInt(partes[4].trim());
                         String zona = partes[5].trim();
-                        
-                        // Crear sensor y añadirlo
                         sentsoreak.add(new SensorPlano(id, x, y, zona));
                         encontrado = true;
                     }
@@ -79,12 +72,9 @@ public class PlanoInstalacion {
         } catch (IOException | NumberFormatException e) {
             System.err.println("Error leyendo sensores.txt: " + e.getMessage());
         }
-        
-        // Si no encontramos sensores en el fichero para este plano, 
-        // avisamos (o podríamos generar randoms como fallback si quisieras)
+
         if (!encontrado) {
-            System.out.println("⚠ No hay sensores definidos en sensores.txt para: " + 
-                             nombreInstalacion + " - " + nombrePlano);
+            System.out.println("⚠ No hay sensores definidos para: " + nombreInstalacion + " - " + nombrePlano);
         }
     }
     
@@ -117,6 +107,7 @@ public class PlanoInstalacion {
     public String getNombrePlano() { return nombrePlano; }
     public int getAncho() { return ancho; }
     public int getAlto() { return alto; }
+    public String getImagenFondo() { return imagenFondo; }
     
     public int getTotalSentsoreak() { return sentsoreak.size(); }
     

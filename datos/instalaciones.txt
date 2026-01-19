@@ -56,3 +56,4 @@ Errenteria Ikastola|21|NORMALA|Galtzaraborda 67, 20100 Errenteria, Gipuzkoa|IKAS
 Froga2|2|NORMALA|Froga2|HOSPITAL
 Froga3|5|NORMALA|Froga3|HOSPITAL
 Froga manex|2|NORMALA|Froga manex|ESCOLA
+Froga sensores|6|NORMALA|Froga sensores|LABORATORIO
