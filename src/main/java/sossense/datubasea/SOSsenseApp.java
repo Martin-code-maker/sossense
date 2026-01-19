@@ -14,7 +14,6 @@ import sossense.bista.EstadisticasPanelBuilder;
 import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
- 
 
 public class SOSsenseApp {
 
@@ -31,21 +30,20 @@ public class SOSsenseApp {
     private final PlanoRepository planoRepo = new PlanoRepository("datos/planos.txt");
     private final Navigator navigator = panel -> cambiarPanelCentral(panel);
 
-
     public SOSsenseApp() {
         this.model = new SOSsenseModeloa();
         this.controller = new SOSsenseKontrolatzailea(model);
         crearInterfaz();
-        
+
         // --- Integración MQTT separada de la UI ---
         try {
             Mqtt mqtt = new Mqtt();
-            MqttIntegration.attachPlanUpdater(mqtt, () -> appContext.getPanelPlanoActivo(), () -> appContext.getInstalacionActiva());
+            MqttIntegration.attachPlanUpdater(mqtt, () -> appContext.getPanelPlanoActivo(),
+                    () -> appContext.getInstalacionActiva());
         } catch (Exception ex) {
             System.err.println("Error conectando MQTT: " + ex.getMessage());
         }
         System.out.println("[APP] Modo offline - MQTT desactivado");
-        // ---------------------
     }
 
     public void bistaratuApp() {
@@ -53,7 +51,7 @@ public class SOSsenseApp {
     }
 
     private void crearInterfaz() {
-        //
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(900, 700);
@@ -78,7 +76,6 @@ public class SOSsenseApp {
         leftTopPanel.add(menuToggle);
         topPanel.add(leftTopPanel, BorderLayout.WEST);
 
-        // Título centrado
         JLabel title = new JLabel("S.O.S.sense - Monitorización de Instalaciones", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 36));
         title.setForeground(Color.BLACK);
@@ -161,7 +158,6 @@ public class SOSsenseApp {
         // ==================== PANEL PRINCIPAL ====================
         centerPanel = new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build();
 
-        // ==================== AÑADIR TODO AL FRAME ====================
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(menuPanel, BorderLayout.WEST);
         frame.add(centerPanel, BorderLayout.CENTER);
@@ -240,13 +236,15 @@ public class SOSsenseApp {
                 case "INSTALACION GUZTIAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        cambiarPanelCentral(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build());
+                        cambiarPanelCentral(
+                                new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build());
                     });
                     break;
                 case "GEHITU BERRIA":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        cambiarPanelCentral(new sossense.bista.AgregarInstalacionPanelBuilder(controller, navigator, planoRepo, appContext).build());
+                        cambiarPanelCentral(new sossense.bista.AgregarInstalacionPanelBuilder(controller, navigator,
+                                planoRepo, appContext).build());
                     });
                     break;
                 case "ESTATISTIKAK":
@@ -299,14 +297,6 @@ public class SOSsenseApp {
             e.printStackTrace();
         }
     }
-
-    // Instalaciones panel moved to InstalacionesPanelBuilder
-
-    // bistaratuInstalazioak moved to builder logic
-
-    // lortuIrudiaMotarenArabera moved to builder
-
-    // crearPanelInstalacion moved to builder
 
     private void cambiarPanelCentral(JPanel nuevoPanel) {
         frame.getContentPane().remove(centerPanel);

@@ -12,7 +12,6 @@ public class PanelPlano extends JPanel {
     private Timer timerActualizacion;
     private SensorPlano sensorSeleccionado;
     
-    // Nueva variable para la imagen
     private Image imagenPlano; 
     
     public PanelPlano(PlanoInstalacion plano) {
@@ -40,7 +39,6 @@ public class PanelPlano extends JPanel {
                 rutas.add("/sossense/img/" + nombreImagenFondo.substring(0, nombreImagenFondo.length() - 4) + ".jpg");
             }
         } else {
-            // Lógica por nombre de instalación
             if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
                 rutas.add("/sossense/img/plano_hospital.png");
             }
@@ -61,7 +59,6 @@ public class PanelPlano extends JPanel {
             }
         }
 
-        // Aseguramos un fallback genérico al final
         rutas.add("/sossense/img/plano_default.png");
 
         // Cargar la primera imagen disponible
@@ -80,7 +77,6 @@ public class PanelPlano extends JPanel {
         if (imagenPlano == null) {
             System.err.println("No se encontró ninguna imagen de plano para " + nombreInstalacion + " (intentado: " + rutas + ")");
         }
-        // ------------------------------------------
         
         // Configurar eventos del ratón
         addMouseListener(new MouseAdapter() {

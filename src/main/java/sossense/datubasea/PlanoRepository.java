@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import sossense.datubasea.SensorLayout;
-
 public class PlanoRepository {
 
     private final String archivo;
@@ -67,12 +65,12 @@ public class PlanoRepository {
     private String formatearPlano(PlanoInfo plano) {
         StringBuilder sb = new StringBuilder();
         sb.append(plano.getNombreInstalacion()).append('|')
-          .append(plano.getNombrePlano()).append('|')
-          .append(plano.getImagenFondo() == null ? "" : plano.getImagenFondo()).append('|')
-          .append(plano.getAncho()).append('|')
-          .append(plano.getAlto()).append('|')
-          .append(plano.getSensoresMin()).append('|')
-          .append(plano.getSensoresMax());
+                .append(plano.getNombrePlano()).append('|')
+                .append(plano.getImagenFondo() == null ? "" : plano.getImagenFondo()).append('|')
+                .append(plano.getAncho()).append('|')
+                .append(plano.getAlto()).append('|')
+                .append(plano.getSensoresMin()).append('|')
+                .append(plano.getSensoresMax());
         return sb.toString();
     }
 }

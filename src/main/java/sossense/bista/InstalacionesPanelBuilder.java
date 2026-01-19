@@ -7,11 +7,7 @@ import java.util.HashMap;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import javax.swing.Timer;
-import java.util.Map;
-import java.util.HashMap;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-import javax.swing.Timer;
+
 import javax.swing.*;
 
 import sossense.datubasea.Instalazioa;

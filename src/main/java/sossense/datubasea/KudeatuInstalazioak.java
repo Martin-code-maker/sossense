@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,13 +44,12 @@ public class KudeatuInstalazioak {
                 if (partes.length >= 5) {
                     String nombre = partes[0].trim();
                     int sensores = Integer.parseInt(partes[1].trim());
-                    // Egoera hasierakoa ez da hartu fitxategitik: dinamikoki eguneratuko da sentsoreen arabera
                     String direccion = partes[3].trim();
                     String tipo = partes[4].trim();
 
                     if (!motaBaimendua(tipo)) {
                         System.err.println("Mota ezezaguna instalazioan: " + nombre + " -> " + tipo + ". Saltatzen...");
-                        continue; // tipo ez bada baliozkoa, ez kargatu
+                        continue; 
                     }
                     
                     // Si hay color personalizado
@@ -125,7 +123,7 @@ public class KudeatuInstalazioak {
     }
     
     public List<Instalazioa> getInstalaciones() {
-        return new ArrayList<>(instalazioZerrenda); // Devolver copia
+        return new ArrayList<>(instalazioZerrenda); 
     }
 
     public int getTotalSensores() {
@@ -147,7 +145,6 @@ public class KudeatuInstalazioak {
         stats.append("Total instalazioZerrenda: ").append(getTotalInstalaciones()).append("\n");
         stats.append("Total sensores: ").append(getTotalSensores()).append("\n");
         
-        // Contar por tipo
         stats.append("\nPor tipo:\n");
         Map<String, Integer> porTipo = new HashMap<>();
         for (Instalazioa inst : instalazioZerrenda) {
@@ -164,7 +161,6 @@ public class KudeatuInstalazioak {
             stats.append("  ").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
         
-        // Contar por estado
         stats.append("\nPor estado:\n");
         Map<String, Integer> porEstado = new HashMap<>();
         for (Instalazioa inst : instalazioZerrenda) {

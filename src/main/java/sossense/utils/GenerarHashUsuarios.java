@@ -19,11 +19,12 @@ public final class GenerarHashUsuarios {
             usuario = console.readLine("Usuario (opcional, ENTER para omitir): ");
             passwordChars = console.readPassword("Contraseña: ");
         } else {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Usuario (opcional, ENTER para omitir): ");
-            usuario = sc.nextLine();
-            System.out.print("Contraseña (se verá al escribirla): ");
-            passwordChars = sc.nextLine().toCharArray();
+            try (Scanner sc = new Scanner(System.in)) {
+                System.out.print("Usuario (opcional, ENTER para omitir): ");
+                usuario = sc.nextLine();
+                System.out.print("Contraseña (se verá al escribirla): ");
+                passwordChars = sc.nextLine().toCharArray();
+            }
         }
 
         String password = new String(passwordChars);

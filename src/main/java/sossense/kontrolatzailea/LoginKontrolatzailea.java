@@ -16,7 +16,6 @@ public class LoginKontrolatzailea implements ActionListener {
     public void actionPerformed(java.awt.event.ActionEvent e) {
         switch (e.getActionCommand()) {
             case "irten":
-            //case "kantzelatu":
                 m.itxiLehioa();
                 break;
             case "ok":

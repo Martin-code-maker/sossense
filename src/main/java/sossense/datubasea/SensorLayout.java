@@ -1,8 +1,5 @@
 package sossense.datubasea;
 
-/**
- * Representa la configuracion fija de un sensor dentro de un plano.
- */
 public class SensorLayout {
 
     private final String id;
