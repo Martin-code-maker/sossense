@@ -1,25 +1,215 @@
 # Formato: Instalacion|Plano|ID_Sensor|X|Y|Zona
-# IMPORTANTE: Los nombres deben ser idénticos a los que salen en tu error
 
-# --- MONDRAGON FABRIKA ---
+# ==========================================
+# MU-ko OSPITALA
+# ==========================================
+MU-ko OSPITALA|Planta Baja|H_PB_01|100|100|Harrera Nagusia
+MU-ko OSPITALA|Planta Baja|H_PB_02|250|100|Itxarongela A
+MU-ko OSPITALA|Planta Baja|H_PB_03|500|150|Kafetegia
+MU-ko OSPITALA|Planta Baja|H_PB_04|700|200|Komunak
+MU-ko OSPITALA|Planta Baja|H_PB_05|150|400|Larrialdiak Sarrera
+MU-ko OSPITALA|Planta Baja|H_PB_06|350|450|Triajea
+MU-ko OSPITALA|Planta Baja|H_PB_07|600|500|Administrazioa
+MU-ko OSPITALA|Planta Baja|H_PB_08|400|300|Korridore Zentrala
+MU-ko OSPITALA|Planta Baja|H_PB_09|100|500|Segurtasun Gela
+MU-ko OSPITALA|Planta Baja|H_PB_10|750|100|Biltegia
+MU-ko OSPITALA|Planta Baja|H_PB_11|50|250|Igogailuak
+MU-ko OSPITALA|Planta Baja|H_PB_12|650|400|Kanpo Kontsultak
+
+MU-ko OSPITALA|Planta 1|H_P1_01|100|100|Erizaintza Kontrola
+MU-ko OSPITALA|Planta 1|H_P1_02|200|100|Gela 101
+MU-ko OSPITALA|Planta 1|H_P1_03|300|100|Gela 102
+MU-ko OSPITALA|Planta 1|H_P1_04|400|100|Gela 103
+MU-ko OSPITALA|Planta 1|H_P1_05|500|100|Gela 104
+MU-ko OSPITALA|Planta 1|H_P1_06|600|100|Gela 105
+MU-ko OSPITALA|Planta 1|H_P1_07|100|300|Medikuen Gela
+MU-ko OSPITALA|Planta 1|H_P1_08|300|300|Botika Biltegia
+MU-ko OSPITALA|Planta 1|H_P1_09|500|300|Familien Gela
+MU-ko OSPITALA|Planta 1|H_P1_10|100|500|Gela 110
+MU-ko OSPITALA|Planta 1|H_P1_11|300|500|Gela 111
+MU-ko OSPITALA|Planta 1|H_P1_12|500|500|Gela 112
+MU-ko OSPITALA|Planta 1|H_P1_13|700|500|Gela 113
+MU-ko OSPITALA|Planta 1|H_P1_14|400|400|Korridore Hegoa
+
+MU-ko OSPITALA|Planta 2|H_P2_01|150|150|Ebakuntza Gela A
+MU-ko OSPITALA|Planta 2|H_P2_02|350|150|Ebakuntza Gela B
+MU-ko OSPITALA|Planta 2|H_P2_03|550|150|Ebakuntza Gela C
+MU-ko OSPITALA|Planta 2|H_P2_04|250|400|Suspertze Gela
+MU-ko OSPITALA|Planta 2|H_P2_05|500|400|Esterilizazioa
+MU-ko OSPITALA|Planta 2|H_P2_06|100|500|Material Garbia
+MU-ko OSPITALA|Planta 2|H_P2_07|700|500|Material Zikina
+MU-ko OSPITALA|Planta 2|H_P2_08|400|300|Pasillo Teknikoa
+MU-ko OSPITALA|Planta 2|H_P2_09|650|250|Aldagelak
+
+MU-ko OSPITALA|UCI|H_UCI_01|150|200|Box 1
+MU-ko OSPITALA|UCI|H_UCI_02|300|200|Box 2
+MU-ko OSPITALA|UCI|H_UCI_03|450|200|Box 3
+MU-ko OSPITALA|UCI|H_UCI_04|600|200|Box 4
+MU-ko OSPITALA|UCI|H_UCI_05|375|400|Kontrol Zentrala
+MU-ko OSPITALA|UCI|H_UCI_06|150|500|Ekipamendu Biltegia
+
+# ==========================================
+# MU-ko UNIBERTSITATEA
+# ==========================================
+MU-ko UNIBERTSITATEA|Planta Baja|U_PB_01|400|550|Sarrera Nagusia
+MU-ko UNIBERTSITATEA|Planta Baja|U_PB_02|150|300|Idazkaritza
+MU-ko UNIBERTSITATEA|Planta Baja|U_PB_03|650|300|Areto Nagusia
+MU-ko UNIBERTSITATEA|Planta Baja|U_PB_04|400|150|Ikasleen Txokoa
+MU-ko UNIBERTSITATEA|Planta Baja|U_PB_05|100|100|Komunak
+
+MU-ko UNIBERTSITATEA|Planta 1|U_P1_01|200|200|Gela 1.1
+MU-ko UNIBERTSITATEA|Planta 1|U_P1_02|400|200|Gela 1.2
+MU-ko UNIBERTSITATEA|Planta 1|U_P1_03|600|200|Gela 1.3
+MU-ko UNIBERTSITATEA|Planta 1|U_P1_04|300|450|Irakasleen Gela
+MU-ko UNIBERTSITATEA|Planta 1|U_P1_05|500|450|Mintegi Gela
+
+MU-ko UNIBERTSITATEA|Biblioteca|U_BIB_01|200|300|Ikasketa Gela Isila
+MU-ko UNIBERTSITATEA|Biblioteca|U_BIB_02|400|300|Talde Lanerako Gela
+MU-ko UNIBERTSITATEA|Biblioteca|U_BIB_03|600|300|Ordenagailuak
+MU-ko UNIBERTSITATEA|Biblioteca|U_BIB_04|400|100|Liburuak A-K
+MU-ko UNIBERTSITATEA|Biblioteca|U_BIB_05|400|500|Liburuak L-Z
+
+# ==========================================
+# Mondragon Fabrika
+# ==========================================
+# OJO: S1 mantendu dugu MQTT probarako
 Mondragon Fabrika|Planta Principal|S1|200|150|Zona de Carga
-Mondragon Fabrika|Planta Principal|S2|450|100|Línea de Montaje
-Mondragon Fabrika|Planta Principal|S3|600|300|Salida Emergencia
-Mondragon Fabrika|Almacén|S10|100|100|Estantería A
-Mondragon Fabrika|Almacén|S11|300|250|Estantería B
-Mondragon Fabrika|Oficinas|S20|400|300|Sala Reuniones
+Mondragon Fabrika|Planta Principal|F_PP_02|400|150|Muntaketa Katea 1
+Mondragon Fabrika|Planta Principal|F_PP_03|600|150|Muntaketa Katea 2
+Mondragon Fabrika|Planta Principal|F_PP_04|200|400|Prentsa Hidraulikoa
+Mondragon Fabrika|Planta Principal|F_PP_05|400|400|Soldadura Gunea
+Mondragon Fabrika|Planta Principal|F_PP_06|600|400|Pintura Kabina
+Mondragon Fabrika|Planta Principal|F_PP_07|100|300|Erreminta Gela
+Mondragon Fabrika|Planta Principal|F_PP_08|700|300|Kalitate Kontrola
+Mondragon Fabrika|Planta Principal|F_PP_09|400|550|Irteera Logistikoa
+Mondragon Fabrika|Planta Principal|F_PP_10|50|50|Konpresoreak
+Mondragon Fabrika|Planta Principal|F_PP_11|750|50|Koadro Elektrikoa
 
-# --- MU-ko OSPITALA ---
-MU-ko OSPITALA|Planta Baja|H1|400|300|Recepción
-MU-ko OSPITALA|Planta Baja|H2|200|500|Sala de Espera
-MU-ko OSPITALA|Planta Baja|H3|600|200|Cafetería
-MU-ko OSPITALA|Planta 1|H10|350|250|Pasillo Central
-MU-ko OSPITALA|Planta 1|H11|150|150|Habitación 101
-MU-ko OSPITALA|Planta 2|H20|300|300|Quirófano A
-MU-ko OSPITALA|UCI|H30|400|300|Box 1
-MU-ko OSPITALA|UCI|H31|200|200|Box 2Froga sensores|Lehenengoa|S1|35|234|Lehenengoa - Nagusia
-Froga sensores|Lehenengoa|S2|135|134|Lehenengoa - Nagusia
-Froga sensores|Lehenengoa|S3|435|34|Lehenengoa - Nagusia
-Froga sensores|Bigarrena|S1|37|274|Bigarrena - Bi
-Froga sensores|Bigarrena|S2|37|634|Bigarrena - Nagusia
-Froga sensores|Bigarrena|S3|335|334|Bigarrena - Nagusia
+Mondragon Fabrika|Almacén|F_ALM_01|150|150|Estanteria A
+Mondragon Fabrika|Almacén|F_ALM_02|350|150|Estanteria B
+Mondragon Fabrika|Almacén|F_ALM_03|550|150|Estanteria C
+Mondragon Fabrika|Almacén|F_ALM_04|250|400|Orga Jasotzaileen Gunea
+Mondragon Fabrika|Almacén|F_ALM_05|550|400|Paketaratze Gunea
+Mondragon Fabrika|Almacén|F_ALM_06|100|500|Sarrera Logistikoa
+Mondragon Fabrika|Almacén|F_ALM_07|700|500|Stock Berezia
+
+Mondragon Fabrika|Oficinas|F_OF_01|200|200|Administrazioa
+Mondragon Fabrika|Oficinas|F_OF_02|500|200|Ingeniaritza Bulegoa
+Mondragon Fabrika|Oficinas|F_OF_03|350|450|Zuzendaritza
+Mondragon Fabrika|Oficinas|F_OF_04|600|450|Bilera Gela
+Mondragon Fabrika|Oficinas|F_OF_05|100|300|Server Gela
+
+# ==========================================
+# Eskola Nagusia
+# ==========================================
+Eskola Nagusia|Planta Baja|E_PB_01|400|500|Sarrera
+Eskola Nagusia|Planta Baja|E_PB_02|200|200|Jantokia
+Eskola Nagusia|Planta Baja|E_PB_03|600|200|Gimnasioa
+Eskola Nagusia|Planta Baja|E_PB_04|100|100|Sukaldea
+Eskola Nagusia|Planta Baja|E_PB_05|700|400|Aldagelak
+
+Eskola Nagusia|Planta 1|E_P1_01|150|200|Gela 1A
+Eskola Nagusia|Planta 1|E_P1_02|350|200|Gela 1B
+Eskola Nagusia|Planta 1|E_P1_03|550|200|Gela 1C
+Eskola Nagusia|Planta 1|E_P1_04|350|450|Laborategi Txikia
+Eskola Nagusia|Planta 1|E_P1_05|600|450|Irakasle Gela
+
+# ==========================================
+# Ikerketa Laborategia
+# ==========================================
+Ikerketa Laborategia|Laboratorio Principal|L_MAIN_01|200|300|Mikroskopioak
+Ikerketa Laborategia|Laboratorio Principal|L_MAIN_02|400|300|Zentrifugagailuak
+Ikerketa Laborategia|Laboratorio Principal|L_MAIN_03|600|300|Analisi Kimikoa
+Ikerketa Laborategia|Laboratorio Principal|L_MAIN_04|200|150|Hozkailuak
+Ikerketa Laborategia|Laboratorio Principal|L_MAIN_05|600|150|Inkubagailuak
+
+Ikerketa Laborategia|Sala Limpia|L_CLEAN_01|400|300|Lan Mahai Zentrala
+Ikerketa Laborategia|Sala Limpia|L_CLEAN_02|200|200|Aire Filtratua Sarrera
+Ikerketa Laborategia|Sala Limpia|L_CLEAN_03|600|200|Presio Kontrola
+Ikerketa Laborategia|Sala Limpia|L_CLEAN_04|400|500|Esklusaren Irteera
+Ikerketa Laborategia|Sala Limpia|L_CLEAN_05|100|100|Jantzi Esterilak
+
+Ikerketa Laborategia|Almacén Químicos|L_CHEM_01|200|200|Azidoak
+Ikerketa Laborategia|Almacén Químicos|L_CHEM_02|600|200|Baseak
+Ikerketa Laborategia|Almacén Químicos|L_CHEM_03|400|400|Disolbatzaileak
+Ikerketa Laborategia|Almacén Químicos|L_CHEM_04|200|500|Hondakinak
+Ikerketa Laborategia|Almacén Químicos|L_CHEM_05|600|500|Segurtasun Armairua
+
+# ==========================================
+# Osakidetza Azkoitia
+# ==========================================
+Osakidetza Azkoitia|Planta Baja|OA_PB_01|400|500|Sarrera Nagusia
+Osakidetza Azkoitia|Planta Baja|OA_PB_02|200|300|Errehabilitazioa
+Osakidetza Azkoitia|Planta Baja|OA_PB_03|600|300|Erradiologia
+Osakidetza Azkoitia|Planta Baja|OA_PB_04|100|150|Odol Eraketak
+Osakidetza Azkoitia|Planta Baja|OA_PB_05|700|150|Administrazioa
+Osakidetza Azkoitia|Planta Baja|OA_PB_06|400|200|Igogailuak
+Osakidetza Azkoitia|Planta Baja|OA_PB_07|150|450|Komunak
+Osakidetza Azkoitia|Planta Baja|OA_PB_08|650|450|Itxarongela
+Osakidetza Azkoitia|Planta Baja|OA_PB_09|300|100|Biltegia
+
+Osakidetza Azkoitia|Planta 1|OA_P1_01|100|100|Gela 101
+Osakidetza Azkoitia|Planta 1|OA_P1_02|250|100|Gela 102
+Osakidetza Azkoitia|Planta 1|OA_P1_03|400|100|Gela 103
+Osakidetza Azkoitia|Planta 1|OA_P1_04|550|100|Gela 104
+Osakidetza Azkoitia|Planta 1|OA_P1_05|700|100|Gela 105
+Osakidetza Azkoitia|Planta 1|OA_P1_06|100|500|Gela 106
+Osakidetza Azkoitia|Planta 1|OA_P1_07|250|500|Gela 107
+Osakidetza Azkoitia|Planta 1|OA_P1_08|400|500|Gela 108
+Osakidetza Azkoitia|Planta 1|OA_P1_09|550|500|Gela 109
+Osakidetza Azkoitia|Planta 1|OA_P1_10|400|300|Kontrol Zentrala
+
+Osakidetza Azkoitia|Planta 2|OA_P2_01|150|200|Pediatria 1
+Osakidetza Azkoitia|Planta 2|OA_P2_02|350|200|Pediatria 2
+Osakidetza Azkoitia|Planta 2|OA_P2_03|550|200|Pediatria 3
+Osakidetza Azkoitia|Planta 2|OA_P2_04|200|400|Jolas Gela
+Osakidetza Azkoitia|Planta 2|OA_P2_05|500|400|Nidoa
+Osakidetza Azkoitia|Planta 2|OA_P2_06|350|500|Kontsulta Pediatria
+Osakidetza Azkoitia|Planta 2|OA_P2_07|700|300|Erizaintza
+
+Osakidetza Azkoitia|UCI|OA_UCI_01|200|200|Box Kritikoa 1
+Osakidetza Azkoitia|UCI|OA_UCI_02|400|200|Box Kritikoa 2
+Osakidetza Azkoitia|UCI|OA_UCI_03|600|200|Box Kritikoa 3
+Osakidetza Azkoitia|UCI|OA_UCI_04|300|400|Monitorizazioa
+Osakidetza Azkoitia|UCI|OA_UCI_05|500|400|Medikuen Gela
+
+# ==========================================
+# CAF Fabrika
+# ==========================================
+CAF Fabrika|Planta Principal|C_MAIN_01|100|100|Tren Muntaketa A
+CAF Fabrika|Planta Principal|C_MAIN_02|300|100|Tren Muntaketa B
+CAF Fabrika|Planta Principal|C_MAIN_03|500|100|Tren Muntaketa C
+CAF Fabrika|Planta Principal|C_MAIN_04|700|100|Tren Muntaketa D
+CAF Fabrika|Planta Principal|C_MAIN_05|100|300|Bogie Muntaketa
+CAF Fabrika|Planta Principal|C_MAIN_06|300|300|Gurpilak
+CAF Fabrika|Planta Principal|C_MAIN_07|500|300|Motorrak
+CAF Fabrika|Planta Principal|C_MAIN_08|700|300|Elektronika
+CAF Fabrika|Planta Principal|C_MAIN_09|100|500|Pintura A
+CAF Fabrika|Planta Principal|C_MAIN_10|300|500|Pintura B
+CAF Fabrika|Planta Principal|C_MAIN_11|500|500|Amaiera Kontrola
+CAF Fabrika|Planta Principal|C_MAIN_12|700|500|Irteera
+CAF Fabrika|Planta Principal|C_MAIN_13|400|200|Garabi Zubia 1
+CAF Fabrika|Planta Principal|C_MAIN_14|400|400|Garabi Zubia 2
+CAF Fabrika|Planta Principal|C_MAIN_15|50|250|Segurtasun Gunea 1
+CAF Fabrika|Planta Principal|C_MAIN_16|750|250|Segurtasun Gunea 2
+CAF Fabrika|Planta Principal|C_MAIN_17|400|50|Sarrera Materiala
+
+CAF Fabrika|Almacén|C_ALM_01|150|150|Altzairua A
+CAF Fabrika|Almacén|C_ALM_02|350|150|Altzairua B
+CAF Fabrika|Almacén|C_ALM_03|550|150|Aluminioa
+CAF Fabrika|Almacén|C_ALM_04|150|350|Kristalak
+CAF Fabrika|Almacén|C_ALM_05|350|350|Kableatua
+CAF Fabrika|Almacén|C_ALM_06|550|350|Osagai Txikiak
+CAF Fabrika|Almacén|C_ALM_07|200|500|Erremintak
+CAF Fabrika|Almacén|C_ALM_08|500|500|EPI Biltegia
+CAF Fabrika|Almacén|C_ALM_09|100|100|Sarrera A
+CAF Fabrika|Almacén|C_ALM_10|700|500|Irteera B
+
+CAF Fabrika|Oficinas|C_OF_01|200|200|I+G Gunea
+CAF Fabrika|Oficinas|C_OF_02|400|200|Proiektuen Bulegoa
+CAF Fabrika|Oficinas|C_OF_03|600|200|Diseinu Teknikoa
+CAF Fabrika|Oficinas|C_OF_04|200|400|Giza Baliabideak
+CAF Fabrika|Oficinas|C_OF_05|400|400|Finantzak
+CAF Fabrika|Oficinas|C_OF_06|600|400|Zuzendaritza
+CAF Fabrika|Oficinas|C_OF_07|100|300|Server Gela
+CAF Fabrika|Oficinas|C_OF_08|700|300|Artxiboa
