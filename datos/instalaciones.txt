@@ -53,3 +53,6 @@ Deusto Unibertsitatea|34|NORMALA|Mundaiz 50, 20012 Donostia, Gipuzkoa|UNIBERTSIT
 Usurbil Kirol Zentroa|13|NORMALA|Errotazar Bidea 2, 20170 Usurbil, Gipuzkoa|KIROL_ZENTROA
 Araba Laborategia|31|MANTENIMIENTO|Portal de Arriaga 9, 01013 Vitoria-Gasteiz, Araba|LABORATORIO
 Errenteria Ikastola|21|NORMALA|Galtzaraborda 67, 20100 Errenteria, Gipuzkoa|IKASTOLA
+Froga2|2|NORMALA|Froga2|HOSPITAL
+Froga3|5|NORMALA|Froga3|HOSPITAL
+Froga manex|2|NORMALA|Froga manex|ESCOLA

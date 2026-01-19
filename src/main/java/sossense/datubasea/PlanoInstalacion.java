@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import sossense.datubasea.SensorLayout;
+
 public class PlanoInstalacion {
 
     private String nombreInstalacion;
