@@ -1,7 +1,6 @@
 package sossense.utils;
 
 import java.io.*;
-import java.nio.file.Paths;
 
 public class UsuarioUtils {
 

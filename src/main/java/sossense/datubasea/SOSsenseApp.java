@@ -6,12 +6,8 @@ import sossense.kontrolatzailea.SOSsenseKontrolatzailea;
 import sossense.modelo.SOSsenseModeloa;
 import sossense.mqtt.Mqtt;
 import sossense.mqtt.MqttIntegration;
-import sossense.datubasea.PlanoRepository;
-import sossense.datubasea.AppContext;
 import sossense.bista.Navigator;
 import sossense.bista.InstalacionesPanelBuilder;
-import sossense.bista.SeleccionPlanosPanelBuilder;
-import sossense.bista.PlanoDetallePanelBuilder;
 import sossense.bista.ContactoPanelBuilder;
 import sossense.bista.EstadisticasPanelBuilder;
 
@@ -50,18 +46,6 @@ public class SOSsenseApp {
         }
         System.out.println("[APP] Modo offline - MQTT desactivado");
         // ---------------------
-    }
-
-    // Método nuevo para buscar el sensor y actualizarlo
-    private void actualizarSensorConMqtt(String nombreInstalacion, double valorGas) {
-        // Buscamos la instalación
-        // NOTA: Esto requiere que tengas acceso a los planos desde aquí o a través del controlador.
-        // Como ejemplo rápido, si tuviéramos acceso al objeto 'plano' activo:
-        
-        System.out.println("Actualizando mapa con valor medio: " + valorGas);
-        
-        // Lógica ideal: Pasar este valor al controlador para que actualice el SensorPlano específico
-        // controller.actualizarSensorGas(nombreInstalacion, "S1", valorGas);
     }
 
     public void bistaratuApp() {
