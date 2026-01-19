@@ -15,208 +15,114 @@ public class PlanoInstalacion {
     private int alto;
     private List<SensorPlano> sentsoreak;
     private Random random;
-    private List<String> plantas;
-    private List<String> areas;
-    private int sensoresMin;
-    private int sensoresMax;
     
+    // Variables de control
+    private boolean simulacionActiva = true; 
+
+    // Constructor básico (Por si se usa en algún test antiguo)
     public PlanoInstalacion(String nombreInstalacion) {
-        this.nombreInstalacion = nombreInstalacion;
-        this.nombrePlano = "Plano General";
-        this.ancho = 800;
-        this.alto = 600;
-        this.sensoresMin = 15;
-        this.sensoresMax = 34;
-        this.sentsoreak = new ArrayList<>();
-        this.random = new Random();
-        this.plantas = new ArrayList<>();
-        this.areas = new ArrayList<>();
-        cargarUbicaciones();
-        generarSentsoreak();
-        simularNivelesHumo();
+        this(new PlanoInfo(nombreInstalacion, "Plano General", "", 800, 600, 0, 0));
     }
     
-    // Nuevo constructor con PlanoInfo
+    // Constructor Principal
     public PlanoInstalacion(PlanoInfo planoInfo) {
         this.nombreInstalacion = planoInfo.getNombreInstalacion();
         this.nombrePlano = planoInfo.getNombrePlano();
         this.ancho = planoInfo.getAncho();
         this.alto = planoInfo.getAlto();
-        this.sensoresMin = planoInfo.getSensoresMin();
-        this.sensoresMax = planoInfo.getSensoresMax();
+        
         this.sentsoreak = new ArrayList<>();
         this.random = new Random();
-        this.plantas = new ArrayList<>();
-        this.areas = new ArrayList<>();
-        cargarUbicaciones();
-        generarSentsoreak();
-        simularNivelesHumo();
+        
+        // Cargar sensores REALES desde el fichero
+        cargarSensoresDesdeFichero();
+        
+        // Inicializar con valores simulados (para que no salgan en blanco al inicio)
+        simularNivelesHumoIniciales();
     }
     
-    private void generarSentsoreak() {
-        int rango = sensoresMax - sensoresMin;
-        int numSentsoreak = sensoresMin + random.nextInt(rango + 1);
-        
-        for (int i = 1; i <= numSentsoreak; i++) {
-            int x = 50 + random.nextInt(ancho - 100);
-            int y = 50 + random.nextInt(alto - 100);
-            String ubicacion = generarUbicacionAleatoria();
-            sentsoreak.add(new SensorPlano("S" + i, x, y, ubicacion));
-        }
-    }
-    
-    private void cargarUbicaciones() {
-        String archivo = "datos/planos.txt";
-        
+    private void cargarSensoresDesdeFichero() {
+        String archivo = "datos/sensores.txt";
+        boolean encontrado = false;
+
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                // Ignorar líneas vacías y comentarios
+                // Ignorar comentarios y líneas vacías
                 if (linea.trim().isEmpty() || linea.trim().startsWith("#")) {
                     continue;
                 }
                 
-                // Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
                 String[] partes = linea.split("\\|");
-                if (partes.length >= 2) {
-                    String plano = partes[1].trim();
+                // Formato esperado: Instalacion|Plano|ID|X|Y|Zona
+                if (partes.length >= 6) {
+                    String inst = partes[0].trim();
+                    String plan = partes[1].trim();
                     
-                    // Añadir el nombre del plano a la lista de plantas si no existe
-                    if (!plantas.contains(plano)) {
-                        plantas.add(plano);
+                    // Solo cargamos los sensores que coincidan con ESTE edificio y ESTA planta
+                    if (inst.equalsIgnoreCase(this.nombreInstalacion) && 
+                        plan.equalsIgnoreCase(this.nombrePlano)) {
+                        
+                        String id = partes[2].trim();
+                        int x = Integer.parseInt(partes[3].trim());
+                        int y = Integer.parseInt(partes[4].trim());
+                        String zona = partes[5].trim();
+                        
+                        // Crear sensor y añadirlo
+                        sentsoreak.add(new SensorPlano(id, x, y, zona));
+                        encontrado = true;
                     }
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Error al leer el archivo de planos: " + e.getMessage());
-            // Cargar valores por defecto si falla la lectura
-            cargarUbicacionesPorDefecto();
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error leyendo sensores.txt: " + e.getMessage());
         }
         
-        // Si no se cargaron plantas, usar valores por defecto
-        if (plantas.isEmpty()) {
-            cargarUbicacionesPorDefecto();
+        // Si no encontramos sensores en el fichero para este plano, 
+        // avisamos (o podríamos generar randoms como fallback si quisieras)
+        if (!encontrado) {
+            System.out.println("⚠ No hay sensores definidos en sensores.txt para: " + 
+                             nombreInstalacion + " - " + nombrePlano);
         }
-        
-        // Cargar áreas por defecto
-        cargarAreasPorDefecto();
     }
     
-    private void cargarAreasPorDefecto() {
-        areas.clear();
-        areas.add("Pasillo Principal");
-        areas.add("Oficina");
-        areas.add("Sala de Máquinas");
-        areas.add("Cocina");
-        areas.add("Baños");
-        areas.add("Almacén");
-        areas.add("Laboratorio");
-        areas.add("Aula");
-        areas.add("Habitación");
-        areas.add("Vestíbulo");
-    }
-    
-    private void cargarUbicacionesPorDefecto() {
-        plantas.clear();
-        areas.clear();
-        plantas.add("Planta Baja");
-        plantas.add("Planta 1");
-        plantas.add("Planta 2");
-        plantas.add("Planta 3");
-        plantas.add("Sótano");
-        
-        areas.add("Pasillo Principal");
-        areas.add("Oficina");
-        areas.add("Sala de Máquinas");
-        areas.add("Cocina");
-        areas.add("Baños");
-        areas.add("Almacén");
-        areas.add("Laboratorio");
-        areas.add("Aula");
-        areas.add("Habitación");
-        areas.add("Vestíbulo");
-    }
-    
-    private String generarUbicacionAleatoria() {
-        if (plantas.isEmpty() || areas.isEmpty()) {
-            return "Ubicación desconocida";
-        }
-        
-        return plantas.get(random.nextInt(plantas.size())) + " - " + 
-               areas.get(random.nextInt(areas.size()));
-    }
-    
-    public void simularNivelesHumo() {
+    // Método para dar un valor inicial (0-30%) para que no aparezcan todos apagados
+    private void simularNivelesHumoIniciales() {
         for (SensorPlano sensor : sentsoreak) {
-            // Simular un nivel de humo aleatorio
-            int nivelBase = random.nextInt(30); // Base 0-29%
-            
-            // 10% de probabilidad de tener humo alto
-            if (random.nextInt(100) < 10) {
-                nivelBase += 50 + random.nextInt(50);
-            }
-            
-            sensor.setNivelHumo(nivelBase);
+            sensor.setNivelHumo(random.nextInt(30)); 
         }
     }
-
-    private boolean simulacionActiva = true; // Por defecto true
 
     public void setSimulacionActiva(boolean activa) {
         this.simulacionActiva = activa;
     }
     
-    public void actualizarNivelesHumo() {
-        if (!simulacionActiva) return; // Si es false, no hace nada (respeta MQTT)
+    // Este método lo llama el Timer de la UI si la simulación está activa
+    public void simularNivelesHumo() {
+        if (!simulacionActiva) return; // Si estamos con MQTT, no tocamos nada
+        
         for (SensorPlano sensor : sentsoreak) {
-            int cambio = random.nextInt(11) - 5; // Cambio entre -5 y +5
-            int nuevoNivel = sensor.getNivelHumo() + cambio;
+            // Pequeña variación aleatoria para dar efecto de "vida"
+            int cambio = random.nextInt(11) - 5; // -5 a +5
+            int nuevoNivel = Math.max(0, Math.min(100, sensor.getNivelHumo() + cambio));
             sensor.setNivelHumo(nuevoNivel);
         }
     }
     
-    public List<SensorPlano> getSentsoreak() {
-        return sentsoreak;
-    }
+    // Getters
+    public List<SensorPlano> getSentsoreak() { return sentsoreak; }
+    public String getNombreInstalacion() { return nombreInstalacion; }
+    public String getNombrePlano() { return nombrePlano; }
+    public int getAncho() { return ancho; }
+    public int getAlto() { return alto; }
     
-    public String getNombreInstalacion() {
-        return nombreInstalacion;
-    }
-    
-    public String getNombrePlano() {
-        return nombrePlano;
-    }
-    
-    public int getAncho() {
-        return ancho;
-    }
-    
-    public int getAlto() {
-        return alto;
-    }
-    
-    public int getTotalSentsoreak() {
-        return sentsoreak.size();
-    }
+    public int getTotalSentsoreak() { return sentsoreak.size(); }
     
     public int getSentsoreakAlerta() {
-        int count = 0;
-        for (SensorPlano sensor : sentsoreak) {
-            if (sensor.getNivelHumo() >= 30) {
-                count++;
-            }
-        }
-        return count;
+        return (int) sentsoreak.stream().filter(s -> s.getNivelHumo() >= 30).count();
     }
     
     public int getSentsoreakCriticos() {
-        int count = 0;
-        for (SensorPlano sensor : sentsoreak) {
-            if (sensor.getNivelHumo() >= 70) {
-                count++;
-            }
-        }
-        return count;
+        return (int) sentsoreak.stream().filter(s -> s.getNivelHumo() >= 70).count();
     }
-
 }

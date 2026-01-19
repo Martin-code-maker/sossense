@@ -1,0 +1,20 @@
+# Formato: Instalacion|Plano|ID_Sensor|X|Y|Zona
+# IMPORTANTE: Los nombres deben ser idénticos a los que salen en tu error
+
+# --- MONDRAGON FABRIKA ---
+Mondragon Fabrika|Planta Principal|S1|200|150|Zona de Carga
+Mondragon Fabrika|Planta Principal|S2|450|100|Línea de Montaje
+Mondragon Fabrika|Planta Principal|S3|600|300|Salida Emergencia
+Mondragon Fabrika|Almacén|S10|100|100|Estantería A
+Mondragon Fabrika|Almacén|S11|300|250|Estantería B
+Mondragon Fabrika|Oficinas|S20|400|300|Sala Reuniones
+
+# --- MU-ko OSPITALA ---
+MU-ko OSPITALA|Planta Baja|H1|400|300|Recepción
+MU-ko OSPITALA|Planta Baja|H2|200|500|Sala de Espera
+MU-ko OSPITALA|Planta Baja|H3|600|200|Cafetería
+MU-ko OSPITALA|Planta 1|H10|350|250|Pasillo Central
+MU-ko OSPITALA|Planta 1|H11|150|150|Habitación 101
+MU-ko OSPITALA|Planta 2|H20|300|300|Quirófano A
+MU-ko OSPITALA|UCI|H30|400|300|Box 1
+MU-ko OSPITALA|UCI|H31|200|200|Box 2
