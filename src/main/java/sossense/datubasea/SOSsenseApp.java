@@ -20,7 +20,6 @@ public class SOSsenseApp {
 
     private final SOSsenseModeloa model;
     private final SOSsenseKontrolatzailea controller;
-    private Mqtt mqtt;
     JFrame frame = new JFrame("S.O.S.sense");
     private JPanel menuPanel;
     private JPanel centerPanel;
@@ -40,7 +39,7 @@ public class SOSsenseApp {
         
         // --- Integración MQTT separada de la UI ---
         try {
-            mqtt = new Mqtt();
+            Mqtt mqtt = new Mqtt();
             MqttIntegration.attachPlanUpdater(mqtt, () -> appContext.getPanelPlanoActivo(), () -> appContext.getInstalacionActiva());
         } catch (Exception ex) {
             System.err.println("Error conectando MQTT: " + ex.getMessage());
@@ -253,7 +252,7 @@ public class SOSsenseApp {
                 case "ESTATISTIKAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
-                        cambiarPanelCentral(new EstadisticasPanelBuilder(controller, mqtt).build());
+                        cambiarPanelCentral(new EstadisticasPanelBuilder(controller).build());
                     });
                     break;
                 case "KONTAKTUA":

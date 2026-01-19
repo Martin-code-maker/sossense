@@ -1,6 +1,7 @@
 package sossense.kontrolatzailea;
 
 import java.util.List;
+import java.beans.PropertyChangeListener;
 
 import sossense.datubasea.Instalazioa;
 import sossense.modelo.SOSsenseModeloa;
@@ -36,5 +37,13 @@ public class SOSsenseKontrolatzailea {
 
     public String lortuEstadistikak() {
         return model.lortuEstadistikak();
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        model.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        model.removePropertyChangeListener(listener);
     }
 }
