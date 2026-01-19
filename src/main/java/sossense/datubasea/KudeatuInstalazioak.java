@@ -12,6 +12,7 @@ import java.io.IOException;
 
 public class KudeatuInstalazioak {
 
+    private static final String ARCHIVO_INSTALACIONES = "datos/instalaciones.txt";
     private List<Instalazioa> instalazioZerrenda;
     
     public KudeatuInstalazioak() {
@@ -21,9 +22,7 @@ public class KudeatuInstalazioak {
     
     // Cargar instalaciones desde archivo txt
     private void hasieratuInstalazioak() {
-        String archivo = "datos/instalaciones.txt";
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_INSTALACIONES))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 // Ignorar líneas vacías y comentarios
@@ -46,12 +45,12 @@ public class KudeatuInstalazioak {
                             int r = Integer.parseInt(rgb[0].trim());
                             int g = Integer.parseInt(rgb[1].trim());
                             int b = Integer.parseInt(rgb[2].trim());
-                            agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo, new Color(r, g, b)));
+                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo, new Color(r, g, b)), false);
                         } else {
-                            agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo));
+                            agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo), false);
                         }
                     } else {
-                        agregarInstalacion(new Instalazioa(nombre, sensores, estado, direccion, tipo));
+                        agregarInstalacionInternal(new Instalazioa(nombre, sensores, estado, direccion, tipo), false);
                     }
                 }
             }
@@ -67,27 +66,34 @@ public class KudeatuInstalazioak {
     
     // Método de respaldo con instalaciones por defecto
     private void cargarInstalacionesPorDefecto() {
-        agregarInstalacion(new Instalazioa(
+        agregarInstalacionInternal(new Instalazioa(
             "MU-ko OSPITALA",
             60,
             "LARRIA",
             "Nafarros Himbidea 16.20500 Arrasate, Gipuzkoa, Spain",
             "OSPITALEA"
-        ));
+        ), false);
         
-        agregarInstalacion(new Instalazioa(
+        agregarInstalacionInternal(new Instalazioa(
             "MU-ko UNIBERTSITATEA",
             20,
             "NORMALA",
             "Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain",
             "UNIBERTSITATEA"
-        ));
+        ), false);
     }
     
     // Métodos CRUD (Create, Read, Update, Delete)
     
     public void agregarInstalacion(Instalazioa instalacion) {
+        agregarInstalacionInternal(instalacion, true);
+    }
+
+    private void agregarInstalacionInternal(Instalazioa instalacion, boolean persistir) {
         instalazioZerrenda.add(instalacion);
+        if (persistir) {
+            guardarInstalacionEnArchivo(instalacion);
+        }
     }
     
     public Instalazioa buscarInstalacion(String nombre) {
@@ -219,5 +225,19 @@ public class KudeatuInstalazioak {
         System.out.println("==============================");
     }
 
+    private void guardarInstalacionEnArchivo(Instalazioa instalacion) {
+        try (java.io.FileWriter fw = new java.io.FileWriter(ARCHIVO_INSTALACIONES, true)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(instalacion.getIzena()).append('|')
+              .append(instalacion.getSentsoreak()).append('|')
+              .append(instalacion.getEgoera()).append('|')
+              .append(instalacion.getHelbidea()).append('|')
+              .append(instalacion.getMota());
+            fw.write(sb.toString());
+            fw.write(System.lineSeparator());
+        } catch (IOException e) {
+            System.err.println("Ezin izan da instalazioa gorde fitxategian: " + e.getMessage());
+        }
+    }
 
 }

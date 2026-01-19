@@ -76,7 +76,7 @@ public class PlanoDetallePanelBuilder {
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        PanelPlano panelPlano = new PanelPlano(plano);
+        PanelPlano panelPlano = new PanelPlano(plano, planoInfo.getImagenFondo());
         appContext.setPanelPlanoActivo(panelPlano);
 
         JScrollPane scrollPane = new JScrollPane(panelPlano);

@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import sossense.datubasea.SensorLayout;
+
 public class PlanoInstalacion {
 
     private String nombreInstalacion;
@@ -19,6 +21,8 @@ public class PlanoInstalacion {
     private List<String> areas;
     private int sensoresMin;
     private int sensoresMax;
+    private List<SensorLayout> sensoresDefinidos;
+    private String imagenFondo;
     
     public PlanoInstalacion(String nombreInstalacion) {
         this.nombreInstalacion = nombreInstalacion;
@@ -31,6 +35,8 @@ public class PlanoInstalacion {
         this.random = new Random();
         this.plantas = new ArrayList<>();
         this.areas = new ArrayList<>();
+        this.sensoresDefinidos = new ArrayList<>();
+        this.imagenFondo = "";
         cargarUbicaciones();
         generarSentsoreak();
         simularNivelesHumo();
@@ -48,8 +54,14 @@ public class PlanoInstalacion {
         this.random = new Random();
         this.plantas = new ArrayList<>();
         this.areas = new ArrayList<>();
+        this.sensoresDefinidos = planoInfo.getSensoresDefinidos();
+        this.imagenFondo = planoInfo.getImagenFondo();
         cargarUbicaciones();
-        generarSentsoreak();
+        if (planoInfo.tieneSensoresDefinidos()) {
+            generarSentsoreakDefinidos(planoInfo.getNombrePlano());
+        } else {
+            generarSentsoreak();
+        }
         simularNivelesHumo();
     }
     
@@ -62,6 +74,29 @@ public class PlanoInstalacion {
             int y = 50 + random.nextInt(alto - 100);
             String ubicacion = generarUbicacionAleatoria();
             sentsoreak.add(new SensorPlano("S" + i, x, y, ubicacion));
+        }
+    }
+
+    private void generarSentsoreakDefinidos(String nombrePlano) {
+        for (SensorLayout sensor : sensoresDefinidos) {
+            String ubicacion = sensor.getUbicacion();
+            if (!ubicacion.toLowerCase().contains(nombrePlano.toLowerCase())) {
+                ubicacion = nombrePlano + " - " + ubicacion;
+            }
+            sentsoreak.add(new SensorPlano(sensor.getId(), sensor.getX(), sensor.getY(), ubicacion));
+        }
+
+        if (!sensoresDefinidos.isEmpty()) {
+            // Aprovechar las ubicaciones para rellenar el listado de plantas
+            for (SensorLayout sensor : sensoresDefinidos) {
+                String[] partes = sensor.getUbicacion().split("-");
+                if (partes.length > 0) {
+                    String planta = partes[0].trim();
+                    if (!planta.isEmpty() && !plantas.contains(planta)) {
+                        plantas.add(planta);
+                    }
+                }
+            }
         }
     }
     
@@ -193,6 +228,10 @@ public class PlanoInstalacion {
     
     public int getAlto() {
         return alto;
+    }
+
+    public String getImagenFondo() {
+        return imagenFondo;
     }
     
     public int getTotalSentsoreak() {
