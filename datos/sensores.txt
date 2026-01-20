@@ -228,3 +228,9 @@ Eduardo|Pacientes cancer|S3|49|304|Pacientes cancer
 Eduardo|Planta sida|S1|628|470|Planta sida
 Eduardo|Planta sida|S2|641|348|Planta sida
 Eduardo|Planta sida|S EDU|397|130|Planta sida
+Mondragon Unibertsitatea|Lehenengo Solairua|S1|281|115|Lehenengo Solairua
+Mondragon Unibertsitatea|Lehenengo Solairua|S2|290|437|Lehenengo Solairua
+Mondragon Unibertsitatea|Lehenengo Solairua|S3|737|106|Lehenengo Solairua
+Mondragon Unibertsitatea|Bigarren Solairua|S5|365|383|Bigarren Solairua
+Mondragon Unibertsitatea|Bigarren Solairua|S6|439|378|Bigarren Solairua
+Mondragon Unibertsitatea|Bigarren Solairua|S1|284|372|Bigarren Solairua

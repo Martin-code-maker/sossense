@@ -35,3 +35,5 @@ Manex-en etxea|Lehen Solairua|plano_laboratorio.png|800|600|4|4
 Lander|1|plano_universidad.png|800|600|1|1
 Eduardo|Pacientes cancer|plano_hospital.png|800|600|3|3
 Eduardo|Planta sida|plano_hospital.png|800|600|3|3
+Mondragon Unibertsitatea|Lehenengo Solairua|plano_universidad.png|800|600|3|3
+Mondragon Unibertsitatea|Bigarren Solairua|plano_universidad.png|800|600|3|3

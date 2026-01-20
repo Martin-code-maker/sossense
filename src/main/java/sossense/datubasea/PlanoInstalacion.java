@@ -17,7 +17,7 @@ public class PlanoInstalacion {
     private Random random;
     private String imagenFondo;
 
-    private boolean simulacionActiva = true;
+    private boolean simulacionActiva = false;
 
     public PlanoInstalacion(String nombreInstalacion) {
         this(new PlanoInfo(nombreInstalacion, "Plano General", "", 800, 600, 0, 0));
@@ -73,7 +73,7 @@ public class PlanoInstalacion {
 
     private void simularNivelesHumoIniciales() {
         for (SensorPlano sensor : sentsoreak) {
-            sensor.setNivelHumo(random.nextInt(30));
+            sensor.setNivelHumo(0);
         }
     }
 

@@ -43,6 +43,7 @@ public class PlanoDetallePanelBuilder {
         }
 
         appContext.setInstalacionActiva(izenaInstalacion);
+        appContext.setPlanoActivo(nombrePlano);
         PlanoInstalacion plano = new PlanoInstalacion(planoInfo);
 
         JPanel headerPanel = new JPanel(new BorderLayout()) {
@@ -97,17 +98,8 @@ public class PlanoDetallePanelBuilder {
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         controlPanel.setBackground(new Color(245, 245, 245));
         controlPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(0xD3, 0x85, 0x7E)),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-
-        JButton actualizarBtn = UIUtils.crearBotonEstilizado("EGUNERATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
-        actualizarBtn.addActionListener(e -> {
-            panelPlano.repaint();
-            Object stats = infoPanel.getClientProperty("refresh");
-            if (stats instanceof Runnable) {
-                ((Runnable) stats).run();
-            }
-        });
+            BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(0xD3, 0x85, 0x7E)),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
         JButton volverBtn = UIUtils.crearBotonEstilizado("ATZERA", new Color(0xE2, 0x80, 0x76), Color.WHITE);
         volverBtn.addActionListener(e -> {
@@ -116,11 +108,11 @@ public class PlanoDetallePanelBuilder {
             if (stopTimer != null) stopTimer.run();
             appContext.setPanelPlanoActivo(null);
             appContext.setInstalacionActiva("");
+            appContext.setPlanoActivo("");
             navigator.navigateTo(new SeleccionPlanosPanelBuilder(controller, planoRepo, navigator, appContext)
                     .build(izenaInstalacion));
         });
 
-        controlPanel.add(actualizarBtn);
         controlPanel.add(volverBtn);
 
         mainPanel.add(centro, BorderLayout.CENTER);
@@ -206,10 +198,8 @@ public class PlanoDetallePanelBuilder {
         };
         refrescar.run();
 
-        javax.swing.Timer t = new javax.swing.Timer(2000, e -> refrescar.run());
-        t.start();
         p.putClientProperty("refresh", refrescar);
-        p.putClientProperty("stopTimer", (Runnable) t::stop);
+        p.putClientProperty("stopTimer", (Runnable) () -> {});
         return p;
     }
 }

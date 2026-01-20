@@ -31,10 +31,6 @@ public class SOSsenseKontrolatzailea {
         model.gehituInstalazioa(instalazioa);
     }
 
-    public boolean eguneratuEgoerakSensorretatik() {
-        return model.eguneratuEgoerakSensorretatik();
-    }
-
     public String lortuEstadistikak() {
         return model.lortuEstadistikak();
     }

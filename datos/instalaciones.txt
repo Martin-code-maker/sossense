@@ -10,3 +10,4 @@ CAF Fabrika|52|ARINGARRI|Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIK
 Manex-en etxea|8||Berrobi|LABORATORIO
 Lander|1||Eibar|UNIBERTSITATEA
 Eduardo|6||Vitoria|OSPITALEA
+Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEA

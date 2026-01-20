@@ -124,18 +124,10 @@ public class InstalacionesPanelBuilder {
 
         actualizarPagina.run();
 
-        Timer refresco = new Timer(1000, e -> {
-            controller.eguneratuEgoerakSensorretatik();
-            eguneratuEgoeraLabels(egoeraLabels);
-        });
-        refresco.start();
-
         mainPanel.addHierarchyListener(new HierarchyListener() {
             @Override
             public void hierarchyChanged(HierarchyEvent e) {
-                if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0 && !mainPanel.isDisplayable()) {
-                    refresco.stop();
-                }
+                // Limpieza de recursos si es necesario
             }
         });
         return mainPanel;

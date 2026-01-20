@@ -26,7 +26,7 @@ public class Mqtt implements MqttCallback {
     // --- NUEVAS VARIABLES ---
     private List<Double> bufferLecturas = new ArrayList<>();
     private int contadorTotal = 0;
-    private final int LIMITE_MEDIA = 10;   // Hacer media cada 10 valores
+    private final int LIMITE_MEDIA = 5;   // Hacer media cada 5 valores
     private final int LIMITE_BORRADO = 100; // Borrar fichero cada 100 valores
     
     // Para avisar a la interfaz gráfica
@@ -34,7 +34,7 @@ public class Mqtt implements MqttCallback {
 
     public Mqtt() throws MqttException {
         // --- CONEXIÓN A MQTT COMENTADA (SIN RED) ---
-        /* 
+        
         MemoryPersistence persistence = new MemoryPersistence();
         client = new MqttClient(BROKER, CLENT_ID, persistence);
         MqttConnectOptions connOpts = new MqttConnectOptions();
@@ -49,7 +49,7 @@ public class Mqtt implements MqttCallback {
         System.out.println("[MQTT] Suscrito a " + TOPIC_GAS);
         
         System.out.println("[MQTT] Modo offline - conexión desactivada");
-        */
+        
     }
     
     // Método para que la App se pueda suscribir a las alertas de gas
@@ -70,24 +70,36 @@ public class Mqtt implements MqttCallback {
         String contenido = new String(message.getPayload());
         
         try {
-            double valorActual = Double.parseDouble(contenido);
+            // Parsear formato: instalacion|plano|sensor|valor
+            String[] partes = contenido.split("\\|");
+            if (partes.length != 4) {
+                System.err.println("Formato incorrecto. Esperado: instalacion|plano|sensor|valor. Recibido: " + contenido);
+                return;
+            }
+            
+            String instalacion = partes[0].trim();
+            String plano = partes[1].trim();
+            String sensor = partes[2].trim();
+            double valorActual = Double.parseDouble(partes[3].trim());
             
             // 1. Guardar dato en el fichero
-            guardarEnLog(valorActual);
+            guardarEnLog(instalacion, plano, sensor, valorActual);
             
             // 2. Añadir al buffer para la media
             bufferLecturas.add(valorActual);
             contadorTotal++;
             
-            // 3. ¿Tenemos ya 10 valores para hacer la media?
+            // 3. ¿Tenemos ya 5 valores para hacer la media?
             if (bufferLecturas.size() >= LIMITE_MEDIA) {
                 double media = calcularMedia();
-                System.out.println("Media (10 valores): " + media);
+                System.out.println("Media (5 valores): " + media + " para " + instalacion + "/" + plano + "/" + sensor);
                 
                 // AVISAR A LA APP (UI) PARA QUE ACTUALICE EL SENSOR
-                support.firePropertyChange("DATO_GAS_ACTUALIZADO", null, media);
+                // Enviar objeto con toda la información
+                String[] datosSensor = {instalacion, plano, sensor, String.valueOf(media)};
+                support.firePropertyChange("DATO_GAS_ACTUALIZADO", null, datosSensor);
                 
-                // Limpiar el buffer para los siguientes 10
+                // Limpiar el buffer para los siguientes 5
                 bufferLecturas.clear();
             }
             
@@ -99,7 +111,7 @@ public class Mqtt implements MqttCallback {
             }
             
         } catch (NumberFormatException e) {
-            System.err.println("Error al leer valor numérico: " + contenido);
+            System.err.println("Error al parsear valor numérico: " + contenido);
         }
     }
     
@@ -111,14 +123,14 @@ public class Mqtt implements MqttCallback {
         return suma / bufferLecturas.size();
     }
 
-    private void guardarEnLog(double valor) {
+    private void guardarEnLog(String instalacion, String plano, String sensor, double valor) {
         try {
             File carpeta = new File("logs");
             if (!carpeta.exists()) carpeta.mkdir();
             
             FileWriter writer = new FileWriter("logs/datuak.txt", true);
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            writer.write(sdf.format(new Date()) + " | Gas: " + valor + "\n");
+            writer.write(sdf.format(new Date()) + " | " + instalacion + "/" + plano + "/" + sensor + " - Gas: " + valor + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

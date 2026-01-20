@@ -86,15 +86,9 @@ public class PanelPlano extends JPanel {
             }
         });
         
-        // Timer para actualizar los niveles de humo cada 3 segundos
-        timerActualizacion = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //plano.actualizarNivelesHumo();
-                repaint();
-            }
-        });
-        timerActualizacion.start();
+        
+        // El refresco ahora solo ocurre cuando MQTT actualiza los sensores
+        // mediante el método actualizarSensorEspecifico()
     }
     
     // ... (El método buscarSensorClickeado se mantiene igual) ...

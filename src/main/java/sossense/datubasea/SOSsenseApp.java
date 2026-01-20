@@ -38,8 +38,10 @@ public class SOSsenseApp {
         // --- Integración MQTT separada de la UI ---
         try {
             Mqtt mqtt = new Mqtt();
-            MqttIntegration.attachPlanUpdater(mqtt, () -> appContext.getPanelPlanoActivo(),
-                    () -> appContext.getInstalacionActiva());
+                MqttIntegration.attachPlanUpdater(mqtt,
+                    () -> appContext.getPanelPlanoActivo(),
+                    () -> appContext.getInstalacionActiva(),
+                    () -> appContext.getPlanoActivo());
         } catch (Exception ex) {
             System.err.println("Error conectando MQTT: " + ex.getMessage());
         }
