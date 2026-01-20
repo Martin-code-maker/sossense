@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
 import sossense.kontrolatzailea.SOSsenseKontrolatzailea;
 import sossense.datubasea.PlanoRepository;
@@ -126,27 +128,77 @@ public class AgregarInstalacionPanelBuilder {
         plantaPanel.add(plantaIzenaField, pg);
 
         pg.gridx = 0; pg.gridy = 1;
-        JLabel lblSensores = new JLabel("Sentsoreak (id,x,y,kokapena):");
-        lblSensores.setFont(new Font("Arial", Font.BOLD, 13));
-        lblSensores.setForeground(new Color(50, 50, 50));
-        plantaPanel.add(lblSensores, pg);
+        JLabel mapaLabel = new JLabel("Sentsoreak mapan kokatu:");
+        mapaLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        mapaLabel.setForeground(new Color(50, 50, 50));
+        plantaPanel.add(mapaLabel, pg);
 
         pg.gridx = 1;
-        JTextArea sensoresArea = new JTextArea(4, 25);
-        sensoresArea.setFont(new Font("Courier New", Font.PLAIN, 12));
-        sensoresArea.setLineWrap(true);
-        sensoresArea.setWrapStyleWord(true);
-        sensoresArea.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        sensoresArea.setBackground(Color.WHITE);
-        JScrollPane sensoresScroll = new JScrollPane(sensoresArea);
-        sensoresScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        plantaPanel.add(sensoresScroll, pg);
+        JLabel mapaHint = new JLabel("Arrastatu zirkulua mapan kokapena finkatzeko");
+        mapaHint.setFont(new Font("Arial", Font.ITALIC, 11));
+        mapaHint.setForeground(new Color(120, 120, 120));
+        plantaPanel.add(mapaHint, pg);
 
-        pg.gridx = 1; pg.gridy = 2;
-        JLabel hintLabel = new JLabel("Adibidea: S1,120,80,Pasilo nagusia; S2,300,210,Bulegoak");
-        hintLabel.setFont(new Font("Arial", Font.ITALIC, 11));
-        hintLabel.setForeground(new Color(120, 120, 120));
-        plantaPanel.add(hintLabel, pg);
+        pg.gridx = 0; pg.gridy = 2; pg.gridwidth = 2;
+        MapaEditorPanel mapaPanel = new MapaEditorPanel(DEFAULT_ANCHO, DEFAULT_ALTO);
+        mapaPanel.setBackgroundImage(lortuIrudiaMotarenArabera((String) motaCombo.getSelectedItem()));
+        motaCombo.addActionListener(e -> mapaPanel.setBackgroundImage(lortuIrudiaMotarenArabera((String) motaCombo.getSelectedItem())));
+        plantaPanel.add(mapaPanel, pg);
+
+        pg.gridwidth = 1;
+        pg.gridx = 0; pg.gridy = 3;
+        JLabel lblSensorId = new JLabel("Sentsore ID:");
+        lblSensorId.setFont(new Font("Arial", Font.BOLD, 13));
+        lblSensorId.setForeground(new Color(50, 50, 50));
+        plantaPanel.add(lblSensorId, pg);
+
+        pg.gridx = 1;
+        JTextField sensorIdField = crearCampoEstilizado(12);
+        plantaPanel.add(sensorIdField, pg);
+
+        pg.gridx = 0; pg.gridy = 4;
+        JLabel lblSensorUbic = new JLabel("Kokapena (aukerakoa):");
+        lblSensorUbic.setFont(new Font("Arial", Font.BOLD, 13));
+        lblSensorUbic.setForeground(new Color(50, 50, 50));
+        plantaPanel.add(lblSensorUbic, pg);
+
+        pg.gridx = 1;
+        JTextField sensorUbicField = crearCampoEstilizado(18);
+        plantaPanel.add(sensorUbicField, pg);
+
+        JLabel sensorCountLabel = new JLabel("0 sentsore mapan");
+        sensorCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        sensorCountLabel.setForeground(new Color(0xE1, 0x9D, 0x8E));
+
+        pg.gridx = 0; pg.gridy = 5;
+        JButton gehituSensorBtn = UIUtils.crearBotonEstilizado("MAPAN GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        gehituSensorBtn.setPreferredSize(new Dimension(170, 32));
+        gehituSensorBtn.addActionListener(e -> {
+            String id = sensorIdField.getText().trim();
+            String ubic = sensorUbicField.getText().trim();
+            String plantaIzena = plantaIzenaField.getText().trim();
+            if (plantaIzena.isEmpty()) {
+                JOptionPane.showMessageDialog(mainPanel, "Idatzi planta izena lehenik.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(mainPanel, "Idatzi sentsorearen IDa.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (mapaPanel.existeSensor(id)) {
+                JOptionPane.showMessageDialog(mainPanel, "ID hori dagoeneko mapan dago.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String kokapena = ubic.isEmpty() ? plantaIzena : plantaIzena + " - " + ubic;
+            mapaPanel.addSensor(id, kokapena);
+            sensorIdField.setText("");
+            sensorUbicField.setText("");
+            sensorCountLabel.setText(mapaPanel.getSensorCount() + " sentsore mapan");
+        });
+        plantaPanel.add(gehituSensorBtn, pg);
+
+        pg.gridx = 1;
+        plantaPanel.add(sensorCountLabel, pg);
 
         DefaultListModel<String> plantasModel = new DefaultListModel<>();
         JList<String> plantasList = new JList<>(plantasModel);
@@ -161,7 +213,7 @@ public class AgregarInstalacionPanelBuilder {
         resumenLabel.setFont(new Font("Arial", Font.BOLD, 12));
         resumenLabel.setForeground(new Color(0xE1, 0x9D, 0x8E));
 
-        pg.gridx = 0; pg.gridy = 3;
+        pg.gridx = 0; pg.gridy = 6;
         pg.gridwidth = 2;
         JButton gehituPlantaBtn = UIUtils.crearBotonEstilizado("PLANTA GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
         gehituPlantaBtn.setPreferredSize(new Dimension(180, 35));
@@ -172,9 +224,9 @@ public class AgregarInstalacionPanelBuilder {
                 return;
             }
 
-            List<SensorLayout> sentsoreakPlanta = parsearSensores(sensoresArea.getText().trim(), izenaPlanta, mainPanel);
+            List<SensorLayout> sentsoreakPlanta = mapaPanel.toSensorLayouts(izenaPlanta);
             if (sentsoreakPlanta.isEmpty()) {
-                JOptionPane.showMessageDialog(mainPanel, "Gutxienez sentsore bat gehitu behar da.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainPanel, "Gutxienez sentsore bat kokatu behar da mapan.", "Abisua", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -184,17 +236,18 @@ public class AgregarInstalacionPanelBuilder {
             plantasModel.addElement(izenaPlanta + " (" + sentsoreakPlanta.size() + " sentsore)");
 
             plantaIzenaField.setText("");
-            sensoresArea.setText("");
+            mapaPanel.clearSensors();
+            sensorCountLabel.setText("0 sentsore mapan");
 
             int totalSens = planoDefinituak.stream().mapToInt(p -> p.getSensoresDefinidos().size()).sum();
             resumenLabel.setText(planoDefinituak.size() + " planta, " + totalSens + " sentsore");
         });
         plantaPanel.add(gehituPlantaBtn, pg);
 
-        pg.gridx = 0; pg.gridy = 4; pg.gridwidth = 2;
+        pg.gridx = 0; pg.gridy = 7; pg.gridwidth = 2;
         plantaPanel.add(plantasScroll, pg);
 
-        pg.gridy = 5;
+        pg.gridy = 8;
         plantaPanel.add(resumenLabel, pg);
 
         formPanel.add(plantaPanel, gbc);
@@ -281,7 +334,8 @@ public class AgregarInstalacionPanelBuilder {
                 plantasModel.clear();
                 planoDefinituak.clear();
                 plantaIzenaField.setText("");
-                sensoresArea.setText("");
+                mapaPanel.clearSensors();
+                sensorCountLabel.setText("0 sentsore mapan");
                 resumenLabel.setText("0 planta, 0 sentsore");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(mainPanel,
@@ -315,46 +369,6 @@ public class AgregarInstalacionPanelBuilder {
         JComboBox<String> combo = new JComboBox<>(items);
         combo.setFont(new Font("Arial", Font.PLAIN, 13));
         return combo;
-    }
-
-    private List<SensorLayout> parsearSensores(String raw, String nombrePlanta, Component parent) {
-        List<SensorLayout> sensores = new ArrayList<>();
-        if (raw == null || raw.trim().isEmpty()) {
-            return sensores;
-        }
-
-        String[] items = raw.split(";");
-        for (String item : items) {
-            String limpio = item.trim();
-            if (limpio.isEmpty()) {
-                continue;
-            }
-            String[] partes = limpio.split(",", 4);
-            if (partes.length < 4) {
-                JOptionPane.showMessageDialog(parent,
-                        "Sentsorearen formatua: id,x,y,kokapena",
-                        "Errorea",
-                        JOptionPane.ERROR_MESSAGE);
-                return new ArrayList<>();
-            }
-            try {
-                String id = partes[0].trim();
-                int x = Integer.parseInt(partes[1].trim());
-                int y = Integer.parseInt(partes[2].trim());
-                String ubicacion = partes[3].trim();
-                if (!ubicacion.toLowerCase().contains(nombrePlanta.toLowerCase())) {
-                    ubicacion = nombrePlanta + " - " + ubicacion;
-                }
-                sensores.add(new SensorLayout(id, x, y, ubicacion));
-            } catch (NumberFormatException nfe) {
-                JOptionPane.showMessageDialog(parent,
-                        "X eta Y balio osoak izan behar dira.",
-                        "Errorea",
-                        JOptionPane.ERROR_MESSAGE);
-                return new ArrayList<>();
-            }
-        }
-        return sensores;
     }
 
     private void guardarSensoresTxt(String instalacion, List<PlanoInfo> planos) {
@@ -391,6 +405,155 @@ public class AgregarInstalacionPanelBuilder {
                     "Ezin izan da sensors.txt eguneratu: " + e.getMessage(),
                     "Errorea",
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static class SensorDrag {
+        private final String id;
+        private final String ubicacion;
+        private Point posizioa;
+
+        SensorDrag(String id, String ubicacion, Point posizioa) {
+            this.id = id;
+            this.ubicacion = ubicacion;
+            this.posizioa = posizioa;
+        }
+    }
+
+    private static class MapaEditorPanel extends JPanel {
+        private static final int RADIO = 12;
+        private final int ancho;
+        private final int alto;
+        private final List<SensorDrag> sensores = new ArrayList<>();
+        private Image fondo;
+        private SensorDrag arrastrando;
+        private Point offset = new Point();
+
+        MapaEditorPanel(int ancho, int alto) {
+            this.ancho = ancho;
+            this.alto = alto;
+            setPreferredSize(new Dimension(ancho, alto));
+            setBackground(Color.WHITE);
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    arrastrando = sensorEn(e.getX(), e.getY());
+                    if (arrastrando != null) {
+                        offset = new Point(e.getX() - arrastrando.posizioa.x, e.getY() - arrastrando.posizioa.y);
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    arrastrando = null;
+                }
+            });
+
+            addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    if (arrastrando != null) {
+                        Point berria = new Point(e.getX() - offset.x, e.getY() - offset.y);
+                        arrastrando.posizioa = mugatu(berria);
+                        repaint();
+                    }
+                }
+            });
+        }
+
+        void setBackgroundImage(String imageName) {
+            if (imageName == null || imageName.isEmpty()) {
+                fondo = null;
+                repaint();
+                return;
+            }
+            try {
+                java.net.URL imgUrl = getClass().getResource("/sossense/img/" + imageName);
+                fondo = imgUrl != null ? new ImageIcon(imgUrl).getImage() : null;
+            } catch (Exception e) {
+                fondo = null;
+            }
+            repaint();
+        }
+
+        void addSensor(String id, String ubicacion) {
+            int px = getWidth() > 0 ? getWidth() / 2 : ancho / 2;
+            int py = getHeight() > 0 ? getHeight() / 2 : alto / 2;
+            sensores.add(new SensorDrag(id, ubicacion, new Point(px, py)));
+            repaint();
+        }
+
+        boolean existeSensor(String id) {
+            return sensores.stream().anyMatch(s -> s.id.equalsIgnoreCase(id));
+        }
+
+        int getSensorCount() {
+            return sensores.size();
+        }
+
+        void clearSensors() {
+            sensores.clear();
+            repaint();
+        }
+
+        List<SensorLayout> toSensorLayouts(String plantaIzena) {
+            List<SensorLayout> layouts = new ArrayList<>();
+            for (SensorDrag sd : sensores) {
+                String kokapena = sd.ubicacion;
+                if (!kokapena.toLowerCase().contains(plantaIzena.toLowerCase())) {
+                    kokapena = plantaIzena + " - " + kokapena;
+                }
+                layouts.add(new SensorLayout(sd.id, sd.posizioa.x, sd.posizioa.y, kokapena));
+            }
+            return layouts;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            if (fondo != null) {
+                g2.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
+            } else {
+                g2.setColor(new Color(240, 240, 240));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+
+            g2.setColor(Color.BLACK);
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
+
+            for (SensorDrag sd : sensores) {
+                g2.setColor(new Color(0x52, 0xB7, 0x88));
+                g2.fillOval(sd.posizioa.x - RADIO, sd.posizioa.y - RADIO, RADIO * 2, RADIO * 2);
+                g2.setColor(Color.BLACK);
+                g2.drawOval(sd.posizioa.x - RADIO, sd.posizioa.y - RADIO, RADIO * 2, RADIO * 2);
+                g2.setFont(new Font("Arial", Font.BOLD, 10));
+                FontMetrics fm = g2.getFontMetrics();
+                int w = fm.stringWidth(sd.id);
+                g2.drawString(sd.id, sd.posizioa.x - w / 2, sd.posizioa.y - RADIO - 4);
+            }
+        }
+
+        private SensorDrag sensorEn(int x, int y) {
+            for (SensorDrag sd : sensores) {
+                int dx = x - sd.posizioa.x;
+                int dy = y - sd.posizioa.y;
+                if ((dx * dx) + (dy * dy) <= (RADIO + 2) * (RADIO + 2)) {
+                    return sd;
+                }
+            }
+            return null;
+        }
+
+        private Point mugatu(Point p) {
+            int m = RADIO + 4;
+            int nx = Math.max(m, Math.min(getWidth() - m, p.x));
+            int ny = Math.max(m, Math.min(getHeight() - m, p.y));
+            return new Point(nx, ny);
         }
     }
 

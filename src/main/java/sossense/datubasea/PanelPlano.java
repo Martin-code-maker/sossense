@@ -167,65 +167,16 @@ public class PanelPlano extends JPanel {
             g2d.drawString(id, sensor.getX() - idWidth/2, sensor.getY() + 4);
         }
         
-        dibujarLeyenda(g2d);
-        
-        // Título y estadísticas...
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Arial", Font.BOLD, 20));
-        String titulo = "Plano: " + plano.getNombreInstalacion();
-        FontMetrics fm = g2d.getFontMetrics();
-        int tituloWidth = fm.stringWidth(titulo);
-        g2d.drawString(titulo, (getWidth() - tituloWidth) / 2, 30);
-        
-        g2d.setFont(new Font("Arial", Font.PLAIN, 14));
-        String stats = "Sentsoreak: " + plano.getTotalSentsoreak() + 
-                      " | Alerta: " + plano.getSentsoreakAlerta() + 
-                      " | Críticos: " + plano.getSentsoreakCriticos();
-        int statsWidth = fm.stringWidth(stats);
-        g2d.drawString(stats, (getWidth() - statsWidth) / 2, getHeight() - 20);
-    }
-
-    // ... (Resto de métodos: dibujarLeyenda y detenerActualizacion se mantienen igual) ...
-    private void dibujarLeyenda(Graphics2D g2d) {
-        int x = getWidth() - 150;
-        int y = 50;
-        
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
-        g2d.drawString("LEYENDA", x, y);
-        
-        y += 20;
-        g2d.setColor(Color.GREEN);
-        g2d.fillRect(x, y, 15, 15);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRect(x, y, 15, 15);
-        g2d.drawString("Normal (0-29%)", x + 25, y + 12);
-        
-        y += 25;
-        g2d.setColor(Color.ORANGE);
-        g2d.fillRect(x, y, 15, 15);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRect(x, y, 15, 15);
-        g2d.drawString("Alerta (30-69%)", x + 25, y + 12);
-        
-        y += 25;
-        g2d.setColor(Color.RED);
-        g2d.fillRect(x, y, 15, 15);
-        g2d.setColor(Color.BLACK);
-        g2d.drawRect(x, y, 15, 15);
-        g2d.drawString("Crítico (70-100%)", x + 25, y + 12);
-        
-        y += 30;
-        g2d.setColor(Color.BLACK);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 10));
-        g2d.drawString("Haz clic en un", x, y);
-        g2d.drawString("sensor para más info", x, y + 15);
     }
     
     public void detenerActualizacion() {
         if (timerActualizacion != null) {
             timerActualizacion.stop();
         }
+    }
+
+    public java.util.List<SensorPlano> getSensoresSnapshot() {
+        return new java.util.ArrayList<>(plano.getSentsoreak());
     }
 
     // Método nuevo para actualizar un sensor concreto desde fuera (MQTT)

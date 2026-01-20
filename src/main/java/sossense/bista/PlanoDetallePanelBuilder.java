@@ -79,8 +79,20 @@ public class PlanoDetallePanelBuilder {
         PanelPlano panelPlano = new PanelPlano(plano, planoInfo.getImagenFondo());
         appContext.setPanelPlanoActivo(panelPlano);
 
-        JScrollPane scrollPane = new JScrollPane(panelPlano);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 3));
+        JPanel mapaWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        mapaWrapper.setBackground(new Color(245, 245, 245));
+        panelPlano.setBorder(BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 2));
+        mapaWrapper.add(panelPlano);
+
+        JPanel legendPanel = crearLeyendaPanel();
+        JPanel infoPanel = crearInfoPanel(panelPlano);
+
+        JPanel centro = new JPanel(new BorderLayout(15, 0));
+        centro.setBackground(new Color(245, 245, 245));
+        centro.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        centro.add(legendPanel, BorderLayout.WEST);
+        centro.add(mapaWrapper, BorderLayout.CENTER);
+        centro.add(infoPanel, BorderLayout.EAST);
 
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         controlPanel.setBackground(new Color(245, 245, 245));
@@ -89,11 +101,19 @@ public class PlanoDetallePanelBuilder {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
         JButton actualizarBtn = UIUtils.crearBotonEstilizado("🔄 EGUNERATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
-        actualizarBtn.addActionListener(e -> panelPlano.repaint());
+        actualizarBtn.addActionListener(e -> {
+            panelPlano.repaint();
+            Object stats = infoPanel.getClientProperty("refresh");
+            if (stats instanceof Runnable) {
+                ((Runnable) stats).run();
+            }
+        });
 
         JButton volverBtn = UIUtils.crearBotonEstilizado("⬅ ATZERA", new Color(0xE2, 0x80, 0x76), Color.WHITE);
         volverBtn.addActionListener(e -> {
             panelPlano.detenerActualizacion();
+            Runnable stopTimer = (Runnable) infoPanel.getClientProperty("stopTimer");
+            if (stopTimer != null) stopTimer.run();
             appContext.setPanelPlanoActivo(null);
             appContext.setInstalacionActiva("");
             navigator.navigateTo(new SeleccionPlanosPanelBuilder(controller, planoRepo, navigator, appContext)
@@ -103,8 +123,93 @@ public class PlanoDetallePanelBuilder {
         controlPanel.add(actualizarBtn);
         controlPanel.add(volverBtn);
 
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(centro, BorderLayout.CENTER);
         mainPanel.add(controlPanel, BorderLayout.SOUTH);
         return mainPanel;
+    }
+
+    private JPanel crearLeyendaPanel() {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setBackground(new Color(245, 245, 245));
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 2),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        JLabel title = new JLabel("LEYENDA");
+        title.setFont(new Font("Arial", Font.BOLD, 14));
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+        p.add(title);
+        p.add(Box.createVerticalStrut(10));
+        p.add(crearChip(Color.GREEN, "Normal (0-29%)"));
+        p.add(Box.createVerticalStrut(8));
+        p.add(crearChip(Color.ORANGE, "Alerta (30-69%)"));
+        p.add(Box.createVerticalStrut(8));
+        p.add(crearChip(Color.RED, "Kritikoa (70-100%)"));
+        p.add(Box.createVerticalStrut(8));
+        JLabel hint = new JLabel("Klik sentsorean info lortzeko");
+        hint.setFont(new Font("Arial", Font.PLAIN, 12));
+        hint.setForeground(new Color(70, 70, 70));
+        hint.setAlignmentX(Component.LEFT_ALIGNMENT);
+        p.add(hint);
+        return p;
+    }
+
+    private JPanel crearChip(Color color, String texto) {
+        JPanel chip = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 2));
+        chip.setOpaque(false);
+        JLabel square = new JLabel();
+        square.setOpaque(true);
+        square.setBackground(color);
+        square.setPreferredSize(new Dimension(16, 16));
+        square.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        JLabel label = new JLabel(texto);
+        label.setFont(new Font("Arial", Font.PLAIN, 12));
+        chip.add(square);
+        chip.add(label);
+        return chip;
+    }
+
+    private JPanel crearInfoPanel(PanelPlano panelPlano) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(new Color(245, 245, 245));
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 2),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
+        JLabel title = new JLabel("Sentsoreen egoera");
+        title.setFont(new Font("Arial", Font.BOLD, 14));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        p.add(title, BorderLayout.NORTH);
+
+        DefaultListModel<String> model = new DefaultListModel<>();
+        JList<String> list = new JList<>(model);
+        list.setFont(new Font("Arial", Font.PLAIN, 12));
+        JScrollPane sp = new JScrollPane(list);
+        sp.setPreferredSize(new Dimension(220, 420));
+        p.add(sp, BorderLayout.CENTER);
+
+        JLabel resumen = new JLabel("-");
+        resumen.setFont(new Font("Arial", Font.BOLD, 12));
+        resumen.setHorizontalAlignment(SwingConstants.CENTER);
+        resumen.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+        p.add(resumen, BorderLayout.SOUTH);
+
+        Runnable refrescar = () -> {
+            java.util.List<sossense.datubasea.SensorPlano> sensores = panelPlano.getSensoresSnapshot();
+            model.clear();
+            int alerta = 0; int crit = 0;
+            for (sossense.datubasea.SensorPlano s : sensores) {
+                if (s.getNivelHumo() >= 70) crit++; else if (s.getNivelHumo() >= 30) alerta++;
+                model.addElement(s.getId() + " | " + s.getNivelHumo() + "% | " + s.getUbicacion());
+            }
+            resumen.setText("Guztira: " + sensores.size() + " | Alerta: " + alerta + " | Kritiko: " + crit);
+        };
+        refrescar.run();
+
+        javax.swing.Timer t = new javax.swing.Timer(2000, e -> refrescar.run());
+        t.start();
+        p.putClientProperty("refresh", refrescar);
+        p.putClientProperty("stopTimer", (Runnable) t::stop);
+        return p;
     }
 }

@@ -213,3 +213,12 @@ CAF Fabrika|Oficinas|C_OF_05|400|400|Finantzak
 CAF Fabrika|Oficinas|C_OF_06|600|400|Zuzendaritza
 CAF Fabrika|Oficinas|C_OF_07|100|300|Server Gela
 CAF Fabrika|Oficinas|C_OF_08|700|300|Artxiboa
+Manex-en etxea|Sotoa|S3|247|470|Sotoa
+Manex-en etxea|Sotoa|S1|322|467|Sotoa
+Manex-en etxea|Sotoa|S2|384|468|Sotoa
+Manex-en etxea|Sotoa|S4|452|468|Sotoa
+Manex-en etxea|Lehen Solairua|S1|516|357|Lehen Solairua
+Manex-en etxea|Lehen Solairua|S2|519|239|Lehen Solairua
+Manex-en etxea|Lehen Solairua|S3|683|250|Lehen Solairua
+Manex-en etxea|Lehen Solairua|S4|684|379|Lehen Solairua
+Lander|1|S1|410|432|1
