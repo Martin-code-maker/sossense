@@ -44,9 +44,8 @@ public class InstalacionesPanelBuilder {
         JTextField searchField = new JTextField(25);
         searchField.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        JButton buscarBtn = new JButton("BILATU");
-        buscarBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        buscarBtn.setPreferredSize(new Dimension(100, 30));
+        JButton buscarBtn = sossense.utils.UIUtils.crearBotonEstilizado("BILATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
+        buscarBtn.setPreferredSize(new Dimension(150, 35));
 
         searchPanel.add(lblBuscar);
         searchPanel.add(searchField);
@@ -66,16 +65,14 @@ public class InstalacionesPanelBuilder {
         JPanel navegacionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         navegacionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton anteriorBtn = new JButton("◀ AURREKO");
-        anteriorBtn.setFont(new Font("Arial", Font.BOLD, 12));
-        anteriorBtn.setPreferredSize(new Dimension(120, 35));
+        JButton anteriorBtn = sossense.utils.UIUtils.crearBotonEstilizado("AURREKO", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        anteriorBtn.setPreferredSize(new Dimension(160, 40));
 
         JLabel paginaLabel = new JLabel();
         paginaLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
-        JButton siguienteBtn = new JButton("HURRENGOA ▶");
-        siguienteBtn.setFont(new Font("Arial", Font.BOLD, 12));
-        siguienteBtn.setPreferredSize(new Dimension(140, 35));
+        JButton siguienteBtn = sossense.utils.UIUtils.crearBotonEstilizado("HURRENGOA", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        siguienteBtn.setPreferredSize(new Dimension(180, 40));
 
         navegacionPanel.add(anteriorBtn);
         navegacionPanel.add(paginaLabel);

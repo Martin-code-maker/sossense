@@ -61,7 +61,7 @@ public class PlanoDetallePanelBuilder {
         headerPanel.setOpaque(false);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(25, 20, 25, 20));
 
-        JLabel titulo = new JLabel("📍 " + izenaInstalacion + " - " + nombrePlano);
+        JLabel titulo = new JLabel(izenaInstalacion + " - " + nombrePlano);
         titulo.setFont(new Font("Arial", Font.BOLD, 32));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setForeground(Color.WHITE);
@@ -100,7 +100,7 @@ public class PlanoDetallePanelBuilder {
                 BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(0xD3, 0x85, 0x7E)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
-        JButton actualizarBtn = UIUtils.crearBotonEstilizado("🔄 EGUNERATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
+        JButton actualizarBtn = UIUtils.crearBotonEstilizado("EGUNERATU", new Color(0x52, 0xB7, 0x88), Color.WHITE);
         actualizarBtn.addActionListener(e -> {
             panelPlano.repaint();
             Object stats = infoPanel.getClientProperty("refresh");
@@ -109,7 +109,7 @@ public class PlanoDetallePanelBuilder {
             }
         });
 
-        JButton volverBtn = UIUtils.crearBotonEstilizado("⬅ ATZERA", new Color(0xE2, 0x80, 0x76), Color.WHITE);
+        JButton volverBtn = UIUtils.crearBotonEstilizado("ATZERA", new Color(0xE2, 0x80, 0x76), Color.WHITE);
         volverBtn.addActionListener(e -> {
             panelPlano.detenerActualizacion();
             Runnable stopTimer = (Runnable) infoPanel.getClientProperty("stopTimer");

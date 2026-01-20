@@ -9,3 +9,4 @@ Osakidetza Azkoitia|45|LARRIA|Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALE
 CAF Fabrika|52|ARINGARRI|Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA
 Manex-en etxea|8||Berrobi|LABORATORIO
 Lander|1||Eibar|UNIBERTSITATEA
+Eduardo|6||Vitoria|OSPITALEA

@@ -67,7 +67,7 @@ public class SeleccionPlanosPanelBuilder {
         headerPanel.setOpaque(false);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(25, 20, 25, 20));
 
-        JLabel titulo = new JLabel("🏢 " + nombreInstalacion);
+        JLabel titulo = new JLabel(nombreInstalacion);
         titulo.setFont(new Font("Arial", Font.BOLD, 32));
         titulo.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.setForeground(Color.WHITE);
@@ -89,16 +89,14 @@ public class SeleccionPlanosPanelBuilder {
         planosPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
         planosPanel.setBackground(new Color(245, 245, 245));
 
-        String[] iconos = {"🏠", "🏢", "🏗️", "🔦", "📍", "🏛️"};
         Color verdeBase = Color.decode("#10c531"); // verde default para todas las plantas
 
         for (int i = 0; i < planosInstalacion.size(); i++) {
             PlanoInfo planoInfo = planosInstalacion.get(i);
-            String icono = iconos[i % iconos.length];
             Color colorAccent = verdeBase;
             PlanoInstalacion planoTemp = new PlanoInstalacion(planoInfo);
             int sensoresCriticos = planoTemp.getSentsoreakCriticos();
-            planosPanel.add(crearTarjetaPlano(planoInfo.getNombrePlano(), icono, colorAccent,
+            planosPanel.add(crearTarjetaPlano(planoInfo.getNombrePlano(), colorAccent,
                     instalacion, nombreInstalacion, sensoresCriticos, planoInfo));
         }
 
@@ -110,7 +108,7 @@ public class SeleccionPlanosPanelBuilder {
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
         bottomPanel.setBackground(new Color(245, 245, 245));
-        JButton volverBtn = UIUtils.crearBotonEstilizado("⬅ INSTALAZIOETARA ITZULI", new Color(0xE2, 0x80, 0x76), Color.WHITE);
+        JButton volverBtn = UIUtils.crearBotonEstilizado("ITZULI", new Color(0xE2, 0x80, 0x76), Color.WHITE);
         volverBtn.addActionListener(e -> navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build()));
         bottomPanel.add(volverBtn);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -135,7 +133,7 @@ public class SeleccionPlanosPanelBuilder {
         }
     }
 
-    private JPanel crearTarjetaPlano(String nombrePlano, String icono, Color colorAccent,
+    private JPanel crearTarjetaPlano(String nombrePlano, Color colorAccent,
                                      Instalazioa instalacion, String nombreInstalacion,
                                      int sensoresCriticos, PlanoInfo planoInfo) {
         final boolean[] hover = { false };
@@ -180,7 +178,7 @@ public class SeleccionPlanosPanelBuilder {
                     g2.fillRoundRect(0, 0, w - 6, h - 6, 25, 25);
                     g2.setFont(new Font("Arial", Font.BOLD, 22));
                     g2.setColor(Color.WHITE);
-                    g2.drawString("🚨 ALERTA", 15, 35);
+                    g2.drawString("ALERTA", 15, 35);
                 }
                 if (hover[0]) {
                     g2.setColor(new Color(255, 255, 255, 40));
