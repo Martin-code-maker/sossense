@@ -2,6 +2,8 @@ package sossense.bista;
 
 import java.awt.*;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 
 import sossense.datubasea.Instalazioa;
@@ -18,6 +20,9 @@ public class SeleccionPlanosPanelBuilder {
     private final PlanoRepository planoRepo;
     private final Navigator navigator;
     private final AppContext appContext;
+    private final Map<String, PlanoInstalacion> planosCache = new HashMap<>();
+    private final Map<String, JPanel> tarjetasCache = new HashMap<>();
+    private Timer actualizacionTimer;
 
     public SeleccionPlanosPanelBuilder(SOSsenseKontrolatzailea controller,
                                        PlanoRepository planoRepo,
@@ -89,15 +94,18 @@ public class SeleccionPlanosPanelBuilder {
         planosPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
         planosPanel.setBackground(new Color(245, 245, 245));
 
-        Color verdeBase = Color.decode("#10c531"); // verde default para todas las plantas
-
-        for (int i = 0; i < planosInstalacion.size(); i++) {
-            PlanoInfo planoInfo = planosInstalacion.get(i);
-            Color colorAccent = verdeBase;
-            PlanoInstalacion planoTemp = new PlanoInstalacion(planoInfo);
-            int sensoresCriticos = planoTemp.getSentsoreakCriticos();
-            planosPanel.add(crearTarjetaPlano(planoInfo.getNombrePlano(), colorAccent,
-                    instalacion, nombreInstalacion, sensoresCriticos, planoInfo));
+        // Crear y cachear instancias de PlanoInstalacion
+        tarjetasCache.clear();
+        for (PlanoInfo planoInfo : planosInstalacion) {
+            String claveCache = nombreInstalacion + "_" + planoInfo.getNombrePlano();
+            
+            // Usar instancia en caché o crear nueva
+            PlanoInstalacion planoTemp = planosCache.computeIfAbsent(claveCache, k -> new PlanoInstalacion(planoInfo));
+            
+                JPanel tarjeta = crearTarjetaPlano(planoInfo.getNombrePlano(),
+                    instalacion, nombreInstalacion, planoInfo, planoTemp, claveCache);
+            tarjetasCache.put(claveCache, tarjeta);
+            planosPanel.add(tarjeta);
         }
 
         JScrollPane scrollPane = new JScrollPane(planosPanel);
@@ -109,11 +117,35 @@ public class SeleccionPlanosPanelBuilder {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
         bottomPanel.setBackground(new Color(245, 245, 245));
         JButton volverBtn = UIUtils.crearBotonEstilizado("ITZULI", new Color(0xE2, 0x80, 0x76), Color.WHITE);
-        volverBtn.addActionListener(e -> navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build()));
+        volverBtn.addActionListener(e -> {
+            detenerActualizacion();
+            navigator.navigateTo(new InstalacionesPanelBuilder(controller, navigator, planoRepo, appContext).build());
+        });
         bottomPanel.add(volverBtn);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
+        // Iniciar temporizador de actualización
+        iniciarActualizacion(planosPanel);
+
         return mainPanel;
+    }
+
+    private void iniciarActualizacion(JPanel planosPanel) {
+        detenerActualizacion();
+        
+        actualizacionTimer = new Timer(500, e -> {
+            for (Map.Entry<String, JPanel> entry : tarjetasCache.entrySet()) {
+                entry.getValue().repaint();
+            }
+        });
+        actualizacionTimer.start();
+    }
+
+    private void detenerActualizacion() {
+        if (actualizacionTimer != null) {
+            actualizacionTimer.stop();
+            actualizacionTimer = null;
+        }
     }
 
     private String lortuPlanoMotarenArabera(String mota) {
@@ -133,11 +165,10 @@ public class SeleccionPlanosPanelBuilder {
         }
     }
 
-    private JPanel crearTarjetaPlano(String nombrePlano, Color colorAccent,
+    private JPanel crearTarjetaPlano(String nombrePlano,
                                      Instalazioa instalacion, String nombreInstalacion,
-                                     int sensoresCriticos, PlanoInfo planoInfo) {
+                                     PlanoInfo planoInfo, PlanoInstalacion planoTemp, String claveCache) {
         final boolean[] hover = { false };
-        final boolean enAlerta = sensoresCriticos >= 3;
         final Image imagenPlano;
         Image temp = null;
         try {
@@ -150,14 +181,24 @@ public class SeleccionPlanosPanelBuilder {
         } catch (Exception e) { System.out.println("Error cargando plano"); }
         imagenPlano = temp;
 
+        Color verdeBase = Color.decode("#10c531");
+        Color rojoBase = new Color(220, 30, 30);
+
         JPanel planoPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                // Obtener estado actual desde AppContext (si hay datos en tiempo real)
+                int sensoresCriticos = appContext.contarCriticos(nombreInstalacion, planoInfo.getNombrePlano());
+                int sensoresAlerta = appContext.contarAlertas(nombreInstalacion, planoInfo.getNombrePlano());
+                boolean enCritico = sensoresCriticos > 0;
+                boolean enAlerta = sensoresAlerta > 0 || enCritico;
+                Color colorReal = enCritico ? rojoBase : (enAlerta ? new Color(255,140,0) : verdeBase);
+                
                 int w = getWidth(); int h = getHeight();
-                Color colorReal = enAlerta ? new Color(180, 30, 30) : colorAccent;
                 g2.setColor(hover[0] ? new Color(0, 0, 0, 60) : new Color(0, 0, 0, 30));
                 g2.fillRoundRect(4, 4, w - 4, h - 4, 25, 25);
                 if (imagenPlano != null) {
@@ -173,7 +214,7 @@ public class SeleccionPlanosPanelBuilder {
                 g2.setColor(colorReal);
                 g2.fillRoundRect(0, 0, w - 6, 60, 25, 25);
                 g2.fillRect(0, 40, w - 6, 20);
-                if (enAlerta) {
+                if (enCritico) {
                     g2.setColor(new Color(255, 0, 0, 70));
                     g2.fillRoundRect(0, 0, w - 6, h - 6, 25, 25);
                     g2.setFont(new Font("Arial", Font.BOLD, 22));
@@ -184,8 +225,8 @@ public class SeleccionPlanosPanelBuilder {
                     g2.setColor(new Color(255, 255, 255, 40));
                     g2.fillRoundRect(0, 0, w - 6, h - 6, 25, 25);
                 }
-                g2.setColor(enAlerta ? Color.RED : (hover[0] ? colorAccent : new Color(220, 220, 220)));
-                g2.setStroke(new BasicStroke(enAlerta ? 4 : (hover[0] ? 3 : 2)));
+                g2.setColor(enCritico ? Color.RED : (hover[0] ? colorReal : new Color(220, 220, 220)));
+                g2.setStroke(new BasicStroke(enCritico ? 4 : (hover[0] ? 3 : 2)));
                 g2.drawRoundRect(0, 0, w - 6, h - 6, 25, 25);
             }
         };
@@ -200,15 +241,19 @@ public class SeleccionPlanosPanelBuilder {
         JLabel nombreLabel = new JLabel(nombrePlano);
         nombreLabel.setFont(new Font("Arial", Font.BOLD, 24));
         nombreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nombreLabel.setForeground(enAlerta ? Color.RED.darker() : new Color(50, 50, 50));
+        
+        // Actualizar color del nombre dinámicamente
+        planoPanel.addPropertyChangeListener("paintComponent", evt -> {
+            int sensoresCriticos = appContext.contarCriticos(nombreInstalacion, planoInfo.getNombrePlano());
+            int sensoresAlerta = appContext.contarAlertas(nombreInstalacion, planoInfo.getNombrePlano());
+            boolean enCritico = sensoresCriticos > 0;
+            boolean enAlerta = sensoresAlerta > 0 || enCritico;
+            if (enCritico) nombreLabel.setForeground(Color.RED.darker());
+            else if (enAlerta) nombreLabel.setForeground(new Color(255,140,0));
+            else nombreLabel.setForeground(new Color(50, 50, 50));
+        });
+        
         centerPanel.add(nombreLabel);
-        if (enAlerta) {
-            JLabel alertaLabel = new JLabel("⚠ " + sensoresCriticos + " críticos");
-            alertaLabel.setFont(new Font("Arial", Font.BOLD, 18));
-            alertaLabel.setForeground(Color.RED);
-            alertaLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            centerPanel.add(alertaLabel);
-        }
         planoPanel.add(centerPanel, BorderLayout.NORTH);
 
         planoPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));

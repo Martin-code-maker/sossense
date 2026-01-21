@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 
@@ -24,7 +26,8 @@ public class Mqtt implements MqttCallback {
     private MqttClient client;
     
     // --- NUEVAS VARIABLES ---
-    private List<Double> bufferLecturas = new ArrayList<>();
+    // Buffer separado por sensor (clave: "instalacion|plano|sensor")
+    private Map<String, List<Double>> bufferPorSensor = new HashMap<>();
     private int contadorTotal = 0;
     private final int LIMITE_MEDIA = 5;   // Hacer media cada 5 valores
     private final int LIMITE_BORRADO = 100; // Borrar fichero cada 100 valores
@@ -82,16 +85,21 @@ public class Mqtt implements MqttCallback {
             String sensor = partes[2].trim();
             double valorActual = Double.parseDouble(partes[3].trim());
             
+            // Crear clave única por sensor
+            String claveSensor = instalacion + "|" + plano + "|" + sensor;
+            
             // 1. Guardar dato en el fichero
             guardarEnLog(instalacion, plano, sensor, valorActual);
             
-            // 2. Añadir al buffer para la media
-            bufferLecturas.add(valorActual);
+            // 2. Añadir al buffer específico de este sensor
+            bufferPorSensor.putIfAbsent(claveSensor, new ArrayList<>());
+            List<Double> bufferSensor = bufferPorSensor.get(claveSensor);
+            bufferSensor.add(valorActual);
             contadorTotal++;
             
-            // 3. ¿Tenemos ya 5 valores para hacer la media?
-            if (bufferLecturas.size() >= LIMITE_MEDIA) {
-                double media = calcularMedia();
+            // 3. ¿Tenemos ya 5 valores para hacer la media de ESTE sensor?
+            if (bufferSensor.size() >= LIMITE_MEDIA) {
+                double media = calcularMedia(bufferSensor);
                 System.out.println("Media (5 valores): " + media + " para " + instalacion + "/" + plano + "/" + sensor);
                 
                 // AVISAR A LA APP (UI) PARA QUE ACTUALICE EL SENSOR
@@ -99,8 +107,8 @@ public class Mqtt implements MqttCallback {
                 String[] datosSensor = {instalacion, plano, sensor, String.valueOf(media)};
                 support.firePropertyChange("DATO_GAS_ACTUALIZADO", null, datosSensor);
                 
-                // Limpiar el buffer para los siguientes 5
-                bufferLecturas.clear();
+                // Limpiar el buffer de ESTE sensor para los siguientes 5
+                bufferSensor.clear();
             }
             
             // 4. ¿Hemos llegado a 100 valores totales? -> Limpiar fichero
@@ -115,12 +123,12 @@ public class Mqtt implements MqttCallback {
         }
     }
     
-    private double calcularMedia() {
+    private double calcularMedia(List<Double> buffer) {
         double suma = 0;
-        for (Double val : bufferLecturas) {
+        for (Double val : buffer) {
             suma += val;
         }
-        return suma / bufferLecturas.size();
+        return suma / buffer.size();
     }
 
     private void guardarEnLog(String instalacion, String plano, String sensor, double valor) {

@@ -11,6 +11,8 @@ import javax.swing.Timer;
 import javax.swing.*;
 
 import sossense.datubasea.Instalazioa;
+import sossense.datubasea.PlanoInfo;
+import sossense.datubasea.PlanoInstalacion;
 import sossense.kontrolatzailea.SOSsenseKontrolatzailea;
 import sossense.datubasea.PlanoRepository;
 import sossense.datubasea.AppContext;
@@ -21,6 +23,8 @@ public class InstalacionesPanelBuilder {
     private final Navigator navigator;
     private final PlanoRepository planoRepo;
     private final AppContext appContext;
+    private Timer actualizacionTimer;
+    private final Map<String, PlanoInstalacion> planosCache = new HashMap<>();
 
     public InstalacionesPanelBuilder(SOSsenseKontrolatzailea controller,
                                      Navigator navigator,
@@ -57,6 +61,7 @@ public class InstalacionesPanelBuilder {
         instalacionesPanel.setLayout(new BoxLayout(instalacionesPanel, BoxLayout.Y_AXIS));
         instalacionesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         Map<String, JLabel> egoeraLabels = new HashMap<>();
+        Map<String, JPanel> panelesTarjetas = new HashMap<>();
 
         int[] paginaActual = {0};
         int itemsPorPagina = 5;
@@ -101,7 +106,7 @@ public class InstalacionesPanelBuilder {
             int inicio = paginaActual[0] * itemsPorPagina;
             int fin = Math.min(inicio + itemsPorPagina, todasInstalaciones.size());
             List<Instalazioa> instalaziakPagina = todasInstalaciones.subList(inicio, fin);
-            bistaratuInstalazioak(instalacionesPanel, instalaziakPagina, egoeraLabels);
+            bistaratuInstalazioak(instalacionesPanel, instalaziakPagina, egoeraLabels, panelesTarjetas);
             paginaLabel.setText("Orria " + (paginaActual[0] + 1) + " / " + Math.max(1, totalPages));
             anteriorBtn.setEnabled(paginaActual[0] > 0);
             siguienteBtn.setEnabled(paginaActual[0] < totalPages - 1);
@@ -123,20 +128,49 @@ public class InstalacionesPanelBuilder {
         searchField.addActionListener(buscarAction);
 
         actualizarPagina.run();
+        
+        // Iniciar temporizador de actualización de estado
+        iniciarActualizacionEstado(egoeraLabels, panelesTarjetas);
 
         mainPanel.addHierarchyListener(new HierarchyListener() {
             @Override
             public void hierarchyChanged(HierarchyEvent e) {
-                // Limpieza de recursos si es necesario
+                if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+                    if (!mainPanel.isShowing()) {
+                        detenerActualizacionEstado();
+                    } else {
+                        iniciarActualizacionEstado(egoeraLabels, panelesTarjetas);
+                    }
+                }
             }
         });
         return mainPanel;
     }
 
-    private void bistaratuInstalazioak(JPanel instalacionesPanel, List<Instalazioa> instalazioak, Map<String, JLabel> egoeraLabels) {
+    private void iniciarActualizacionEstado(Map<String, JLabel> egoeraLabels, Map<String, JPanel> panelesTarjetas) {
+        detenerActualizacionEstado();
+        
+        actualizacionTimer = new Timer(500, e -> {
+            eguneratuEgoeraLabels(egoeraLabels);
+            eguneratuTarjetas(panelesTarjetas);
+        });
+        actualizacionTimer.start();
+    }
+
+    private void detenerActualizacionEstado() {
+        if (actualizacionTimer != null) {
+            actualizacionTimer.stop();
+            actualizacionTimer = null;
+        }
+    }
+
+    private void bistaratuInstalazioak(JPanel instalacionesPanel, List<Instalazioa> instalazioak, Map<String, JLabel> egoeraLabels, Map<String, JPanel> panelesTarjetas) {
         instalacionesPanel.removeAll();
+        panelesTarjetas.clear();
         for (Instalazioa inst : instalazioak) {
-            instalacionesPanel.add(crearPanelInstalacion(inst, egoeraLabels));
+            JPanel panelInstalacion = crearPanelInstalacion(inst, egoeraLabels);
+            panelesTarjetas.put(inst.getIzena(), panelInstalacion);
+            instalacionesPanel.add(panelInstalacion);
             instalacionesPanel.add(Box.createVerticalStrut(10));
         }
         instalacionesPanel.revalidate();
@@ -237,10 +271,44 @@ public class InstalacionesPanelBuilder {
         for (Instalazioa inst : instalazioak) {
             JLabel lbl = egoeraLabels.get(inst.getIzena());
             if (lbl != null) {
-                lbl.setText(inst.getEgoera());
-                lbl.setForeground(inst.getKolorEgoera());
+                int maila = kalkulatuInstalazioMaila(inst.getIzena());
+
+                if (maila == 2) { // kritikoa
+                    inst.setEgoera("LARRIA");
+                    lbl.setText("LARRIA");
+                    lbl.setForeground(Color.RED);
+                } else if (maila == 1) { // alerta 30-69
+                    inst.setEgoera("ALERTA");
+                    lbl.setText("ALERTA");
+                    lbl.setForeground(new Color(255, 140, 0)); // naranja
+                } else {
+                    inst.setEgoera("OK");
+                    lbl.setText("OK");
+                    lbl.setForeground(new Color(16, 197, 49)); // verde
+                }
             }
         }
+    }
+
+    private void eguneratuTarjetas(Map<String, JPanel> panelesTarjetas) {
+        for (JPanel panel : panelesTarjetas.values()) {
+            panel.repaint();
+        }
+    }
+
+    // 0 = OK, 1 = ALERTA (>=30), 2 = LARRIA (>=70)
+    private int kalkulatuInstalazioMaila(String nombreInstalacion) {
+        // Usar lecturas en tiempo real almacenadas en AppContext
+        java.util.Map<String, Integer> valores = appContext.getSensorValoresSnapshot();
+        int maila = 0;
+        String prefix = nombreInstalacion.toLowerCase() + "|";
+        for (java.util.Map.Entry<String, Integer> e : valores.entrySet()) {
+            if (!e.getKey().toLowerCase().startsWith(prefix)) continue;
+            int v = e.getValue();
+            if (v >= 70) return 2; // crítico encontrado
+            if (v >= 30) maila = Math.max(maila, 1);
+        }
+        return maila;
     }
 
     private String lortuIrudiaMotarenArabera(String mota) {

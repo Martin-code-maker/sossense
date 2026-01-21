@@ -13,7 +13,8 @@ public final class MqttIntegration {
     public static void attachPlanUpdater(Mqtt mqtt,
                                          Supplier<PanelPlano> panelSupplier,
                                          Supplier<String> instalacionSupplier,
-                                         Supplier<String> planoSupplier) {
+                                         Supplier<String> planoSupplier,
+                                         sossense.datubasea.AppContext appContext) {
         PropertyChangeListener listener = evt -> {
             if ("DATO_GAS_ACTUALIZADO".equals(evt.getPropertyName())) {
                 Object nv = evt.getNewValue();
@@ -46,6 +47,11 @@ public final class MqttIntegration {
                         PanelPlano panel = panelSupplier.get();
                         String instalacionActiva = instalacionSupplier.get();
                         String planoActivo = planoSupplier.get();
+
+                        // Guardar valor global para que otras vistas lo usen
+                        if (appContext != null) {
+                            appContext.setSensorValue(instalacion, plano, sensor, valorProcesado);
+                        }
                         
                         // Actualizar solo si instalación y plano coinciden
                         if (panel != null

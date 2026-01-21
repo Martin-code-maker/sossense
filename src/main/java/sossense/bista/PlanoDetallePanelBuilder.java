@@ -198,8 +198,16 @@ public class PlanoDetallePanelBuilder {
         };
         refrescar.run();
 
+        // Crear timer para actualizar la lista cada 500ms
+        Timer actualizacionTimer = new Timer(500, e -> refrescar.run());
+        actualizacionTimer.start();
+
         p.putClientProperty("refresh", refrescar);
-        p.putClientProperty("stopTimer", (Runnable) () -> {});
+        p.putClientProperty("stopTimer", (Runnable) () -> {
+            if (actualizacionTimer != null) {
+                actualizacionTimer.stop();
+            }
+        });
         return p;
     }
 }

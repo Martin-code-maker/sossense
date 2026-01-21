@@ -41,7 +41,8 @@ public class SOSsenseApp {
                 MqttIntegration.attachPlanUpdater(mqtt,
                     () -> appContext.getPanelPlanoActivo(),
                     () -> appContext.getInstalacionActiva(),
-                    () -> appContext.getPlanoActivo());
+                    () -> appContext.getPlanoActivo(),
+                    appContext);
         } catch (Exception ex) {
             System.err.println("Error conectando MQTT: " + ex.getMessage());
         }

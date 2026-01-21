@@ -7,7 +7,4 @@ Eskola Nagusia|15|NORMALA|San Andres Kalea 12, 20500 Arrasate|IKASTOLA
 Ikerketa Laborategia|25|MANTENIMIENTO|Teknologia Parkea, 20100 Errenteria|LABORATORIO
 Osakidetza Azkoitia|45|LARRIA|Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALEA
 CAF Fabrika|52|ARINGARRI|Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA
-Manex-en etxea|8||Berrobi|LABORATORIO
-Lander|1||Eibar|UNIBERTSITATEA
-Eduardo|6||Vitoria|OSPITALEA
 Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEA

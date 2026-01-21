@@ -213,21 +213,6 @@ CAF Fabrika|Oficinas|S6|600|400|Zuzendaritza
 CAF Fabrika|Oficinas|S7|100|300|Server Gela
 CAF Fabrika|Oficinas|S8|700|300|Artxiboa
 
-Manex-en etxea|Sotoa|S1|247|470|Sotoa
-Manex-en etxea|Sotoa|S2|322|467|Sotoa
-Manex-en etxea|Sotoa|S3|384|468|Sotoa
-Manex-en etxea|Sotoa|S4|452|468|Sotoa
-Manex-en etxea|Lehen Solairua|S1|516|357|Lehen Solairua
-Manex-en etxea|Lehen Solairua|S2|519|239|Lehen Solairua
-Manex-en etxea|Lehen Solairua|S3|683|250|Lehen Solairua
-Manex-en etxea|Lehen Solairua|S4|684|379|Lehen Solairua
-Lander|1|S1|410|432|1
-Eduardo|Pacientes cancer|S1|387|310|Pacientes cancer
-Eduardo|Pacientes cancer|S2|638|287|Pacientes cancer
-Eduardo|Pacientes cancer|S3|49|304|Pacientes cancer
-Eduardo|Planta sida|S1|628|470|Planta sida
-Eduardo|Planta sida|S2|641|348|Planta sida
-Eduardo|Planta sida|S3|397|130|Planta sida
 Mondragon Unibertsitatea|Lehenengo Solairua|S1|281|115|Lehenengo Solairua
 Mondragon Unibertsitatea|Lehenengo Solairua|S2|290|437|Lehenengo Solairua
 Mondragon Unibertsitatea|Lehenengo Solairua|S3|737|106|Lehenengo Solairua

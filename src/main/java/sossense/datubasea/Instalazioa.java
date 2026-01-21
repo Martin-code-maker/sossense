@@ -40,6 +40,9 @@ public class Instalazioa {
             case "GRAVE":
             case "CRITICO":
                 return Color.RED;
+            case "ALERTA":
+            case "ALERT":
+                return Color.ORANGE;
             case "NORMALA":
             case "NORMAL":
             case "OK":
