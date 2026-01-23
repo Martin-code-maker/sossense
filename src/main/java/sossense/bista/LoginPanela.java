@@ -132,7 +132,7 @@ public class LoginPanela implements PropertyChangeListener {
         tfUser = new JTextField();
         tfUser.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         tfUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        tfUser.setBorder(BorderFactory.createTitledBorder("Usuario"));
+        tfUser.setBorder(BorderFactory.createTitledBorder("Erabiltzailea"));
         return tfUser;
     }
 
@@ -140,7 +140,7 @@ public class LoginPanela implements PropertyChangeListener {
         pfPass = new JPasswordField();
         pfPass.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         pfPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        pfPass.setBorder(BorderFactory.createTitledBorder("Contraseña"));
+        pfPass.setBorder(BorderFactory.createTitledBorder("Pasahitza"));
         
         pfPass.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -158,8 +158,8 @@ public class LoginPanela implements PropertyChangeListener {
         panel.setOpaque(false);
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 28, 0));
 
-        JButton entrar = new JButton("ENTRAR");
-        JButton salir = new JButton("SALIR");
+        JButton entrar = new JButton("AURRERA");
+        JButton salir = new JButton("IRTEN");
 
         entrar.addActionListener(controller);
         entrar.setActionCommand("ok");

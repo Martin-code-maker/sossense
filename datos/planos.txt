@@ -2,33 +2,37 @@
 # Formato: nombre_instalacion|nombre_plano|imagen_fondo|ancho|alto|sensores_min|sensores_max
 # Cada línea representa un plano. Varias líneas con el mismo nombre_instalacion = varios planos
 
-MU-ko OSPITALA|Planta Baja|plano_hospital.jpg|800|600|12|30
-MU-ko OSPITALA|Planta 1|plano_hospital.jpg|800|600|14|33
-MU-ko OSPITALA|Planta 2|plano_hospital.jpg|800|600|9|24
-MU-ko OSPITALA|UCI|plano_hospital.jpg|800|600|6|18
+MU-ko OSPITALA|Planta Baja|plano_ospitalea.png|800|600|12|30
+MU-ko OSPITALA|Planta 1|plano_ospitalea.png|800|600|14|33
+MU-ko OSPITALA|Planta 2|plano_ospitalea.png|800|600|9|24
+MU-ko OSPITALA|UCI|plano_ospitalea.png|800|600|6|18
 
-MU-ko UNIBERTSITATEA|Planta Baja|plano_universidad.jpg|800|600|5|10
-MU-ko UNIBERTSITATEA|Planta 1|plano_universidad.jpg|800|600|5|10
-MU-ko UNIBERTSITATEA|Biblioteca|plano_universidad.jpg|800|600|5|10
+MU-ko UNIBERTSITATEA|Planta Baja|plano_unibertsitatea.png|800|600|5|10
+MU-ko UNIBERTSITATEA|Planta 1|plano_unibertsitatea.png|800|600|5|10
+MU-ko UNIBERTSITATEA|Biblioteca|plano_unibertsitatea.png|800|600|5|10
 
-Mondragon Fabrika|Planta Principal|plano_fabrica.jpg|800|600|11|24
-Mondragon Fabrika|Almacén|plano_fabrica.jpg|800|600|7|15
-Mondragon Fabrika|Oficinas|plano_fabrica.jpg|800|600|5|17
+Mondragon Fabrika|Planta Principal|plano_fabrika.png|800|600|11|24
+Mondragon Fabrika|Almacén|plano_fabrika.png|800|600|7|15
+Mondragon Fabrika|Oficinas|plano_fabrika.png|800|600|5|17
 
-Eskola Nagusia|Planta Baja|plano_escuela.jpg|800|600|5|10
-Eskola Nagusia|Planta 1|plano_escuela.jpg|800|600|5|10
+Eskola Nagusia|Planta Baja|plano_eskola.png|800|600|5|10
+Eskola Nagusia|Planta 1|plano_eskola.png|800|600|5|10
 
-Ikerketa Laborategia|Laboratorio Principal|plano_laboratorio.jpg|800|600|5|12
-Ikerketa Laborategia|Sala Limpia|plano_laboratorio.jpg|800|600|5|10
-Ikerketa Laborategia|Almacén Químicos|plano_laboratorio.jpg|800|600|5|10
+Ikerketa Laborategia|Laboratorio Principal|plano_laborategia.png|800|600|5|12
+Ikerketa Laborategia|Sala Limpia|plano_laborategia.png|800|600|5|10
+Ikerketa Laborategia|Almacén Químicos|plano_laborategia.png|800|600|5|10
 
-Osakidetza Azkoitia|Planta Baja|plano_hospital.jpg|800|600|9|22
-Osakidetza Azkoitia|Planta 1|plano_hospital.jpg|800|600|10|25
-Osakidetza Azkoitia|Planta 2|plano_hospital.jpg|800|600|7|18
-Osakidetza Azkoitia|UCI|plano_hospital.jpg|800|600|5|13
+Osakidetza Azkoitia|Planta Baja|plano_ospitalea.png|800|600|9|22
+Osakidetza Azkoitia|Planta 1|plano_ospitalea.png|800|600|10|25
+Osakidetza Azkoitia|Planta 2|plano_ospitalea.png|800|600|7|18
+Osakidetza Azkoitia|UCI|plano_ospitalea.png|800|600|5|13
 
-CAF Fabrika|Planta Principal|plano_fabrica.jpg|800|600|17|36
-CAF Fabrika|Almacén|plano_fabrica.jpg|800|600|10|22
-CAF Fabrika|Oficinas|plano_fabrica.jpg|800|600|8|26
-Mondragon Unibertsitatea|Lehenengo Solairua|plano_universidad.png|800|600|3|3
-Mondragon Unibertsitatea|Bigarren Solairua|plano_universidad.png|800|600|3|3
+CAF Fabrika|Planta Principal|plano_fabrika.png|800|600|17|36
+CAF Fabrika|Almacén|plano_fabrika.png|800|600|10|22
+CAF Fabrika|Oficinas|plano_fabrika.png|800|600|8|26
+
+Mondragon Unibertsitatea|Lehenengo Solairua|plano_unibertsitatea.png|800|600|3|3
+Mondragon Unibertsitatea|Bigarren Solairua|plano_unibertsitatea.png|800|600|3|3
+
+
+Eusko Jaurlaritza|Lehen sola|plano_fabrika.png|800|600|5|5

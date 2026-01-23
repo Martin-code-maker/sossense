@@ -40,9 +40,9 @@ public class PlanoRepository {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de planos: " + e.getMessage());
+            System.err.println("Errorea planos fitxategia irakurtzean: " + e.getMessage());
         } catch (NumberFormatException e) {
-            System.err.println("Error al parsear números del archivo de planos: " + e.getMessage());
+            System.err.println("Errorea planos fitxategiko zenbakiak parseatzean: " + e.getMessage());
         }
         return planos;
     }

@@ -99,7 +99,7 @@ public class AgregarInstalacionPanelBuilder {
         formPanel.add(lblMota, gbc);
 
         gbc.gridx = 1;
-        String[] motas = { "FABRIKA", "OSPITALEA", "LABORATORIO", "IKASTOLA", "UNIBERTSITATEA" };
+        String[] motas = { "FABRIKA", "OSPITALEA", "LABORATEGIA", "ESKOLA", "UNIBERTSITATEA" };
         JComboBox<String> motaCombo = crearComboEstilizado(motas);
         formPanel.add(motaCombo, gbc);
 
@@ -118,7 +118,7 @@ public class AgregarInstalacionPanelBuilder {
         pg.fill = GridBagConstraints.HORIZONTAL;
 
         pg.gridx = 0; pg.gridy = 0;
-        JLabel lblPlantaIzena = new JLabel("Planta izena:");
+        JLabel lblPlantaIzena = new JLabel("Solairuaren izena:");
         lblPlantaIzena.setFont(new Font("Arial", Font.BOLD, 13));
         lblPlantaIzena.setForeground(new Color(50, 50, 50));
         plantaPanel.add(lblPlantaIzena, pg);
@@ -134,7 +134,7 @@ public class AgregarInstalacionPanelBuilder {
         plantaPanel.add(mapaLabel, pg);
 
         pg.gridx = 1;
-        JLabel mapaHint = new JLabel("Arrastatu zirkulua mapan kokapena finkatzeko");
+        JLabel mapaHint = new JLabel("Sentsorea (borobila) mugitu mapan kokapena finkatzeko");
         mapaHint.setFont(new Font("Arial", Font.ITALIC, 11));
         mapaHint.setForeground(new Color(120, 120, 120));
         plantaPanel.add(mapaHint, pg);
@@ -147,7 +147,7 @@ public class AgregarInstalacionPanelBuilder {
 
         pg.gridwidth = 1;
         pg.gridx = 0; pg.gridy = 3;
-        JLabel lblSensorId = new JLabel("Sentsore ID:");
+        JLabel lblSensorId = new JLabel("Sentsorearen ID:");
         lblSensorId.setFont(new Font("Arial", Font.BOLD, 13));
         lblSensorId.setForeground(new Color(50, 50, 50));
         plantaPanel.add(lblSensorId, pg);
@@ -157,7 +157,7 @@ public class AgregarInstalacionPanelBuilder {
         plantaPanel.add(sensorIdField, pg);
 
         pg.gridx = 0; pg.gridy = 4;
-        JLabel lblSensorUbic = new JLabel("Kokapena (aukerakoa):");
+        JLabel lblSensorUbic = new JLabel("Deskribapena (aukerakoa):");
         lblSensorUbic.setFont(new Font("Arial", Font.BOLD, 13));
         lblSensorUbic.setForeground(new Color(50, 50, 50));
         plantaPanel.add(lblSensorUbic, pg);
@@ -178,7 +178,7 @@ public class AgregarInstalacionPanelBuilder {
             String ubic = sensorUbicField.getText().trim();
             String plantaIzena = plantaIzenaField.getText().trim();
             if (plantaIzena.isEmpty()) {
-                JOptionPane.showMessageDialog(mainPanel, "Idatzi planta izena lehenik.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainPanel, "Idatzi solairuaren izena lehenik.", "Abisua", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             if (id.isEmpty()) {
@@ -209,18 +209,18 @@ public class AgregarInstalacionPanelBuilder {
         plantasScroll.setPreferredSize(new Dimension(360, 100));
 
         List<PlanoInfo> planoDefinituak = new ArrayList<>();
-        JLabel resumenLabel = new JLabel("0 planta, 0 sentsore");
+        JLabel resumenLabel = new JLabel("0 solairu, 0 sentsore");
         resumenLabel.setFont(new Font("Arial", Font.BOLD, 12));
         resumenLabel.setForeground(new Color(0xE1, 0x9D, 0x8E));
 
         pg.gridx = 0; pg.gridy = 6;
         pg.gridwidth = 2;
-        JButton gehituPlantaBtn = UIUtils.crearBotonEstilizado("PLANTA GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        JButton gehituPlantaBtn = UIUtils.crearBotonEstilizado("SOLAIRUA GEHITU", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
         gehituPlantaBtn.setPreferredSize(new Dimension(180, 35));
         gehituPlantaBtn.addActionListener(e -> {
             String izenaPlanta = plantaIzenaField.getText().trim();
             if (izenaPlanta.isEmpty()) {
-                JOptionPane.showMessageDialog(mainPanel, "Idatzi planta izena.", "Abisua", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainPanel, "Idatzi solairuaren izena.", "Abisua", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -240,7 +240,7 @@ public class AgregarInstalacionPanelBuilder {
             sensorCountLabel.setText("0 sentsore mapan");
 
             int totalSens = planoDefinituak.stream().mapToInt(p -> p.getSensoresDefinidos().size()).sum();
-            resumenLabel.setText(planoDefinituak.size() + " planta, " + totalSens + " sentsore");
+            resumenLabel.setText(planoDefinituak.size() + " solairu, " + totalSens + " sentsore");
         });
         plantaPanel.add(gehituPlantaBtn, pg);
 
@@ -255,7 +255,7 @@ public class AgregarInstalacionPanelBuilder {
         // Resumen final de sentsoreak kalkulatzeko eremu irakurgarria
         gbc.gridy = 4;
         gbc.gridwidth = 1;
-        JLabel lblSentsoreak = new JLabel("Sentsore kopurua (autom.):");
+        JLabel lblSentsoreak = new JLabel("Sentsore kopurua :");
         lblSentsoreak.setFont(new Font("Arial", Font.BOLD, 14));
         lblSentsoreak.setForeground(new Color(50, 50, 50));
         formPanel.add(lblSentsoreak, gbc);
@@ -264,7 +264,7 @@ public class AgregarInstalacionPanelBuilder {
         JTextField sensoresField = crearCampoEstilizado(25);
         sensoresField.setEditable(false);
         sensoresField.setBackground(new Color(240, 240, 240));
-        sensoresField.setToolTipText("Kontua automatikoki kalkulatzen da sartutako sentsoreen arabera");
+        sensoresField.setToolTipText("Zenbaketa automatikoki egiten da sartutako sentsoreen arabera");
         formPanel.add(sensoresField, gbc);
 
         JPanel scrollFormPanel = new JPanel(new BorderLayout());
@@ -301,7 +301,7 @@ public class AgregarInstalacionPanelBuilder {
 
             if (planoDefinituak.isEmpty()) {
                 JOptionPane.showMessageDialog(mainPanel,
-                        "Gutxienez planta bat definitu behar da sentsoreekin.",
+                        "Gutxienez solairu bat definitu behar da sentsoreekin.",
                         "Errorea",
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -336,7 +336,7 @@ public class AgregarInstalacionPanelBuilder {
                 plantaIzenaField.setText("");
                 mapaPanel.clearSensors();
                 sensorCountLabel.setText("0 sentsore mapan");
-                resumenLabel.setText("0 planta, 0 sentsore");
+                resumenLabel.setText("0 solairu, 0 sentsore");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(mainPanel,
                         "Ezin izan da instalazioa gorde: " + ex.getMessage(),
@@ -402,7 +402,7 @@ public class AgregarInstalacionPanelBuilder {
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
-                    "Ezin izan da sensors.txt eguneratu: " + e.getMessage(),
+                    "Ezin izan da sensores.txt eguneratu: " + e.getMessage(),
                     "Errorea",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -560,24 +560,16 @@ public class AgregarInstalacionPanelBuilder {
     private String lortuIrudiaMotarenArabera(String mota) {
         if (mota == null) return "plano_default.png";
         switch (mota.toUpperCase()) {
-            case "HOSPITAL":
             case "OSPITALEA":
-                return "plano_hospital.png";
-            case "UNIVERSIDAD":
+                return "plano_ospitalea.png";
             case "UNIBERTSITATEA":
-                return "plano_universidad.png";
-            case "ESCOLA":
-            case "ESCUELA":
-            case "IKASTOLA":
-                return "plano_escuela.png";
-            case "FABRICA":
+                return "plano_unibertsitatea.png";
+            case "ESKOLA":
+                return "plano_eskola.png";
             case "FABRIKA":
-                return "plano_fabrica.png";
-            case "LABORATORIO":
-                return "plano_laboratorio.png";
-            case "OFICINA":
-            case "ALMACEN":
-                return "plano_default.png";
+                return "plano_fabrika.png";
+            case "LABORATEGIA":
+                return "plano_laborategia.png";
             default:
                 return "plano_default.png";
         }

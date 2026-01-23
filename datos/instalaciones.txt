@@ -1,10 +1,10 @@
 # Formato: nombre|sensores|estado|direccion|tipo|color_r,g,b (opcional)
 # El color es opcional, si no se especifica se usará el color por defecto según el tipo
-MU-ko OSPITALA|60|LARRIA|Nafarros Himbidea 16.20500 Arrasate, Gipuzkoa, Spain|OSPITALEA
-MU-ko UNIBERTSITATEA|20|NORMALA|Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain|UNIBERTSITATEA
-Mondragon Fabrika|35|ARINGARRI|Goiru Kalea 1, 20500 Arrasate, Gipuzkoa|FABRIKA
-Eskola Nagusia|15|NORMALA|San Andres Kalea 12, 20500 Arrasate|IKASTOLA
-Ikerketa Laborategia|25|MANTENIMIENTO|Teknologia Parkea, 20100 Errenteria|LABORATORIO
-Osakidetza Azkoitia|45|LARRIA|Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALEA
-CAF Fabrika|52|ARINGARRI|Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA
-Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEA
+MU-ko OSPITALA|60||Nafarros Himbidea 16.20500 Arrasate, Gipuzkoa, Spain|OSPITALEA
+MU-ko UNIBERTSITATEA|20||Elorrieta Kalea 6, 48008 Bilbo, Bizkaia, Spain|UNIBERTSITATEA
+Mondragon Fabrika|35||Goiru Kalea 1, 20500 Arrasate, Gipuzkoa|FABRIKA
+Eskola Nagusia|15||San Andres Kalea 12, 20500 Arrasate|ESKOLA
+Ikerketa Laborategia|25||Teknologia Parkea, 20100 Errenteria|LABORATEGIA
+Osakidetza Azkoitia|45||Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALEA
+CAF Fabrika|52||Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA
+Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEAEusko Jaurlaritza|5||Gasteiz|FABRIKA

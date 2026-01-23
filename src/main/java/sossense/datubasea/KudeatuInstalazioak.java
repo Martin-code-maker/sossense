@@ -19,8 +19,8 @@ public class KudeatuInstalazioak {
     private static final Set<String> MOTA_BAIMENDUAK = new HashSet<>(Arrays.asList(
             "FABRIKA",
             "OSPITALEA",
-            "LABORATORIO",
-            "IKASTOLA",
+            "LABORATEGIA",
+            "ESKOLA",
             "UNIBERTSITATEA"
     ));
     private List<Instalazioa> instalazioZerrenda;
@@ -69,11 +69,11 @@ public class KudeatuInstalazioak {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo de instalaciones: " + e.getMessage());
+            System.err.println("Errorea fitxategia irakurtzerakoan: " + e.getMessage());
             // Cargar instalaciones por defecto si falla la lectura
             cargarInstalacionesPorDefecto();
         } catch (NumberFormatException e) {
-            System.err.println("Error al parsear números del archivo: " + e.getMessage());
+            System.err.println("Errorea fitxategiko zenbakiak parseatzerakoan: " + e.getMessage());
             cargarInstalacionesPorDefecto();
         }
     }

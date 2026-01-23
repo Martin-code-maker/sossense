@@ -8,7 +8,7 @@ public class Instalazioa {
     private int sentsoreak;
     private String egoera;
     private String helbidea;
-    private String mota; // mota: OSPITALEA, UNIBERTSITATEA, IKASTOLA, FABRIKA, etc.
+    private String mota; // mota: OSPITALEA, UNIBERTSITATEA, ESKOLA, FABRIKA, etc.
     private Color kolorea;
     
     // Konstruktoeaa kolore gabe
@@ -70,18 +70,11 @@ public class Instalazioa {
                 case "OSPITALEA":
                     return new Color(220, 240, 255); // Azul claro
                 case "UNIBERTSITATEA":
-                case "IKASTOLA":
+                case "ESKOLA":
                     return new Color(240, 255, 220); // Verde claro
                 case "FABRIKA":
-                case "FACTORY":
                     return new Color(255, 240, 220); // Naranja claro
-                case "OFICINA":
-                case "OFFICE":
-                    return new Color(240, 220, 255); // Lila claro
-                case "ALMACEN":
-                case "WAREHOUSE":
-                    return new Color(255, 255, 220); // Amarillo claro
-                case "LABORATORIO":
+                case "LABORATEGIA":
                     return new Color(255, 220, 220); // Rosa claro
                 default:
                     return Color.WHITE;
@@ -97,18 +90,11 @@ public class Instalazioa {
                 case "OSPITALEA":
                     return Color.BLUE;
                 case "UNIBERTSITATEA":
-                case "IKASTOLA":
+                case "ESKOLA":
                     return Color.GREEN.darker();
                 case "FABRIKA":
-                case "FACTORY":
                     return Color.ORANGE.darker();
-                case "OFICINA":
-                case "OFFICE":
-                    return Color.MAGENTA.darker();
-                case "ALMACEN":
-                case "WAREHOUSE":
-                    return Color.YELLOW.darker();
-                case "LABORATORIO":
+                case "LABORATEGIA":
                     return Color.RED.darker();
                 default:
                     return Color.GRAY;

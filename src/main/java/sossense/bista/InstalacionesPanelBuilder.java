@@ -70,7 +70,7 @@ public class InstalacionesPanelBuilder {
         JPanel navegacionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         navegacionPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton anteriorBtn = sossense.utils.UIUtils.crearBotonEstilizado("AURREKO", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
+        JButton anteriorBtn = sossense.utils.UIUtils.crearBotonEstilizado("AURREKOA", new Color(0xE1, 0x9D, 0x8E), Color.WHITE);
         anteriorBtn.setPreferredSize(new Dimension(160, 40));
 
         JLabel paginaLabel = new JLabel();
@@ -209,7 +209,7 @@ public class InstalacionesPanelBuilder {
             Image imgEscalada = iconOriginal.getImage().getScaledInstance(tamanoImagen, tamanoImagen, Image.SCALE_SMOOTH);
             imageLabel = new JLabel(new ImageIcon(imgEscalada));
         } else {
-            imageLabel = new JLabel("No Image");
+            imageLabel = new JLabel("Ez dago irudirik");
             imageLabel.setPreferredSize(new Dimension(tamanoImagen, tamanoImagen));
         }
         panel.add(imageLabel, gbc);
@@ -314,11 +314,11 @@ public class InstalacionesPanelBuilder {
     private String lortuIrudiaMotarenArabera(String mota) {
         if (mota == null) return "/sossense/img/icon_default.png";
         switch (mota.toUpperCase()) {
-            case "OSPITALEA": return "/sossense/img/icon_hospital.png";
-            case "UNIBERTSITATEA": return "/sossense/img/icon_universidad.png";
+            case "OSPITALEA": return "/sossense/img/icon_ospitalea.png";
+            case "UNIBERTSITATEA": return "/sossense/img/icon_unibertsitatea.png";
             case "FABRIKA": return "/sossense/img/icon_fabrika.png";
-            case "IKASTOLA": return "/sossense/img/icon_ikastola.png";
-            case "LABORATORIO": return "/sossense/img/icon_laboratorio.png";
+            case "ESKOLA": return "/sossense/img/icon_eskola.png";
+            case "LABORATEGIA": return "/sossense/img/icon_laborategia.png";
             default: return "/sossense/img/icon_default.png";
         }
     }

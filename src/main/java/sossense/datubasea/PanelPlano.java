@@ -39,20 +39,20 @@ public class PanelPlano extends JPanel {
                 rutas.add("/sossense/img/" + nombreImagenFondo.substring(0, nombreImagenFondo.length() - 4) + ".jpg");
             }
         } else {
-            if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALA")) {
-                rutas.add("/sossense/img/plano_hospital.png");
+            if (nombreInstalacion.equalsIgnoreCase("MU-ko OSPITALEA")) {
+                rutas.add("/sossense/img/plano_ospitalea.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("MU-ko UNIBERTSITATEA")) {
-                rutas.add("/sossense/img/plano_universidad.png");
+                rutas.add("/sossense/img/plano_unibertsitatea.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Mondragon Fabrika")) {
-                rutas.add("/sossense/img/plano_fabrica.png");
+                rutas.add("/sossense/img/plano_fabrika.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Eskola Nagusia")) {
-                rutas.add("/sossense/img/plano_escuela.png");
+                rutas.add("/sossense/img/plano_eskola.png");
             }
             else if (nombreInstalacion.equalsIgnoreCase("Ikerketa Laborategia")) {
-                rutas.add("/sossense/img/plano_laboratorio.png");
+                rutas.add("/sossense/img/plano_laborategia.png");
             }
             else {
                 rutas.add("/sossense/img/plano_default.png");
@@ -75,7 +75,7 @@ public class PanelPlano extends JPanel {
         }
 
         if (imagenPlano == null) {
-            System.err.println("No se encontró ninguna imagen de plano para " + nombreInstalacion + " (intentado: " + rutas + ")");
+            System.err.println("Ez da aurkitu argazkia " + nombreInstalacion + " (Saiakera: " + rutas + ")");
         }
         
         // Configurar eventos del ratón
@@ -101,7 +101,7 @@ public class PanelPlano extends JPanel {
                 repaint();
                 JOptionPane.showMessageDialog(this,
                     sensor.getInfo(),
-                    "Información del Sensor",
+                    "Sentsorearen informazioa",
                     JOptionPane.INFORMATION_MESSAGE);
                 return;
             }

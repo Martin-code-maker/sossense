@@ -44,9 +44,9 @@ public class SOSsenseApp {
                     () -> appContext.getPlanoActivo(),
                     appContext);
         } catch (Exception ex) {
-            System.err.println("Error conectando MQTT: " + ex.getMessage());
+            System.err.println("Errorea MQTT-ra konektatzean: " + ex.getMessage());
         }
-        System.out.println("[APP] Modo offline - MQTT desactivado");
+        System.out.println("[APP] Offline - MQTT desgaituta");
     }
 
     public void bistaratuApp() {
@@ -79,12 +79,12 @@ public class SOSsenseApp {
         leftTopPanel.add(menuToggle);
         topPanel.add(leftTopPanel, BorderLayout.WEST);
 
-        JLabel title = new JLabel("S.O.S.sense - Monitorización de Instalaciones", SwingConstants.CENTER);
+        JLabel title = new JLabel("S.O.S.sense - Instalazioen Monitorizazioa", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 36));
         title.setForeground(Color.BLACK);
         topPanel.add(title, BorderLayout.CENTER);
 
-        // ==================== PANEL DERECHO CON BOTONES ====================
+        // ==================== ESKUIN ALDEA BOTOIEKIN ====================
         JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         rightTopPanel.setBackground(new Color(0xF6, 0xB2, 0xB2));
 
@@ -96,7 +96,7 @@ public class SOSsenseApp {
         logoutButton.setFocusPainted(false);
         logoutButton.setContentAreaFilled(false);
         logoutButton.setPreferredSize(new Dimension(60, 60));
-        logoutButton.setToolTipText("Volver al inicio de sesión");
+        logoutButton.setToolTipText("Saio hasierara itzuli");
         logoutButton.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(
                     frame,
@@ -139,7 +139,7 @@ public class SOSsenseApp {
         profileButton.setFocusPainted(false);
         profileButton.setContentAreaFilled(false);
         profileButton.setPreferredSize(new Dimension(60, 60));
-        profileButton.setToolTipText("Perfil de usuario");
+        profileButton.setToolTipText("Erabiltzaile Profila");
         profileButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(frame,
                     "Erabiltzaile Profila\n\n" +
@@ -196,7 +196,7 @@ public class SOSsenseApp {
         menuPanel.add(menuTitle);
         menuPanel.add(Box.createVerticalStrut(24));
 
-        String[] itemsMenu = { "INSTALACION GUZTIAK", "GEHITU BERRIA", "ESTATISTIKAK", "KONTAKTUA" };
+        String[] itemsMenu = { "INSTALAZIOAK", "GEHITU BERRIA", "ESTATISTIKAK", "KONTAKTUA" };
         for (String item : itemsMenu) {
             JButton menuButton = new JButton(item) {
                 private boolean isSelected = false;
@@ -236,7 +236,7 @@ public class SOSsenseApp {
             menuButton.setFocusPainted(false);
 
             switch (item) {
-                case "INSTALACION GUZTIAK":
+                case "INSTALAZIOAK":
                     menuButton.addActionListener(e -> {
                         selectButton(menuButton);
                         cambiarPanelCentral(

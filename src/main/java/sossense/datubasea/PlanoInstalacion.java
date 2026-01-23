@@ -20,7 +20,7 @@ public class PlanoInstalacion {
     private boolean simulacionActiva = false;
 
     public PlanoInstalacion(String nombreInstalacion) {
-        this(new PlanoInfo(nombreInstalacion, "Plano General", "", 800, 600, 0, 0));
+        this(new PlanoInfo(nombreInstalacion, "Plano Nagusia", "", 800, 600, 0, 0));
     }
 
     public PlanoInstalacion(PlanoInfo planoInfo) {
@@ -63,11 +63,11 @@ public class PlanoInstalacion {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            System.err.println("Error leyendo sensores.txt: " + e.getMessage());
+            System.err.println("Errorea sensores.txt irakurtzean: " + e.getMessage());
         }
 
         if (!encontrado) {
-            System.out.println("⚠ No hay sensores definidos para: " + nombreInstalacion + " - " + nombrePlano);
+            System.out.println("⚠ Ez da sentsorerik definitu honetarako: " + nombreInstalacion + " - " + nombrePlano);
         }
     }
 

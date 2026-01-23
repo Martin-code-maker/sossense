@@ -16,7 +16,7 @@ public final class MqttIntegration {
                                          Supplier<String> planoSupplier,
                                          sossense.datubasea.AppContext appContext) {
         PropertyChangeListener listener = evt -> {
-            if ("DATO_GAS_ACTUALIZADO".equals(evt.getPropertyName())) {
+            if ("KE_DATUA_EGUNERATUTA".equals(evt.getPropertyName())) {
                 Object nv = evt.getNewValue();
                 
                 // Parsear datos: [instalacion, plano, sensor, valor]
@@ -58,7 +58,7 @@ public final class MqttIntegration {
                                 && instalacion.equalsIgnoreCase(instalacionActiva)
                                 && plano.equalsIgnoreCase(planoActivo)) {
                             panel.actualizarSensorEspecifico(sensor, valorProcesado);
-                            System.out.println(">>> Mapa actualizado: " + instalacion + "/" + plano + "/" + sensor + " | Valor crudo: " + valorMedia + " | Porcentaje: " + valorProcesado + "%");
+                            System.out.println(">>> Mapa eguneratuta: " + instalacion + "/" + plano + "/" + sensor + " | Balioa : " + valorMedia + " | Portzentaia: " + valorProcesado + "%");
                         }
                     }
                 }

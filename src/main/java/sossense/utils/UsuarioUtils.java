@@ -10,7 +10,7 @@ public class UsuarioUtils {
         }
         
         String hash = HashUtils.sha256(contraseña);
-        System.out.println("DEBUG - Usuario: " + usuario + ", Hash calculado: " + hash);
+        System.out.println("DEBUG - Erabiltzailea: " + usuario + ", Hash kalkulatua: " + hash);
 
         // Buscar usuarios.txt en la carpeta datos
         String projectRoot = System.getProperty("user.dir");
@@ -21,10 +21,10 @@ public class UsuarioUtils {
             file = new File(projectRoot, "sossense/datos/usuarios.txt");
         }
         
-        System.out.println("DEBUG - Buscando archivo en: " + file.getAbsolutePath());
+        System.out.println("DEBUG - Fitxategia bilatzen: " + file.getAbsolutePath());
         
         if (!file.exists()) {
-            System.out.println("ERROR - Archivo no encontrado: " + file.getAbsolutePath());
+            System.out.println("ERROR - Fitxategia ez da aurkitu: " + file.getAbsolutePath());
             return false;
         }
 
@@ -40,15 +40,15 @@ public class UsuarioUtils {
                 String usuarioArchivo = partes[0].trim();
                 String hashArchivo = partes[1].trim();
                 
-                System.out.println("DEBUG - Comparando con: " + usuarioArchivo + ":" + hashArchivo);
+                System.out.println("DEBUG - Konparatzen: " + usuarioArchivo + ":" + hashArchivo);
                 
                 if (usuarioArchivo.equals(usuario) && hashArchivo.equals(hash)) {
-                    System.out.println("DEBUG - Login válido!");
+                    System.out.println("DEBUG - Login baliozkoa!");
                     return true;
                 }
             }
         }
-        System.out.println("DEBUG - Login fallido");
+        System.out.println("DEBUG - Login huts egin du");
         return false;
     }
 }

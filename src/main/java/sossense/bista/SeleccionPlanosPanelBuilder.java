@@ -151,16 +151,15 @@ public class SeleccionPlanosPanelBuilder {
     private String lortuPlanoMotarenArabera(String mota) {
         if (mota == null) return null;
         switch (mota.toUpperCase()) {
-            case "OSPITALEA":
-            case "HOSPITAL": return "/sossense/img/plano_hospital.png";
+            case "OSPITALEA": 
+                return "/sossense/img/plano_ospitalea.png";
             case "UNIBERTSITATEA":
-            case "UNIVERSIDAD": return "/sossense/img/plano_universidad.png";
-            case "IKASTOLA":
-            case "ESCOLA":
-            case "ESCUELA": return "/sossense/img/plano_escuela.png";
+                return "/sossense/img/plano_unibertsitatea.png";
+            case "ESKOLA":
+                return "/sossense/img/plano_eskola.png";
             case "FABRIKA":
-            case "FABRICA": return "/sossense/img/plano_fabrica.png";
-            case "LABORATORIO": return "/sossense/img/plano_laboratorio.png";
+                return "/sossense/img/plano_fabrika.png";
+            case "LABORATEGIA": return "/sossense/img/plano_laborategia.png";
             default: System.out.println("⚠ Mota ezezaguna: " + mota); return null;
         }
     }
@@ -176,9 +175,9 @@ public class SeleccionPlanosPanelBuilder {
             if (ruta != null) {
                 java.net.URL url = getClass().getResource(ruta);
                 if (url != null) temp = new ImageIcon(url).getImage();
-                else System.out.println("No se encontró: " + ruta);
+                else System.out.println("Ez da aurkitu: " + ruta);
             }
-        } catch (Exception e) { System.out.println("Error cargando plano"); }
+        } catch (Exception e) { System.out.println("Errorea planoa kargatzean"); }
         imagenPlano = temp;
 
         Color verdeBase = Color.decode("#10c531");

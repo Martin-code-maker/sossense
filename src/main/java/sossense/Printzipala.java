@@ -23,9 +23,9 @@ public class Printzipala {
     private void vaciarArchivoLogs() {
         try (FileWriter fw = new FileWriter("logs/datuak.txt")) {
             // Escribir nada (el archivo se vacía)
-            System.out.println("[LOG] Archivo datuak.txt vaciado al iniciar");
+            System.out.println("[LOG] datuak.txt hutsik hasieratuta");
         } catch (IOException e) {
-            System.err.println("[ERROR] No se pudo vaciar el archivo: " + e.getMessage());
+            System.err.println("[ERROR] Ezin izan da fitxategia hutsik jarri: " + e.getMessage());
         }
     }
 

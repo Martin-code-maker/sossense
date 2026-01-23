@@ -127,18 +127,18 @@ public class PlanoDetallePanelBuilder {
         p.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(0xD3, 0x85, 0x7E), 2),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)));
-        JLabel title = new JLabel("LEYENDA");
+        JLabel title = new JLabel("LEGENDA");
         title.setFont(new Font("Arial", Font.BOLD, 14));
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         p.add(title);
         p.add(Box.createVerticalStrut(10));
-        p.add(crearChip(Color.GREEN, "Normal (0-29%)"));
+        p.add(crearChip(Color.GREEN, "Normala (0-29%)"));
         p.add(Box.createVerticalStrut(8));
         p.add(crearChip(Color.ORANGE, "Alerta (30-69%)"));
         p.add(Box.createVerticalStrut(8));
         p.add(crearChip(Color.RED, "Kritikoa (70-100%)"));
         p.add(Box.createVerticalStrut(8));
-        JLabel hint = new JLabel("Klik sentsorean info lortzeko");
+        JLabel hint = new JLabel("Sakatu sentsorean informazio gehiago lortzeko");
         hint.setFont(new Font("Arial", Font.PLAIN, 12));
         hint.setForeground(new Color(70, 70, 70));
         hint.setAlignmentX(Component.LEFT_ALIGNMENT);

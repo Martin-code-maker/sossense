@@ -19,7 +19,7 @@ import java.beans.PropertyChangeListener;
 public class Mqtt implements MqttCallback {
 
     public static final String BROKER = "tcp://172.16.0.10:1883";
-    public static final String CLENT_ID = "SOSsenseClient";
+    public static final String CLENT_ID = "JAVA_SOSsense_Client";
     public static final int QoS = 2;
     public static final String TOPIC_GAS = "SOSsense"; // Ajusta tu topic
 
@@ -62,7 +62,7 @@ public class Mqtt implements MqttCallback {
 
     @Override
     public void connectionLost(Throwable cause) {
-        System.err.println("[MQTT] Conexión perdida!");
+        System.err.println("[MQTT] Konexioa galdu da!");
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Mqtt implements MqttCallback {
             // Parsear formato: instalacion|plano|sensor|valor
             String[] partes = contenido.split("\\|");
             if (partes.length != 4) {
-                System.err.println("Formato incorrecto. Esperado: instalacion|plano|sensor|valor. Recibido: " + contenido);
+                System.err.println("Formato okerra. Espero dena: instalazioa|planoa|sentsorea|balioa. Jaso da: " + contenido);
                 return;
             }
             
@@ -105,7 +105,7 @@ public class Mqtt implements MqttCallback {
                 // AVISAR A LA APP (UI) PARA QUE ACTUALICE EL SENSOR
                 // Enviar objeto con toda la información
                 String[] datosSensor = {instalacion, plano, sensor, String.valueOf(media)};
-                support.firePropertyChange("DATO_GAS_ACTUALIZADO", null, datosSensor);
+                support.firePropertyChange("KE_DATUA_EGUNERATUTA", null, datosSensor);
                 
                 // Limpiar el buffer de ESTE sensor para los siguientes 5
                 bufferSensor.clear();
@@ -115,11 +115,11 @@ public class Mqtt implements MqttCallback {
             if (contadorTotal >= LIMITE_BORRADO) {
                 limpiarFicheroLog();
                 contadorTotal = 0;
-                System.out.println("[LOG] Fichero reseteado por límite de capacidad.");
+                System.out.println("[LOG] Fitxategia erreseteatuta mugaren ondorioz.");
             }
             
         } catch (NumberFormatException e) {
-            System.err.println("Error al parsear valor numérico: " + contenido);
+            System.err.println("Errorea balio numeriko bat parseatzean: " + contenido);
         }
     }
     
@@ -150,7 +150,7 @@ public class Mqtt implements MqttCallback {
             // Sobrescribir el fichero (false en el constructor de FileWriter) lo deja vacío
             new PrintWriter("logs/datuak.txt").close();
         } catch (IOException e) {
-            System.err.println("No se pudo limpiar el log.");
+            System.err.println("Ezin izan da log garbitu.");
         }
     }
 }

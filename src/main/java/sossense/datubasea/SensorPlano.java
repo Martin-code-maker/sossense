@@ -27,7 +27,7 @@ public class SensorPlano {
     }
 
     public String getInfo() {
-        return "Sensor " + id + ": " + nivelHumo + "% humo - " + ubicacion;
+        return "Sentsorea " + id + ": " + nivelHumo + "% kea - " + ubicacion;
     }
 
     public String getId() {
