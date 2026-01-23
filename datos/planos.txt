@@ -33,6 +33,4 @@ CAF Fabrika|Oficinas|plano_fabrika.png|800|600|8|26
 
 Mondragon Unibertsitatea|Lehenengo Solairua|plano_unibertsitatea.png|800|600|3|3
 Mondragon Unibertsitatea|Bigarren Solairua|plano_unibertsitatea.png|800|600|3|3
-
-
-Eusko Jaurlaritza|Lehen sola|plano_fabrika.png|800|600|5|5
+Froga|Lehenengoa|plano_laborategia.png|800|600|2|2

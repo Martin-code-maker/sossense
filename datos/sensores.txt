@@ -219,8 +219,5 @@ Mondragon Unibertsitatea|Lehenengo Solairua|S3|737|106|Lehenengo Solairua
 Mondragon Unibertsitatea|Bigarren Solairua|S5|365|383|Bigarren Solairua
 Mondragon Unibertsitatea|Bigarren Solairua|S6|439|378|Bigarren Solairua
 Mondragon Unibertsitatea|Bigarren Solairua|S1|284|372|Bigarren Solairua
-Eusko Jaurlaritza|Lehen sola|S1|321|465|Lehen sola
-Eusko Jaurlaritza|Lehen sola|S2|249|469|Lehen sola
-Eusko Jaurlaritza|Lehen sola|S3|451|469|Lehen sola
-Eusko Jaurlaritza|Lehen sola|S4|597|89|Lehen sola
-Eusko Jaurlaritza|Lehen sola|S5|454|92|Lehen sola - Lehendakari
+Froga|Lehenengoa|S2|596|93|Lehenengoa - klase bat
+Froga|Lehenengoa|S3|184|399|Lehenengoa

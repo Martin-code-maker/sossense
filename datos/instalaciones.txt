@@ -7,4 +7,5 @@ Eskola Nagusia|15||San Andres Kalea 12, 20500 Arrasate|ESKOLA
 Ikerketa Laborategia|25||Teknologia Parkea, 20100 Errenteria|LABORATEGIA
 Osakidetza Azkoitia|45||Plaza Nagusia 3, 20720 Azkoitia, Gipuzkoa|OSPITALEA
 CAF Fabrika|52||Jose Miguel Iturrioz 26, 20200 Beasain, Gipuzkoa|FABRIKA
-Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEAEusko Jaurlaritza|5||Gasteiz|FABRIKA
+Mondragon Unibertsitatea|6||Arrasate|UNIBERTSITATEA
+Froga|2||Arrasate|LABORATEGIA
